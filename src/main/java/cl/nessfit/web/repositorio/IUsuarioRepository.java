@@ -1,4 +1,4 @@
-package cl.nessfit.web.repository;
+package cl.nessfit.web.repositorio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
