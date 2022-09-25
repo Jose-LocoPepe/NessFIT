@@ -21,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Configuration
@@ -52,10 +53,52 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 	http.authorizeRequests()
-		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**")
-			.permitAll()
+		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**") .permitAll()
+		.antMatchers("/login**").anonymous()
 		.and().formLogin()
-			.loginPage("/login").usernameParameter("rut").passwordParameter("contrasena");
+			.loginPage("/login")
+			.usernameParameter("rut")
+			.passwordParameter("contrasena")
+			.permitAll()
+			.failureUrl("/login?error=true")
+			.defaultSuccessUrl("/menu")
+			.and()
+		.logout()
+      		.permitAll()
+      		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+      		.logoutSuccessUrl("/login?logout");
     }
+    /** XD
+     *
+     *
+     *
+     *.successHandler(new AuthenticationSuccessHandler() {
+
+			    @Override
+			    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+				    Authentication authentication) throws IOException, ServletException {
+				response.sendRedirect("menu");
+			    }
+			});
+     * protected void configure(HttpSecurity http) throws Exception {
+
+		http.authorizeRequests().antMatchers(
+				"/registro**",
+				"/js/**",
+				"/css/**",
+				"/img/**").permitAll()
+		.anyRequest().authenticated()
+		.and()
+		.formLogin()
+		.loginPage("/login")
+		.permitAll()
+		.and()
+		.logout()
+		.invalidateHttpSession(true)
+		.clearAuthentication(true)
+		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		.logoutSuccessUrl("/login?logout")
+		.permitAll();
+	}*/
  
 }
