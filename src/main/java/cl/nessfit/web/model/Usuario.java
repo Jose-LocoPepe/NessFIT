@@ -11,13 +11,15 @@ public class Usuario implements Serializable{
 	private static final long serialVersionUID = -3699177985262131693L;
 	@Id
 	private String rut;
-	private String weaxd;
-	private String nombre;
 	private String apellido;
-	private String telefono;
+	private String contrasena;
 	private String email;
 	private int estado;
-	private String contrasena;
+	private String nombre;
+	private String telefono;
+	
+	
+	
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_rol", referencedColumnName = "id")

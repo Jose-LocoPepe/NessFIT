@@ -46,6 +46,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authoritiesByUsernameQuery(
 			"select u.rut, r.nombre from usuarios u inner join roles r on u.id_rol = r.id where u.rut=?");
     }
-    
+    /**
+     * Configura el filter Chain para acceso a las rutas
+     */
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+	http.authorizeRequests()
+		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**")
+			.permitAll()
+		.and().formLogin()
+			.loginPage("/login").usernameParameter("rut").passwordParameter("contrasena");
+    }
  
 }
