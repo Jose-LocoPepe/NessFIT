@@ -16,5 +16,9 @@ public class HomeController {
 	public String menu() {
 		return "menu";
 	}
+	@RequestMapping("/olvido")
+	public String olvido() {
+		return "olvido";
+	}
 
 }

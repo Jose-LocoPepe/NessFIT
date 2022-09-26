@@ -36,14 +36,26 @@
                         <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="p-5">
+                                <div class="p-4">
                                     <!-- Modificar controladores -->
                                     <div class="text-center">
-                                        <h1 class="h4 text-black mb-4">Bienvenido a NessFit</h1>
+                                    <img class="img-chica"
+                                    src="img/nessfit-logo-1.png">
+                                        <h1 class="h4 text-black mb-4">Inicio de sesión</h1>
+                                        
                                     </div>
                                     <hr class="sidebar-divider">
                                     
                                     <form class="user" th:action="@{/login}" method="post">
+                                    	<div th:if="${param.error}" class="alert alert-danger" role="alert">
+				            				Rut o contraseña invalida.
+				        				</div>
+		        						<div th:if="${param.logout}" class="alert alert-success" role="alert">
+		            						Has cerrado sesión correctamente.
+		        						</div>
+		        						<div th:if="${param.desabilitado}" class="alert alert-danger" role="alert">
+		        							Usuario Desabilitado. Contacte con el administrador!
+		        						</div>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
                                                 id="rut" name="rut" 
@@ -51,7 +63,7 @@
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="contrasena" name="contrasena" placeholder="Password">
+                                                id="contrasena" name="contrasena" placeholder="Contraseña">
                                 
                                         </div>
                                         <div class="col-md-12 col-md-offset-3">
@@ -59,22 +71,12 @@
 												value="Iniciar sesión" />
 											</div>
 										</div>
-										<div th:if="${param.error}" class="alert alert-danger" role="alert">
-				            				Rut o contraseña invalida.
-				        				</div>
-		        						<div th:if="${param.logout}" class="alert alert-success" role="alert">
-		            						Has cerrado sesión correctamente.
-		        						</div>
-										<!-- 
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>-->
-                                    </form>
+                                    
                                     <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Olvidaste tu password?</a>
+                                    <div class="text-center p-3">
+                                        <a class="small" th:action="@{/olvido}" href="olvido">Olvidaste tu contraseña?</a>
                                     </div>
-                                
+                                </form>
                                 </div>
                             </div>
                         </div>

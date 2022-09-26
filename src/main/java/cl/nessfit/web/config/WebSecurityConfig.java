@@ -55,6 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	http.authorizeRequests()
 		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**") .permitAll()
 		.antMatchers("/login**").anonymous()
+		.antMatchers("/administrador/**").hasAuthority("ADMINISTRADOR")
+		.anyRequest().authenticated()
 		.and().formLogin()
 			.loginPage("/login")
 			.usernameParameter("rut")
@@ -65,6 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 		.logout()
       		.permitAll()
+      		.invalidateHttpSession(true)
+    		.clearAuthentication(true)
       		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
       		.logoutSuccessUrl("/login?logout");
     }
