@@ -72,37 +72,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
       		.logoutSuccessUrl("/login?logout");
     }
-    /** XD
-     *
-     *
-     *
-     *.successHandler(new AuthenticationSuccessHandler() {
 
-			    @Override
-			    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-				    Authentication authentication) throws IOException, ServletException {
-				response.sendRedirect("menu");
-			    }
-			});
-     * protected void configure(HttpSecurity http) throws Exception {
-
-		http.authorizeRequests().antMatchers(
-				"/registro**",
-				"/js/**",
-				"/css/**",
-				"/img/**").permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.formLogin()
-		.loginPage("/login")
-		.permitAll()
-		.and()
-		.logout()
-		.invalidateHttpSession(true)
-		.clearAuthentication(true)
-		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		.logoutSuccessUrl("/login?logout")
-		.permitAll();
-	}*/
- 
 }
