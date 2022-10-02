@@ -66,7 +66,7 @@ public class GestionClienteController {
 	// paso 1 validaciones
 	// result.rejectValue("rut", null, "rut inválido");
 
-git 	if (result.hasErrors()) {
+	if (result.hasErrors()) {
 	    return "/administrativo/form-editar-cliente";
 	}
 
