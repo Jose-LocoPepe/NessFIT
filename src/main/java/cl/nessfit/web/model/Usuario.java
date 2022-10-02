@@ -11,15 +11,11 @@ public class Usuario implements Serializable{
 	private static final long serialVersionUID = -3699177985262131693L;
 	@Id
 	private String rut;
-<<<<<<< HEAD
-=======
 	private String nombre;
->>>>>>> ad6bb9042e8295f6bceae41c4198c5c3670f6d41
 	private String apellido;
 	private String contrasena;
 	private String email;
 	private int estado;
-	private String nombre;
 	private String telefono;
 	
 	
