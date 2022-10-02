@@ -21,7 +21,7 @@ public class Usuario implements Serializable{
 	
 	
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_rol", referencedColumnName = "id")
 	private Rol rol;
 

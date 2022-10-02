@@ -36,6 +36,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /**
+     * Bean para encriptar contraseñas con BCrypt
+    */
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+	return new BCryptPasswordEncoder(4);
+    }
+    
+    /**
      * Configura el usuario y el rol para acceder al sistema
      */
     @Override
@@ -47,30 +55,72 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authoritiesByUsernameQuery(
 			"select u.rut, r.nombre from usuarios u inner join roles r on u.id_rol = r.id where u.rut=?");
     }
+    
+
     /**
      * Configura el filter Chain para acceso a las rutas
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 	http.authorizeRequests()
-		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**") .permitAll()
+		// Los recursos estáticos no requieren autenticación
+		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**").permitAll()
+		// Las vistas públicas no requieren autenticación
 		.antMatchers("/login**").anonymous()
+		// Las vistas con el subdominio administrador quedan protegidas al ROL
+		// administrador
 		.antMatchers("/administrador/**").hasAuthority("ADMINISTRADOR")
+		// Las vistas con el subdominio administrador quedan protegidas al ROL
+		// administrativo
+		.antMatchers("/administrativo/**").hasAuthority("ADMINISTRATIVO")
+		// Las vistas con el subdominio administrador quedan protegidas al ROL
+		// cliente
+		.antMatchers("/cliente/**").hasAuthority("CLIENTE")
+		// Todas las demás URLs de la Aplicación requieren autenticación
 		.anyRequest().authenticated()
-		.and().formLogin()
-			.loginPage("/login")
-			.usernameParameter("rut")
-			.passwordParameter("contrasena")
-			.permitAll()
-			.failureUrl("/login?error=true")
-			.defaultSuccessUrl("/menu")
-			.and()
-		.logout()
-      		.permitAll()
-      		.invalidateHttpSession(true)
-    		.clearAuthentication(true)
-      		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-      		.logoutSuccessUrl("/login?logout");
-    }
+		// El formulario de Login redirecciona a la url /login
+		.and().formLogin().loginPage("/login").usernameParameter("rut").passwordParameter("contrasena")
+		// Si las credenciales son válidas, utiliza el manejador de autenticación
+		.successHandler(new AuthenticationSuccessHandler() {
+
+		    @Override
+		    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+			    Authentication authentication) throws IOException, ServletException {
+			// Tiempo máximo de sesión
+			request.getSession().setMaxInactiveInterval(0);
+			// Si la autenticación fue exitosa redirecciona a /menu
+			response.sendRedirect("/menu");
+		    }
+		})
+		// Si las credenciales son inválidas utiliza el manejador de errores
+		.failureHandler(new SimpleUrlAuthenticationFailureHandler() {
+		    @Override
+		    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			    AuthenticationException exception) throws IOException, ServletException {
+			// Si el fallo es una instancia de la excepción BadCredential agrega el flag
+			// error
+			if (exception instanceof BadCredentialsException) {
+			    super.setDefaultFailureUrl("/login?error=true");
+			    // Si el fallo es una instancia de la excepción Disable agrega el flag
+			    // dehabilitado
+			} else if (exception instanceof DisabledException) {
+			    super.setDefaultFailureUrl("/login?deshabilitado=true");
+			}
+			super.onAuthenticationFailure(request, response, exception);
+		    }
+		    // Si algun Match de url falla utiliza el manejador de excepciones
+		}).and().exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
+
+		    @Override
+		    public void handle(HttpServletRequest request, HttpServletResponse response,
+			    AccessDeniedException accessDeniedException) throws IOException, ServletException {
+			// Cualquiera sea el fallo redirecciona a /login
+			response.sendRedirect("/login");
+
+		    }
+		});
+    }    
+
+    
 
 }

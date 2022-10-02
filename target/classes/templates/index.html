@@ -61,17 +61,21 @@
 		        						<div th:if="${param.logout}" class="alert alert-success" role="alert" default-target-url="/index"  always-use-default-target="false">
 		            						Has cerrado sesión correctamente.
 		        						</div>
-		        						<div th:if="${param.desabilitado}" class="alert alert-danger" role="alert" default-target-url="/index"  always-use-default-target="false">
-		        							Usuario Desabilitado. Contacte con el administrador!
+		        						<div th:if="${param.cambio}" class="alert alert-success" role="alert" default-target-url="/index"  always-use-default-target="false">
+		            						Has cambiado de contraseña correctamente.
+		        						</div>
+		        						
+		        						<div th:if="${param.deshabilitado}" class="alert alert-danger" role="alert" default-target-url="/index"  always-use-default-target="false">
+		        							Usuario Deshabilitado. Contacte con el administrador!
 		        						</div>
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
                                                 id="rut" name="rut" 
-                                                placeholder="Rut">
+                                                placeholder="Rut(formato:12345678K)" required>
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="contrasena" name="contrasena" placeholder="Contraseña" >
+                                                id="contrasena" name="contrasena" placeholder="Contraseña" required>
                                 
                                         </div>
                                         <div class="col-md-12 col-md-offset-3">
@@ -79,11 +83,6 @@
 												value="Iniciar sesión" />
 											</div>
 										</div>
-                                    
-                                    <hr>
-                                    <div class="text-center p-3">
-                                        <a class="small" th:action="@{/olvido}" href="olvido">Olvidaste tu contraseña?</a>
-                                    </div>
                                 </form>
                                 </div>
                             </div>
@@ -98,7 +97,10 @@
     </div>
 
 
-
+<script src"../../../../target/classes/static/js/rutValidador.js"></script>
+<scripts>
+								
+</scripts>
 </body>
 
 </html>

@@ -12,22 +12,32 @@ import cl.nessfit.web.repository.IUsuarioRepository;
 public class UsuarioService implements IUsuarioService {
 
 	@Autowired
-	private IUsuarioRepository usuarioRepository;
-	@Override
-	public void guardar(Usuario usuario) {
-		usuarioRepository.save(usuario);
-		
-	}
+    private IUsuarioRepository usuarioRepository;
 
-	@Override
-	public void eliminar(String rutUsuario) {
-		usuarioRepository.deleteById(rutUsuario);
-		
-	}
+    @Override
+    public List<Usuario> verTodosLosUsuarios() {
+	return usuarioRepository.findAll();
+    }
 
-	@Override
-	public List<Usuario> listar() {
-		return usuarioRepository.findAll();
-	}
+    @Override
+    public List<Usuario> verAdministrativos() {
+	return usuarioRepository.findByRolId(2);
+    }
+    
+    @Override
+    public List<Usuario> verClientes() {
+	return usuarioRepository.findByRolId(3);
+    }
 
+    @Override
+    public void guardar(Usuario usuario) {
+	usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public Usuario buscarPorRut(String rut) {
+	Usuario usuario = usuarioRepository.findByRut(rut);
+	return usuario;
+    }
 }
+    

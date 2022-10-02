@@ -7,10 +7,14 @@ import cl.nessfit.web.repository.IUsuarioRepository;
 
 public interface IUsuarioService {
 	
-	public void guardar(Usuario usuario);
-	
-	public void eliminar(String rutUsuario);
-	
-	public List<Usuario> listar();
+	public List<Usuario> verTodosLosUsuarios();
+
+    public List<Usuario> verAdministrativos();
+
+    public void guardar(Usuario usuario);
+
+    public Usuario buscarPorRut(String rut);
+
+	List<Usuario> verClientes();
 
 }
