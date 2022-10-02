@@ -52,6 +52,10 @@ public class GestionAdministrativoController {
 	model.addAttribute("usuarios", usuarioService.verAdministrativos());
 	return "administrador/gestion-adm";
     }
+    @GetMapping("/menu")
+    public String menu() {
+		return "redirect:/menu";
+    }
 
     @GetMapping("/editar/{rut}")
     public String formEditar(@PathVariable(value = "rut") String rut, Model model) {
