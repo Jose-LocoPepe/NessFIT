@@ -6,8 +6,8 @@ import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.repository.IUsuarioRepository;
 
 public interface IUsuarioService {
-	
-	public List<Usuario> verTodosLosUsuarios();
+
+    public List<Usuario> verTodosLosUsuarios();
 
     public List<Usuario> verAdministrativos();
 
@@ -15,6 +15,7 @@ public interface IUsuarioService {
 
     public Usuario buscarPorRut(String rut);
 
-	List<Usuario> verClientes();
+    public Usuario buscarPorEmail(String email);
+    List<Usuario> verClientes();
 
 }

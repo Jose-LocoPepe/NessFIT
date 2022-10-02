@@ -3,6 +3,7 @@ package cl.nessfit.web.model;
 import java.io.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "usuarios")
@@ -13,6 +14,7 @@ public class Usuario implements Serializable{
 	private String rut;
 	private String apellido;
 	private String contrasena;
+	@Email
 	private String email;
 	private int estado;
 	private String nombre;

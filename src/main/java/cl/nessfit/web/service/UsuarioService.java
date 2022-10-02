@@ -11,33 +11,38 @@ import cl.nessfit.web.repository.IUsuarioRepository;
 @Service
 public class UsuarioService implements IUsuarioService {
 
-	@Autowired
+    @Autowired
     private IUsuarioRepository usuarioRepository;
 
     @Override
     public List<Usuario> verTodosLosUsuarios() {
-	return usuarioRepository.findAll();
+        return usuarioRepository.findAll();
     }
 
     @Override
     public List<Usuario> verAdministrativos() {
-	return usuarioRepository.findByRolId(2);
+        return usuarioRepository.findByRolId(2);
     }
-    
+
     @Override
     public List<Usuario> verClientes() {
-	return usuarioRepository.findByRolId(3);
+        return usuarioRepository.findByRolId(3);
     }
 
     @Override
     public void guardar(Usuario usuario) {
-	usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
     }
 
     @Override
     public Usuario buscarPorRut(String rut) {
-	Usuario usuario = usuarioRepository.findByRut(rut);
-	return usuario;
+        Usuario usuario = usuarioRepository.findByRut(rut);
+        return usuario;
+    }
+    @Override
+    public Usuario buscarPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        return usuario;
     }
 }
     

@@ -24,9 +24,9 @@ public class HomeController {
     BCryptPasswordEncoder passwordEncoder;
 	
 	//@RequestMapping(value = "/",method = RequestMethod.GET)
-	@RequestMapping({"/","login"})
+	@RequestMapping({"/","inicio","","index"})
 	public String index() {
-		return "index";	
+		return "menu";
 	}
 	@RequestMapping("/menu")
 	public String menu() {

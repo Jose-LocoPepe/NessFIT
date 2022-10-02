@@ -315,8 +315,7 @@
 											<div class="col-md-6 col-sm-6 ">
 												<input th:field="*{rut}" type="text" required="required"
 													class="form-control " th:errorclass="border-danger">
-												<div th:if="${#fields.hasErrors('rut')}"
-													th:errorclass="text-danger" th:errors="*{rut}"></div>
+
 											</div>
 										</div>
 
@@ -326,9 +325,8 @@
 											</label>
 											<div class="col-md-6 col-sm-6 ">
 												<input th:field="*{nombre}" type="text" required="required"
-													class="form-control ">
-												<div th:if="${#fields.hasErrors('nombre')}"
-													th:errorclass="text-danger" th:errors="*{nombre}"></div>
+													class="form-control " th:errorclass="border-danger">
+
 											</div>
 										</div>
 
@@ -337,8 +335,8 @@
 												for="apellido">Apellido: <span class="required">*</span>
 											</label>
 											<div class="col-md-6 col-sm-6 ">
-												<input th:field="*{apellido}" type="text"
-													class="form-control ">
+												<input th:field="*{apellido}" type="text" required="required"
+													class="form-control " th:errorclass="border-danger">
 											</div>
 										</div>
 
@@ -348,7 +346,7 @@
 											</label>
 											<div class="col-md-6 col-sm-6 ">
 												<input th:field="*{telefono}" type="tel" required="required"
-													class="form-control">
+													class="form-control" th:errorclass="border-danger">
 											</div>
 										</div>
 
@@ -358,7 +356,7 @@
 											</label>
 											<div class="col-md-6 col-sm-6 ">
 												<input th:field="*{email}" type="text" required="required"
-													class="form-control ">
+													class="form-control " th:errorclass="border-danger">
 											</div>
 										</div>
 

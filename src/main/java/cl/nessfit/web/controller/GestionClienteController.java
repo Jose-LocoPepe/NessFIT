@@ -44,80 +44,105 @@ public class GestionClienteController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-	binder.addValidators(validation);
+        binder.addValidators(validation);
     }
-
+    @GetMapping({"/index","/menu"})
+    public String menu() {
+        return "menu";
+    }
     @GetMapping("")
     public String index(Model model) {
-	model.addAttribute("usuarios", usuarioService.verClientes());
-	return "administrativo/gestion-cliente";
+        model.addAttribute("usuarios", usuarioService.verClientes());
+        return "administrativo/gestion-cliente";
     }
 
     @GetMapping("/editar/{rut}")
     public String formEditar(@PathVariable(value = "rut") String rut, Model model) {
-	Usuario usuario = usuarioService.buscarPorRut(rut);
-	model.addAttribute("usuario", usuario);
-	return "/administrativo/form-editar-cliente";
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+        model.addAttribute("usuario", usuario);
+        return "/administrativo/form-editar-cliente";
     }
 
     @PostMapping("/editar/{rut}")
     public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
 
-	// paso 1 validaciones
-	// result.rejectValue("rut", null, "rut inválido");
+        // paso 1 validaciones
+        // result.rejectValue("rut", null, "rut inválido");
 
-	if (result.hasErrors()) {
-	    return "/administrativo/form-editar-cliente";
-	}
+        if (result.hasErrors()) {
+            return "/administrativo/form-editar-cliente";
+        }
 
-	// paso 2 set atributos no ingresados por usuario
-	usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
-	usuario.setEstado(2);
-	Rol rolCliente = new Rol();
-	rolCliente.setId(3);
-	usuario.setRol(rolCliente);
+        // paso 2 set atributos no ingresados por usuario
+        usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
+        usuario.setEstado(2);
+        Rol rolCliente = new Rol();
+        rolCliente.setId(3);
+        usuario.setRol(rolCliente);
 
-	// paso 3 persistencia
-	usuarioService.guardar(usuario);
+        // paso 3 persistencia
+        usuarioService.guardar(usuario);
 
-	// paso 4 redireccionamiento
-	return "redirect:/administrativo/gestion-cliente";
+        // paso 4 redireccionamiento
+        return "redirect:/administrativo/gestion-cliente";
     }
 
     @GetMapping("/crear")
     public String formUsuario(Usuario usuario) {
-	return "/administrativo/form-crear-cliente";
+        return "/administrativo/form-crear-cliente";
     }
 
     @PostMapping("/crear")
     public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
+        //verificar si esta en la base de datos
+        Usuario userRut = usuarioService.buscarPorRut(usuario.getRut());
+        if (userRut != null) {
+            result.rejectValue("rut", null, "El rut ya existe");
+        }
+        //verificar si el correo se encuentra en la base de datos
+        Usuario userEmail = usuarioService.buscarPorEmail(usuario.getEmail());
+        if (userEmail != null) {
+            result.rejectValue("email", null, "El correo ya existe");
+        }
+        //nombres y apellidos son mayores a 2
+        if (usuario.getNombre().length() < 3) {
+            result.rejectValue("nombre", null, "El nombre debe tener al menos 3 caracteres");
+        }
+        if (usuario.getApellido().length() < 3) {
+            result.rejectValue("apellido", null, "El apellido debe tener al menos 3 caracteres");
+        }
+        if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
+            result.rejectValue("telefono", null, "El movil debe tener entre 11 y 16 caracteres");
+        }
 
-	// paso 1 validaciones
-	// result.rejectValue("rut", null, "rut inválido");
 
-	if (result.hasErrors()) {
-	    return "/administrativo/form-crear-cliente";
-	}
 
-	// paso 2 set atributos no ingresados por usuario
-	usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
-	usuario.setEstado(2);
-	Rol rolCliente = new Rol();
-	rolCliente.setId(3);
-	usuario.setRol(rolCliente);
-	System.out.println(usuario.toString());
+        // paso 1 validaciones
+        // result.rejectValue("rut", null, "rut inválido");
 
-	// paso 3 persistencia
-	usuarioService.guardar(usuario);
+        if (result.hasErrors()) {
+            return "/administrativo/form-crear-cliente";
+        }
 
-	// paso 4 redireccionamiento
-	return "redirect:/administrativo/gestion-cliente";
+        // paso 2 set atributos no ingresados por usuario
+        usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
+        usuario.setEstado(2);
+        Rol rolCliente = new Rol();
+        rolCliente.setId(3);
+        usuario.setRol(rolCliente);
+        System.out.println(usuario.toString());
+
+        // paso 3 persistencia
+        usuarioService.guardar(usuario);
+
+        // paso 4 redireccionamiento
+        return "redirect:/administrativo/gestion-cliente";
     }
 
     @ModelAttribute("rutUser")
     public String auth() {
-	//Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
-	return SecurityContextHolder.getContext().getAuthentication().getName();
+        //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 }
