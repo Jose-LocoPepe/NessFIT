@@ -3,7 +3,7 @@ package cl.nessfit.web.service;
 import java.util.List;
 
 import cl.nessfit.web.model.Usuario;
-import cl.nessfit.web.repository.IUsuarioRepository;
+import cl.nessfit.web.repositorio.IUsuarioRepository;
 
 public interface IUsuarioService {
 	

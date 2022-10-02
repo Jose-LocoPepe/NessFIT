@@ -21,7 +21,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+<<<<<<< HEAD
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+=======
+>>>>>>> ad6bb9042e8295f6bceae41c4198c5c3670f6d41
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Configuration
@@ -36,6 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /**
+<<<<<<< HEAD
      * Bean para encriptar contraseñas con BCrypt
     */
     @Bean
@@ -44,6 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     /**
+=======
+>>>>>>> ad6bb9042e8295f6bceae41c4198c5c3670f6d41
      * Configura el usuario y el rol para acceder al sistema
      */
     @Override
@@ -55,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authoritiesByUsernameQuery(
 			"select u.rut, r.nombre from usuarios u inner join roles r on u.id_rol = r.id where u.rut=?");
     }
+<<<<<<< HEAD
     
 
     /**
@@ -122,5 +129,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }    
 
     
+=======
+
+>>>>>>> ad6bb9042e8295f6bceae41c4198c5c3670f6d41
 
 }
