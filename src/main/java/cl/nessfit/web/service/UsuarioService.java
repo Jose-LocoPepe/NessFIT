@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.nessfit.web.model.Usuario;
-import cl.nessfit.web.repositorio.IUsuarioRepository;
+import cl.nessfit.web.repository.IUsuarioRepository;
 
 @Service
 public class UsuarioService implements IUsuarioService {

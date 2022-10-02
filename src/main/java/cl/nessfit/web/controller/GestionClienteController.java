@@ -83,10 +83,6 @@ public class GestionClienteController {
 	// paso 4 redireccionamiento
 	return "redirect:/administrativo/gestion-cliente";
     }
-    @GetMapping("/menu")
-    public String menu() {
-		return "menu";
-    }
 
     @GetMapping("/crear")
     public String formUsuario(Usuario usuario) {

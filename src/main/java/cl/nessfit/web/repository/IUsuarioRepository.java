@@ -1,4 +1,4 @@
-package cl.nessfit.web.repositorio;
+package cl.nessfit.web.repository;
 
 import java.util.List;
 

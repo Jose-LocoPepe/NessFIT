@@ -67,10 +67,6 @@ public class cambioContrasenaController {
 	logoutHandler.logout(request, null, null);
 	return "redirect:/login?cambio";
     }
-    @GetMapping("/menu")
-    public String menu() {
-		return "redirect:/menu";
-    }
 
     @ModelAttribute("rutUser")
     public String auth() {

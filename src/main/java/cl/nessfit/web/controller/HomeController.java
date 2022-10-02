@@ -36,10 +36,6 @@ public class HomeController {
 	public String olvido() {
 		return "olvido";
 	}
-	@RequestMapping("/cambiar-contrasena")
-	public String cambiarContrasena() {
-		return "cambiarcontrasena";
-	}
 	@RequestMapping("/registrar")
 	public String registrarUsuario() {
 		return "register";	
