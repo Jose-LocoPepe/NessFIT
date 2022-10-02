@@ -94,17 +94,20 @@ public class GestionClienteController {
 
     @PostMapping("/crear")
     public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
-        //verificar si esta en la base de datos
+        //Verificadores del rut
         Usuario userRut = usuarioService.buscarPorRut(usuario.getRut());
         if (userRut != null) {
             result.rejectValue("rut", null, "El rut ya existe");
+        }
+        if (usuario.getRut().contains(".") || usuario.getRut().contains("-")) {
+            result.rejectValue("rut", null, "El rut no debe tener puntos ni guion");
         }
         //verificar si el correo se encuentra en la base de datos
         Usuario userEmail = usuarioService.buscarPorEmail(usuario.getEmail());
         if (userEmail != null) {
             result.rejectValue("email", null, "El correo ya existe");
         }
-        //nombres y apellidos son mayores a 2
+        //Verificador de nombres y rut
         if (usuario.getNombre().length() < 3) {
             result.rejectValue("nombre", null, "El nombre debe tener al menos 3 caracteres");
         }
@@ -113,6 +116,19 @@ public class GestionClienteController {
         }
         if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
             result.rejectValue("telefono", null, "El movil debe tener entre 11 y 16 caracteres");
+        }
+
+        String rut = usuario.getRut();
+        int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
+        char dv = rut.charAt(rut.length() - 1);
+        int m = 0, s = 1;
+        for (; rutAux != 0; rutAux /= 10) {
+            s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
+        }
+        char dvCalculado = (char) (s != 0 ? s + 47 : 75);
+
+        if (dvCalculado != dv) {
+            result.rejectValue("rut", null, "El rut ingresado es invalido♿");
         }
 
 
