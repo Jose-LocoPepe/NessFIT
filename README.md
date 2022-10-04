@@ -24,15 +24,8 @@
   <p align="center">
     Proyecto para la empresa NessFit - Deportes recreativos y arriendo de sedes.
   </p>
+  </div>
   
-  # NessFit - Ayudantía IS 2022 - 02
-
-_Acá va un párrafo que describa lo que es el proyecto_
-
-## Comenzando 🚀
-
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
-
 ### Pre-requisitos 📋
 
 _Que cosas necesitas para instalar el software y como instalarlas_
@@ -70,16 +63,17 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 
 ## Versionado 📌
 
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).
+Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).S
 
 ## Autores ✒️
 
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
+_José Bautista_
+_Joaquin Pinto_
+_Sebastian Concha_
+_Christian an Juan_
 
 ## Licencia 📄
 
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para detalles
-</div>
-
+Este proyecto está bajo la Licencia de &copy; BPCS Corp.
 
 
