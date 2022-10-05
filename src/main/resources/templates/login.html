@@ -12,7 +12,7 @@
     <title>NessFit - Login</title>
 
     <!-- Custom fonts for this template-->
-    <link rel="stylesheet" type="text/css" th:href="@{vendor/fontawesome-free/css/all.min.css}" >
+    <link rel="stylesheet" type="text/css" th:href="@{vendor/fontawesome-free/css/all.min.css}">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
@@ -55,17 +55,22 @@
                                 <hr class="sidebar-divider">
 
                                 <form class="user" th:action="@{/login}" method="post">
-                                    <div th:if="${param.error}" class="alert alert-danger text-center" role="alert" default-target-url="/index"  always-use-default-target="false">
-                                        Las credenciales de acceso son incorrectas o el usuario no está registrado en el sistema.
+                                    <div th:if="${param.error}" class="alert alert-danger text-center" role="alert"
+                                         default-target-url="/index" always-use-default-target="false">
+                                        Las credenciales de acceso son incorrectas o el usuario no está registrado en el
+                                        sistema.
                                     </div>
-                                    <div th:if="${param.logout}" class="alert alert-success" role="alert" default-target-url="/index"  always-use-default-target="false">
+                                    <div th:if="${param.logout}" class="alert alert-success" role="alert"
+                                         default-target-url="/index" always-use-default-target="false">
                                         Has cerrado sesión correctamente.
                                     </div>
-                                    <div th:if="${param.cambio}" class="alert alert-success" role="alert" default-target-url="/index"  always-use-default-target="false">
+                                    <div th:if="${param.cambio}" class="alert alert-success" role="alert"
+                                         default-target-url="/index" always-use-default-target="false">
                                         Has cambiado de contraseña correctamente.
                                     </div>
 
-                                    <div th:if="${param.deshabilitado}" class="alert alert-danger" role="alert" default-target-url="/index"  always-use-default-target="false">
+                                    <div th:if="${param.deshabilitado}" class="alert alert-danger" role="alert"
+                                         default-target-url="/index" always-use-default-target="false">
                                         Usuario Deshabilitado. Contacte con el administrador!
                                     </div>
                                     <div class="form-group">
@@ -81,19 +86,13 @@
 
                                     </div>
                                     <div class="col-md-12 col-md-offset-3">
-                                        <input type="submit" class="btn btn-primary btn-user btn-block" name="login-submit" id="login-submit"
-                                               value="Iniciar sesión" />
+                                        <input type="submit" class="btn btn-primary btn-user btn-block"
+                                               name="login-submit" id="login-submit"
+                                               value="Iniciar sesión"/>
                                     </div>
+                                </form>
                             </div>
-                            <hr class="sidebar-divider">
-                            <div class="col-md-12 col-md-offset-5ß">
-                                <div class="text-center">
-                                    <a class="small" href="olvido">¿Olvidaste tu password?</a>
-                                </div>
-                            </div>
-                            <hr class="sidebar-divider">
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -104,10 +103,9 @@
 
 </div>
 
-</div>
 
-
-<script src"../../../../target/classes/static/js/rutValidador.js"></script>
+<script src
+"../../../../target/classes/static/js/rutValidador.js"></script>
 <scripts>
 
 </scripts>
