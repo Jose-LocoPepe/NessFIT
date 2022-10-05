@@ -160,5 +160,4 @@ public class GestionClienteController {
         //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
-
 }

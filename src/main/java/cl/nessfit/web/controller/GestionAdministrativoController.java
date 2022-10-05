@@ -50,7 +50,7 @@ public class GestionAdministrativoController {
     @GetMapping("")
     public String index(Model model) {
 	model.addAttribute("usuarios", usuarioService.verAdministrativos());
-	return "administrador/gestion-adm";
+	return "/administrador/gestion-adm";
     }
 
     @GetMapping("/editar/{rut}")

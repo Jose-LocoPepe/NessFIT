@@ -56,9 +56,13 @@ public class HomeController {
     logoutHandler.logout(request, null, null);
     return "redirect:/login?cambio";
     }
-	@ModelAttribute("rutUser")
+	@ModelAttribute("nombreUser")
     public String auth() {
-	return SecurityContextHolder.getContext().getAuthentication().getName();
+		String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+		Usuario usuario = usuarioService.buscarPorRut(rut);
+
+		return usuario.getNombre() + " " + usuario.getApellido();
+
     }
 	@GetMapping("/perfil")
     public String perfil(Model model) {

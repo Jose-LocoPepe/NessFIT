@@ -24,53 +24,36 @@
   <p align="center">
     Proyecto para la empresa NessFit - Deportes recreativos y arriendo de sedes.
   </p>
-  </div>
-  
-### Pre-requisitos 📋
+</div>
 
-_Que cosas necesitas para instalar el software y como instalarlas_
-
+### Pre-Requisitos ⚙️
 ```
-Da un ejemplo
+Se requiere una Base de Datos MySQL con los datos de Script.sql
+
+**EN CASO DE SER NECESARIO** Modificar el archivo application.properties con los datos de la base de datos
 ```
 
 ### Instalación 🔧
 
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
-
-_Dí cómo será ese paso_
-
-```
-Da un ejemplo
-```
-
-_Y repite_
-
-```
-hasta finalizar
-```
-
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
+_No se requiere ninguna instalación aparte del IDE que contenga el Framework_
+#### .::SpringBoot::.
+Junto con esto, el servidor de la bases de datos activo.
 
 
-## Despliegue 📦
-
-_Agrega notas adicionales sobre como hacer deploy_
-
-## Construido con 🛠️
-
-_Menciona las herramientas que utilizaste para crear tu proyecto_
 
 ## Versionado 📌
 
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).S
+Usamos [GitHub](http://github.com/Jose-LocoPepe/NessFIT) para el versionado.
 
 ## Autores ✒️
 
-_José Bautista_
-_Joaquin Pinto_
-_Sebastian Concha_
-_Christian an Juan_
+### José Bautista
+
+### Joaquin Pinto_
+
+### Sebastian Concha
+
+### Christian an Juan
 
 ## Licencia 📄
 

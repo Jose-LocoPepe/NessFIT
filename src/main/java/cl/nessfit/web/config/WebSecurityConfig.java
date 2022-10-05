@@ -72,7 +72,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/administrador/**").hasAuthority("ADMINISTRADOR")
 				// Las vistas con el subdominio administrador quedan protegidas al ROL
 				// administrativo
-				.antMatchers("/administrativo/**").hasAuthority("ADMINISTRATIVO")
+				.antMatchers("/administrativo/**"	).hasAuthority("ADMINISTRATIVO")
+				.antMatchers("/administrativo/**"	).hasAuthority("ADMINISTRADOR")
 				// Las vistas con el subdominio administrador quedan protegidas al ROL
 				// cliente
 				.antMatchers("/cliente/**").hasAuthority("CLIENTE")
