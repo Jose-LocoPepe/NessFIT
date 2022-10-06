@@ -269,9 +269,9 @@
                                     Cambiar Contraseña
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="login?logout=true" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="login?cerrar sesion=true" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Cerrar sesion
                                 </a>
                             </div>
                         </li>
@@ -441,7 +441,7 @@
                 <div class="modal-body">Selecciona "Cerrar Sesión" debajo si estás listo para cerrar tu sesión actual.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+                    <a class="btn btn-primary" th:href="@{/Cerrar sesion}">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
