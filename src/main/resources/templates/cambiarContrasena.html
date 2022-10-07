@@ -112,7 +112,7 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" href="#">Gestionar administrativos</a>
+                        <a class="collapse-item" href="administrativo/gestion-adm">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Usuarios:</h6>
                         <a class="collapse-item" href="#">Gestionar usuarios</a>
@@ -120,51 +120,40 @@
                 </div>
                 </div>
             </li>
-            
-            <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->
-            <li class="nav-item">
+
+            <!-- Nav Item - Menu para el administrativo (también se muestra al administrador) -->
+            <!-- <sec:authorize access="hasRole('ADMINISTRATIVO','ADMINISTRADOR')"> -->
             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Gestionar</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Arriendos:</h6>
-                        <a class="collapse-item" href="#">Solicitudes de arriendo</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Usuarios:</h6>
-                        <a class="collapse-item" href="#">Gestionar usuarios</a>
-                    </div>
+                <hr class="sidebar-divider">
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    ADMINISTRATIVO
                 </div>
-                </div>    
-            </li>
-            <li class="nav-item">
-            <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Registrar</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="#">Registrar clientes</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Instalacion:</h6>
-                        <a class="collapse-item" href="#">Instalacion deportiva</a>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
+                       aria-expanded="true" aria-controls="admin2Menu">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Gestionar</span>
+                    </a>
+                    <div id="admin2Menu" class="collapse" aria-labelledby="headingPages"
+                         data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Arriendos:</h6>
+                            <a class="collapse-item" href="#">Solicitudes de arriendo</a>
+
+                            <div class="collapse-divider"></div>
+                            <h6 class="collapse-header">Clientes:</h6>
+                            <a class="collapse-item" href="administrativo/gestion-cliente">Gestionar clientes</a>
+
+                            <div class="collapse-divider"></div>
+                            <h6 class="collapse-header">Camping:</h6>
+                            <a class="collapse-item" href="#">Registrar Complejo</a>
+                            <a class="collapse-item" href="#">Gestionar Complejo</a>
+                            <a class="collapse-item" href="#">Estadisticas</a>
+                        </div>
                     </div>
-                </div>
-                </div> 
-			</li>
-			<li class="nav-item">
-			<div sec:authorize="hasAuthority('ADMINISTRATIVO')">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Estadisticas</span></a>
-                    </div> 
-            </li>
+                </li>
+            </div>
             
             <!-- Nav Item - Pages Collapse Menu CLIENTE-->
             
