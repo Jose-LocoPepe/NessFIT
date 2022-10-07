@@ -12,7 +12,7 @@
     <title>Nessfit - Menu</title>
 
     <!-- Custom fonts for this template-->
-    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -21,21 +21,21 @@
     <link rel="stylesheet" type="text/css"  href="static/css/sb-admin-2.css" th:href="@{/css/sb-admin-2.css}">
 
  <!-- Bootstrap core JavaScript-->
-    <script type="text/javascript" th:src="@{vendor/jquery/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script type="text/javascript" th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
     <!-- Core plugin JavaScript-->
-    <script type="text/javascript" th:src="@{vendor/jquery-easing/jquery.easing.min.js}"></script>
+    <script type="text/javascript" th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script type="text/javascript" th:src="@{js/sb-admin-2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sb-admin-2.min.js}"></script>
 
     <!-- Page level plugins -->
-    <script type="text/javascript" th:src="@{vendor/chart.js/Chart.min.js}"></script>
+    <script type="text/javascript" th:src="@{/vendor/chart.js/Chart.min.js}"></script>
 
     <!-- Page level custom scripts -->
-    <script type="text/javascript" th:src="@{js/demo/chart-area-demo.js}"></script>
-    <script type="text/javascript" th:src="@{js/demo/chart-pie-demo.js}"></script>
+    <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
+    <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
  
 </head>
 
@@ -48,7 +48,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="menu">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/menu}">
                 <div class="sidebar-brand-icon">
                     <i class="fa fa-futbol"></i>
                 </div>
@@ -60,7 +60,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="menu">
+                <a class="nav-link" th:href="@{/menu}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Inicio</span></a>
             </li>
@@ -112,7 +112,7 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" href="#">Gestionar administrativos</a>
+                        <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Usuarios:</h6>
                         <a class="collapse-item" href="#">Gestionar usuarios</a>
@@ -260,11 +260,11 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" th:href="@{/perfil}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
-                                <a class="dropdown-item" href="cambiar-contrasena">
+                                <a class="dropdown-item" th:href="@{/cambiar-contrasena}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Cambiar Contraseña
                                 </a>
