@@ -45,7 +45,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
+        <!-- Barra Izquierda -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
@@ -66,44 +66,7 @@
                     <span>Inicio</span></a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-            	<div sec:authorize="hasAuthority('ADMINISTRADOR')">
-            	ADMINISTRADOR
-				</div>
-				<div sec:authorize="hasAuthority('ADMINISTRATIVO')">
-            	ADMINISTRATIVO
-				</div>
-				<div sec:authorize="hasAuthority('CLIENTE')">
-            	CLIENTE
-				</div>
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
-                    </div>
-                </div>
-            </li>
-
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Menu para el administrativo (también se muestra al administrador) -->
-            <!-- <sec:authorize access="hasRole('ADMINISTRATIVO','ADMINISTRADOR')"> -->
+            <!-- Nav Item - Menu para el administrativo  -->
             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
                 <hr class="sidebar-divider">
                 <!-- Heading -->
@@ -204,9 +167,11 @@
                         
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown arrow">
-                            <a href="javascript:;" class="nav-link dropdown-toggle"
-							aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown"
-							aria-expanded="false" th:text="${rutUser}"> </a>
+                            <a href="javascript:" class="nav-link dropdown-toggle"
+                           id="navbarDropdown" data-toggle="dropdown">
+                            <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
+                               th:text=" ${nombreUser}"></i>
+                        </a>
 					
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -294,13 +259,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; NESSFIT 2022</span>
-                    </div>
-                </div>
-            </footer>
+
             <!-- End of Footer -->
 
         </div>
@@ -333,7 +292,7 @@
             </div>
         </div>
     </div>
-
+    </div>
 
    
 

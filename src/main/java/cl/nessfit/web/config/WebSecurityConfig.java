@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,105 +25,107 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Configuración de seguridad de la aplicación
+ *
+ * @author BPCS Corporation
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	/**
-	 * Inyección de origen de datos (base de datos)
-	 */
-	@Autowired
-	private DataSource dataSource;
+    /**
+     * Inyección de origen de datos (base de datos)
+     */
+    @Autowired
+    private DataSource dataSource;
+    /**
+     * Bean para encriptar contraseñas con BCrypt
+     */
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(4);
+    }
+
+    /**
+     * Configura el usuario y el rol para acceder al sistema
+     */
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(dataSource)
+                // Busca al usuario por el parámetro rut en la base de datos
+                .usersByUsernameQuery("select rut, contrasena, estado from usuarios where rut=?")
+                // Busca el rol asociado al rut
+                .authoritiesByUsernameQuery(
+                        "select u.rut, r.nombre from usuarios u inner join roles r on u.id_rol = r.id where u.rut=?");
+    }
 
 
-	/**
-	 * Bean para encriptar contraseñas con BCrypt
-	 */
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder(4);
-	}
+    /**
+     * Configura el filter Chain para acceso a las rutas
+     */
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                // Los recursos estáticos no requieren autenticación
+                .antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**").permitAll()
+                // Las vistas públicas no requieren autenticación
+                .antMatchers("/login**", "/olvido**").anonymous()
+                // Las vistas con el subdominio administrador quedan protegidas al ROL
+                // administrador
+                .antMatchers("/administrador/**").hasAuthority("ADMINISTRADOR")
+                // Las vistas con el subdominio administrador quedan protegidas al ROL
+                // administrativo
+                .antMatchers("/administrativo/**").hasAuthority("ADMINISTRATIVO")
 
-	/**
-	 * Configura el usuario y el rol para acceder al sistema
-	 */
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().dataSource(dataSource)
-				// Busca al usuario por el parámetro rut en la base de datos
-				.usersByUsernameQuery("select rut, contrasena, estado from usuarios where rut=?")
-				// Busca el rol asociado al rut
-				.authoritiesByUsernameQuery(
-						"select u.rut, r.nombre from usuarios u inner join roles r on u.id_rol = r.id where u.rut=?");
-	}
+                // Las vistas con el subdominio administrador quedan protegidas al ROL
+                // cliente
+                .antMatchers("/cliente/**").hasAuthority("CLIENTE")
+                // Todas las demás URLs de la Aplicación requieren autenticación
+                .anyRequest().authenticated()
+                // El formulario de Login redirecciona a la url /login
+                .and().formLogin().loginPage("/login").usernameParameter("rut").passwordParameter("contrasena")
+                .loginProcessingUrl("/login")
+                // Si las credenciales son válidas, utiliza el manejador de autenticación
+                .successHandler(new AuthenticationSuccessHandler() {
 
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                                        Authentication authentication) throws IOException, ServletException {
+                        // Tiempo máximo de sesión
+                        request.getSession().setMaxInactiveInterval(0);
+                        // Si la autenticación fue exitosa redirecciona a /menu
+                        response.sendRedirect("/menu");
+                    }
+                })
+                // Si las credenciales son inválidas utiliza el manejador de errores
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler() {
+                    @Override
+                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                                        AuthenticationException exception) throws IOException, ServletException {
+                        // Si el fallo es una instancia de la excepción BadCredential agrega el flag
+                        // error
+                        if (exception instanceof BadCredentialsException) {
+                            super.setDefaultFailureUrl("/login?error=true");
+                            // Si el fallo es una instancia de la excepción Disable agrega el flag
+                            // dehabilitado
+                        } else if (exception instanceof DisabledException) {
+                            super.setDefaultFailureUrl("/login?deshabilitado=true");
+                        }
+                        super.onAuthenticationFailure(request, response, exception);
+                    }
+                    // Si algun Match de url falla utiliza el manejador de excepciones
+                }).and().exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
 
-	/**
-	 * Configura el filter Chain para acceso a las rutas
-	 */
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				// Los recursos estáticos no requieren autenticación
-				.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**").permitAll()
-				// Las vistas públicas no requieren autenticación
-				.antMatchers("/login**","/olvido**").anonymous()
-				// Las vistas con el subdominio administrador quedan protegidas al ROL
-				// administrador
-				.antMatchers("/administrador/**").hasAuthority("ADMINISTRADOR")
-				// Las vistas con el subdominio administrador quedan protegidas al ROL
-				// administrativo
-				.antMatchers("/administrativo/**"	).hasAuthority("ADMINISTRATIVO")
+                    @Override
+                    public void handle(HttpServletRequest request, HttpServletResponse response,
+                                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                        // Cualquiera sea el fallo redirecciona a /login
+                        response.sendRedirect("/login");
 
-				// Las vistas con el subdominio administrador quedan protegidas al ROL
-				// cliente
-				.antMatchers("/cliente/**").hasAuthority("CLIENTE")
-				// Todas las demás URLs de la Aplicación requieren autenticación
-				.anyRequest().authenticated()
-				// El formulario de Login redirecciona a la url /login
-				.and().formLogin().loginPage("/login").usernameParameter("rut").passwordParameter("contrasena")
-				.loginProcessingUrl("/login")
-				// Si las credenciales son válidas, utiliza el manejador de autenticación
-				.successHandler(new AuthenticationSuccessHandler() {
-
-					@Override
-					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-														Authentication authentication) throws IOException, ServletException {
-						// Tiempo máximo de sesión
-						request.getSession().setMaxInactiveInterval(0);
-						// Si la autenticación fue exitosa redirecciona a /menu
-						response.sendRedirect("/menu");
-					}
-				})
-				// Si las credenciales son inválidas utiliza el manejador de errores
-				.failureHandler(new SimpleUrlAuthenticationFailureHandler() {
-					@Override
-					public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-														AuthenticationException exception) throws IOException, ServletException {
-						// Si el fallo es una instancia de la excepción BadCredential agrega el flag
-						// error
-						if (exception instanceof BadCredentialsException) {
-							super.setDefaultFailureUrl("/login?error=true");
-							// Si el fallo es una instancia de la excepción Disable agrega el flag
-							// dehabilitado
-						} else if (exception instanceof DisabledException) {
-							super.setDefaultFailureUrl("/login?deshabilitado=true");
-						}
-						super.onAuthenticationFailure(request, response, exception);
-					}
-					// Si algun Match de url falla utiliza el manejador de excepciones
-				}).and().exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
-
-					@Override
-					public void handle(HttpServletRequest request, HttpServletResponse response,
-									   AccessDeniedException accessDeniedException) throws IOException, ServletException {
-						// Cualquiera sea el fallo redirecciona a /login
-						response.sendRedirect("/login");
-
-					}
-				});
-	}
-
+                    }
+                });
+    }
 
 
 }

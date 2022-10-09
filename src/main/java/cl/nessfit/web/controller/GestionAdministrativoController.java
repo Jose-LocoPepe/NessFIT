@@ -22,8 +22,12 @@ import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.service.IUsuarioService;
 import cl.nessfit.web.util.RutValidacion;
 
+/**
+ * Controlador de la vista de Gestión Administrativa
+ *
+ * @author BPCS Corporation
+ */
 @Controller
-//Mapeo de clase (aplica a todas las funciones declaradas.
 @RequestMapping("/administrador/gestion-adm")
 public class GestionAdministrativoController {
 
@@ -38,86 +42,131 @@ public class GestionAdministrativoController {
      */
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
+    /**
+     * Inyeccion del bean de validacion de rut
+     */
     @Autowired
     private RutValidacion validation;
 
+    /**
+     * Inicializa el binder para la validacion del rut
+     *
+     * @param binder binder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-	binder.addValidators(validation);
+        binder.addValidators(validation);
     }
 
+    /**
+     * Maneja la peticion GET para la vista de gestion de administrativos
+     *
+     * @param model modelo
+     * @return vista de gestión de administrativos
+     */
     @GetMapping("")
     public String index(Model model) {
-	model.addAttribute("usuarios", usuarioService.verAdministrativos());
-	return "/administrador/gestion-adm";
+        model.addAttribute("usuarios", usuarioService.verAdministrativos());
+        return "/administrador/gestion-adm";
     }
 
+    /**
+     * Maneja la peticion GET para la vista de edicion de un rut
+     *
+     * @param rut   rut de la peticion
+     * @param model modelo
+     * @return vista del menu de edicion de administrativos
+     */
     @GetMapping("/editar/{rut}")
     public String formEditar(@PathVariable(value = "rut") String rut, Model model) {
-	Usuario usuario = usuarioService.buscarPorRut(rut);
-	model.addAttribute("usuario", usuario);
-	return "/administrador/form-editar-administrativo";
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+        model.addAttribute("usuario", usuario);
+        return "/administrador/form-editar-administrativo";
     }
 
+    /**
+     * Maneja la peticion POST para la vista de la edicion de administrativos
+     *
+     * @param usuario usuario de la peticion
+     * @param result  el resultado de la peticion
+     * @param attr
+     * @return vista del menu de edicion de administrativos
+     */
     @PostMapping("/editar/{rut}")
     public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
+        // Si hay errores
+        if (result.hasErrors()) {
+            return "/administrador/form-editar-administrativo";
+        }
 
-	// paso 1 validaciones
-	// result.rejectValue("rut", null, "rut inválido");
+        //Datos del administrativo a editar
+        usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
+        usuario.setEstado(1);
+        Rol rolAdministrativo = new Rol();
+        rolAdministrativo.setId(2);
+        usuario.setRol(rolAdministrativo);
 
-	if (result.hasErrors()) {
-	    return "/administrador/form-editar-administrativo";
-	}
+        // Guarda el administrativo
+        usuarioService.guardar(usuario);
 
-	// paso 2 set atributos no ingresados por usuario
-	usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
-	usuario.setEstado(1);
-	Rol rolAdministrativo = new Rol();
-	rolAdministrativo.setId(2);
-	usuario.setRol(rolAdministrativo);
-
-	// paso 3 persistencia
-	usuarioService.guardar(usuario);
-
-	// paso 4 redireccionamiento
-	return "redirect:/administrador/gestion-adm";
+        // Redirecciona a la vista de gestion de administrativos
+        return "redirect:/administrador/gestion-adm";
     }
-
+    /**
+     * Maneja la peticion GET para crear un administrativo
+     * @return retorna la vista para crear administrativo
+     */
     @GetMapping("/crear")
     public String formUsuario(Usuario usuario) {
-	return "/administrador/form-crear-administrativo";
+        return "/administrador/form-crear-administrativo";
     }
-
+    /**
+     * Maneja la peticion POST para crear un administrativo
+     * @param usuario usuario de la peticion
+     * @param result el resultado de la peticion
+     * @param attr atributos
+     * @return retorna la vista para crear administrativos
+     */
     @PostMapping("/crear")
     public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
-
-	// paso 1 validaciones
-	// result.rejectValue("rut", null, "rut inválido");
-
-	if (result.hasErrors()) {
-	    return "/administrador/form-crear-administrativo";
-	}
-
-	// paso 2 set atributos no ingresados por usuario
-	usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
-	usuario.setEstado(1);
-	Rol rolAdministrativo = new Rol();
-	rolAdministrativo.setId(2);
-	usuario.setRol(rolAdministrativo);
-	System.out.println(usuario.toString());
-
-	// paso 3 persistencia
-	usuarioService.guardar(usuario);
-
-	// paso 4 redireccionamiento
-	return "redirect:/administrador/gestion-adm";
+        // Si hay errores
+        if (result.hasErrors()) {
+            return "/administrador/form-crear-administrativo";
+        }
+        //Datos del administrativo a crear
+        usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
+        usuario.setEstado(1);
+        Rol rolAdministrativo = new Rol();
+        rolAdministrativo.setId(2);
+        usuario.setRol(rolAdministrativo);
+        System.out.println(usuario.toString());
+        // Guarda el administrativo
+        usuarioService.guardar(usuario);
+        // Redirecciona a la vista de gestion de administrativos
+        return "redirect:/administrador/gestion-adm";
     }
 
+    /**
+     * authName para buscar el nombre del rut logueado
+     * @return Nombre y apellido del usuario logueado
+     */
+    @ModelAttribute("nombreUser")
+    public String authName() {
+        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+
+        return usuario.getNombre() + " " + usuario.getApellido();
+
+    }
+
+    /**
+     * auth para obtener el rut del usuario logueado
+     * @return retorna el rut
+     */
     @ModelAttribute("rutUser")
     public String auth() {
-	//Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
-	return SecurityContextHolder.getContext().getAuthentication().getName();
+        //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 }

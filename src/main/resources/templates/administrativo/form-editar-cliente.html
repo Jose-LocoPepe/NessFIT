@@ -65,67 +65,41 @@
                     <span>Inicio</span></a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-            	<div sec:authorize="hasAuthority('ADMINISTRADOR')">
-            	ADMINISTRADOR
-				</div>
-				<div sec:authorize="hasAuthority('ADMINISTRATIVO')">
-            	ADMINISTRATIVO
-				</div>
-				<div sec:authorize="hasAuthority('CLIENTE')">
-            	CLIENTE
-				</div>
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
-                    </div>
-                </div>
-            </li>
-
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu ADMINISTRADOR-->
-            <li class="nav-item">
+            <!-- Menú de administrador -->
             <div sec:authorize="hasAuthority('ADMINISTRADOR')">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Gestionar</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" href="#">Gestionar administrativos</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Usuarios:</h6>
-                        <a class="collapse-item" href="#">Gestionar usuarios</a>
-                    </div>
-                </div>
-                </div>
-            </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider ">
 
-            <!-- Nav Item - Menu para el administrativo (también se muestra al administrador) -->
-            <!-- <sec:authorize access="hasRole('ADMINISTRATIVO','ADMINISTRADOR')"> -->
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    ADMINISTRADOR
+                </div>
+
+                <!-- Nav Item - Menu para el administrador-->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin1Menu"
+                       aria-expanded="true" aria-controls="admin1Menu">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Gestionar</span>
+                    </a>
+                    <div id="admin1Menu" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-1 collapse-inner rounded">
+                            <h6 class="collapse-header">Administrativos:</h6>
+                            <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
+                            <div class="collapse-divider"></div>
+                            <h6 class="collapse-header">Clientes:</h6>
+                            <a class="collapse-item" th:href="@{administrativo/gestion-cliente}">Gestionar Clientes</a>
+                        </div>
+                    </div>
+                </li>
+            </div>
+
             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
                 <hr class="sidebar-divider">
                 <!-- Heading -->
+                <div class="sidebar-heading">
+                    ADMINISTRATIVO
+                </div>
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
                        aria-expanded="true" aria-controls="admin2Menu">
@@ -151,23 +125,24 @@
                     </div>
                 </li>
             </div>
-            
+
             <!-- Nav Item - Pages Collapse Menu CLIENTE-->
-            
+
             <li class="nav-item">
-            <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Arrendar centro deportivo</span></a>
-                    </div>
+                <div sec:authorize="hasAuthority('CLIENTE')">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Arrendar centro deportivo</span></a>
+                </div>
             </li>
             <li class="nav-item">
-            <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Visualizar solicitudes</span></a>
-                    </div>
+                <div sec:authorize="hasAuthority('CLIENTE')">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Visualizar solicitudes</span></a>
+                </div>
             </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -239,9 +214,11 @@
                         
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown arrow">
-                            <a href="javascript:;" class="nav-link dropdown-toggle"
-							aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown"
-							aria-expanded="false" th:text="${rutUser}"> </a>
+                            <a href="javascript:" class="nav-link dropdown-toggle"
+                           id="navbarDropdown" data-toggle="dropdown">
+                            <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
+                               th:text=" ${nombreUser}"></i>
+                        </a>
 					
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -293,7 +270,7 @@
 											class='alert alert-danger' role='alert'>
 											Por favor corrija los siguientes errores:
 											<ul>
-												<li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+												<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
 											</ul>
 										</div>
 
@@ -390,13 +367,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; NESSFIT 2022</span>
-                    </div>
-                </div>
-            </footer>
+
             <!-- End of Footer -->
 
         </div>

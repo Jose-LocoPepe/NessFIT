@@ -21,9 +21,13 @@ import cl.nessfit.web.model.Rol;
 import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.service.IUsuarioService;
 import cl.nessfit.web.util.RutValidacion;
-
+/**
+ * Controlador de la vista de Gestión de Clientes
+ *
+ * @author BPCS Corporation
+ *
+ */
 @Controller
-//Mapeo de clase (aplica a todas las funciones declaradas.
 @RequestMapping("/administrativo/gestion-cliente")
 public class GestionClienteController {
 
@@ -38,24 +42,46 @@ public class GestionClienteController {
      */
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
+    /**
+     * Inyección del bean de validación de rut
+     */
     @Autowired
     private RutValidacion validation;
-
+    /**
+     * Inicializa el binder para la validación de rut
+     * @param binder binder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(validation);
     }
+
+    /**
+     * Maneja la petición GET para la volver al menu
+     * @return Menu principal
+     */
     @GetMapping({"/index","/menu"})
     public String menu() {
         return "menu";
     }
+
+    /**
+     * Maneja la petición GET para la vista de gestión de clientes
+     * @param model modelo
+     * @return vista de gestión de clientes
+     */
     @GetMapping("")
     public String index(Model model) {
         model.addAttribute("usuarios", usuarioService.verClientes());
         return "administrativo/gestion-cliente";
     }
 
+    /**
+     * Maneja la petición GET para la vista de edicion de clientes
+     * @param rut rut de la peticion
+     * @param model modelo
+     * @return vista del menu de edicion de clientes
+     */
     @GetMapping("/editar/{rut}")
     public String formEditar(@PathVariable(value = "rut") String rut, Model model) {
         Usuario usuario = usuarioService.buscarPorRut(rut);
@@ -63,34 +89,49 @@ public class GestionClienteController {
         return "/administrativo/form-editar-cliente";
     }
 
+    /**
+     * Maneja la peticion POST para la vista de la edicion de clientes
+     * @param usuario usuario de la peticion
+     * @param result el resultado de la peticion
+     * @param attr
+     * @return vista del menu de edicion de clientes
+     */
     @PostMapping("/editar/{rut}")
     public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
-
-        // paso 1 validaciones
-        // result.rejectValue("rut", null, "rut inválido");
-
+        //Si hay errores
         if (result.hasErrors()) {
             return "/administrativo/form-editar-cliente";
         }
-
-        // paso 2 set atributos no ingresados por usuario
+        //Datos del cliente a editar
         usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
         usuario.setEstado(2);
         Rol rolCliente = new Rol();
         rolCliente.setId(3);
         usuario.setRol(rolCliente);
 
-        // paso 3 persistencia
+        //Guarda el cliente
         usuarioService.guardar(usuario);
 
-        // paso 4 redireccionamiento
+        //Redirecciona a la vista de gestion de clientes
         return "redirect:/administrativo/gestion-cliente";
     }
 
+    /**
+     * Maneja la peticion GET para crear un usuario
+     * @return retorna la vista para crear clientes
+     */
     @GetMapping("/crear")
-    public String formUsuario(Usuario usuario) {
+    public String formUsuario() {
         return "/administrativo/form-crear-cliente";
     }
+
+    /**
+     * Maneja la peticion POST para crear un usuario
+     * @param usuario usuario de la peticion
+     * @param result el resultado de la peticion
+     * @param attr atributos
+     * @return retorna la vista para crear clientes
+     */
 
     @PostMapping("/crear")
     public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
@@ -105,7 +146,7 @@ public class GestionClienteController {
         //verificar si el correo se encuentra en la base de datos
         Usuario userEmail = usuarioService.buscarPorEmail(usuario.getEmail());
         if (userEmail != null) {
-            result.rejectValue("email", null, "El correo ya existe");
+            result.rejectValue("email", null, "El email ya existe");
         }
         //Verificador de nombres y rut
         if (usuario.getNombre().length() < 3) {
@@ -128,19 +169,16 @@ public class GestionClienteController {
         char dvCalculado = (char) (s != 0 ? s + 47 : 75);
 
         if (dvCalculado != dv) {
-            result.rejectValue("rut", null, "El rut ingresado es invalido♿");
+            result.rejectValue("rut", null, "El rut ingresado es invalido.");
         }
 
-
-
-        // paso 1 validaciones
-        // result.rejectValue("rut", null, "rut inválido");
+        // Verifica si hay errores
 
         if (result.hasErrors()) {
             return "/administrativo/form-crear-cliente";
         }
 
-        // paso 2 set atributos no ingresados por usuario
+        // Atributos del formulario
         usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
         usuario.setEstado(2);
         Rol rolCliente = new Rol();
@@ -148,13 +186,30 @@ public class GestionClienteController {
         usuario.setRol(rolCliente);
         System.out.println(usuario.toString());
 
-        // paso 3 persistencia
+        // Guardado del usuario
         usuarioService.guardar(usuario);
 
-        // paso 4 redireccionamiento
+        // Redireccionamiento a la vista principal
         return "redirect:/administrativo/gestion-cliente";
     }
 
+    /**
+     * authName para buscar el nombre del rut logueado
+     * @return Nombre y apellido del usuario logueado
+     */
+    @ModelAttribute("nombreUser")
+    public String authName() {
+        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+
+        return usuario.getNombre() + " " + usuario.getApellido();
+
+    }
+
+    /**
+     * auth para obtener el rut del usuario logueado
+     * @return retorna el rut
+     */
     @ModelAttribute("rutUser")
     public String auth() {
         //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());

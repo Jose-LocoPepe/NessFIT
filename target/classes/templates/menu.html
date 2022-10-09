@@ -87,14 +87,12 @@
                         <a class="collapse-item" href="/administrador/gestion-adm">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="#">Gestionar Clientes</a>
+                        <a class="collapse-item" href="administrativo/gestion-cliente">Gestionar Clientes</a>
                     </div>
                 </div>
             </li>
         </div>
 
-        <!-- Nav Item - Menu para el administrativo (también se muestra al administrador) -->
-        <!-- <sec:authorize access="hasRole('ADMINISTRATIVO','ADMINISTRADOR')"> -->
         <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
             <hr class="sidebar-divider">
             <!-- Heading -->
@@ -145,28 +143,8 @@
         </li>
 
 
-        <!-- Nav Item - Charts
-        <li class="nav-item">
-            <a class="nav-link" href="charts.html">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Charts</span></a>
-        </li>-->
-
-        <!-- Nav Item - Tables
-        <li class="nav-item">
-            <a class="nav-link" href="tables.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Tables</span></a>
-        </li>-->
-
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar)
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>-->
-
 
     </ul>
     <!-- End of Sidebar -->
@@ -348,16 +326,6 @@
 
         </div>
         <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; NESSFIT 2022</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
 
     </div>
     <!-- End of Content Wrapper -->

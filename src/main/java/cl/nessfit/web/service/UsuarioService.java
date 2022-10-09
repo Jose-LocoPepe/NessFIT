@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.repository.IUsuarioRepository;
 
+/**
+ * Clase de servicio del Usuario
+ * @author BPCS Corp
+ */
 @Service
 public class UsuarioService implements IUsuarioService {
 

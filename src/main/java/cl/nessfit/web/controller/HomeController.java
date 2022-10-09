@@ -14,9 +14,18 @@ import org.springframework.web.bind.annotation.*;
 
 import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.service.IUsuarioService;
+/**
+ * Controlador de la vista de Home
+ *
+ * @author BPCS Corporation
+ *
+ */
 
 @Controller
 public class HomeController {
+	/**
+	 *
+	 */
 	@Autowired
     IUsuarioService usuarioService;
 
@@ -56,14 +65,7 @@ public class HomeController {
     logoutHandler.logout(request, null, null);
     return "redirect:/login?cambio";
     }
-	@ModelAttribute("nombreUser")
-    public String auth() {
-		String rut = SecurityContextHolder.getContext().getAuthentication().getName();
-		Usuario usuario = usuarioService.buscarPorRut(rut);
 
-		return usuario.getNombre() + " " + usuario.getApellido();
-
-    }
 	@GetMapping("/perfil")
     public String perfil(Model model) {
 	Usuario usuario = usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -94,5 +96,26 @@ public class HomeController {
 	// Paso 4.- Redireccion
 	return "redirect:/menu";
     }
+	/**
+	 * auth para buscar el nombre del rut logueado
+	 * @return Nombre y apellido del usuario logueado
+	 */
+	@ModelAttribute("nombreUser")
+	public String auth() {
+		String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+		Usuario usuario = usuarioService.buscarPorRut(rut);
 
+		return usuario.getNombre() + " " + usuario.getApellido();
+
+	}
+
+	/**
+	 * authRut para obtener el rut del usuario logueado
+	 * @return retorna el rut
+	 */
+	@ModelAttribute("rutUser")
+	public String authRut() {
+		//Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
+		return SecurityContextHolder.getContext().getAuthentication().getName();
+	}
 }
