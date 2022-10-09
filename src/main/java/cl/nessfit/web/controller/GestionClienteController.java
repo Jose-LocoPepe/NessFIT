@@ -21,11 +21,11 @@ import cl.nessfit.web.model.Rol;
 import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.service.IUsuarioService;
 import cl.nessfit.web.util.RutValidacion;
+
 /**
  * Controlador de la vista de Gestión de Clientes
  *
  * @author BPCS Corporation
- *
  */
 @Controller
 @RequestMapping("/administrativo/gestion-cliente")
@@ -47,8 +47,10 @@ public class GestionClienteController {
      */
     @Autowired
     private RutValidacion validation;
+
     /**
      * Inicializa el binder para la validación de rut
+     *
      * @param binder binder
      */
     @InitBinder
@@ -58,15 +60,17 @@ public class GestionClienteController {
 
     /**
      * Maneja la petición GET para la volver al menu
+     *
      * @return Menu principal
      */
-    @GetMapping({"/index","/menu"})
+    @GetMapping({"/index", "/menu"})
     public String menu() {
         return "menu";
     }
 
     /**
      * Maneja la petición GET para la vista de gestión de clientes
+     *
      * @param model modelo
      * @return vista de gestión de clientes
      */
@@ -78,7 +82,8 @@ public class GestionClienteController {
 
     /**
      * Maneja la petición GET para la vista de edicion de clientes
-     * @param rut rut de la peticion
+     *
+     * @param rut   rut de la peticion
      * @param model modelo
      * @return vista del menu de edicion de clientes
      */
@@ -91,8 +96,9 @@ public class GestionClienteController {
 
     /**
      * Maneja la peticion POST para la vista de la edicion de clientes
+     *
      * @param usuario usuario de la peticion
-     * @param result el resultado de la peticion
+     * @param result  el resultado de la peticion
      * @param attr
      * @return vista del menu de edicion de clientes
      */
@@ -118,6 +124,7 @@ public class GestionClienteController {
 
     /**
      * Maneja la peticion GET para crear un usuario
+     *
      * @return retorna la vista para crear clientes
      */
     @GetMapping("/crear")
@@ -127,9 +134,10 @@ public class GestionClienteController {
 
     /**
      * Maneja la peticion POST para crear un usuario
+     *
      * @param usuario usuario de la peticion
-     * @param result el resultado de la peticion
-     * @param attr atributos
+     * @param result  el resultado de la peticion
+     * @param attr    atributos
      * @return retorna la vista para crear clientes
      */
 
@@ -195,6 +203,7 @@ public class GestionClienteController {
 
     /**
      * authName para buscar el nombre del rut logueado
+     *
      * @return Nombre y apellido del usuario logueado
      */
     @ModelAttribute("nombreUser")
@@ -208,6 +217,7 @@ public class GestionClienteController {
 
     /**
      * auth para obtener el rut del usuario logueado
+     *
      * @return retorna el rut
      */
     @ModelAttribute("rutUser")

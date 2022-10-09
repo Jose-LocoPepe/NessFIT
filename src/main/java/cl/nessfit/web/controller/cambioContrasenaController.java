@@ -21,96 +21,99 @@ import cl.nessfit.web.service.IUsuarioService;
  * Controlador de la vista de cambio de contraseña
  *
  * @author BPCS Corporation
- *
  */
 @Controller
 public class cambioContrasenaController {
-	/**
-	 * Inyección de servicio de usuario
-	 */
+    /**
+     * Inyección de servicio de usuario
+     */
     @Autowired
     private IUsuarioService usuarioService;
-	/**
-	 * Inyeccion de encriptador de contraseñas
-	 */
+    /**
+     * Inyeccion de encriptador de contraseñas
+     */
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-	/**
-	 * Atributos del cambio de contraseña
-	 * @param model modelo de la vista
-	 * @return vista de cambio de contraseña
-	 */
+    /**
+     * Atributos del cambio de contraseña
+     *
+     * @param model modelo de la vista
+     * @return vista de cambio de contraseña
+     */
     @GetMapping("/cambiar-contrasena")
     public String cambiarContrasenaForm(Model model) {
-	model.addAttribute("nuevaContrasena", "");
-	model.addAttribute("nuevaContrasenaRepetir", "");
-	return "cambiarContrasena";
+        model.addAttribute("nuevaContrasena", "");
+        model.addAttribute("nuevaContrasenaRepetir", "");
+        return "cambiarContrasena";
     }
 
-	/**
-	 * Cambia la contraseña del usuario
-	 * @param nuevaContrasena nueva contraseña
-	 * @param nuevaContrasenaRepetir repetición de la nueva contraseña
-	 * @param request petición
-	 * @param attr	redirección
-	 * @param model modelo de la vista
-	 * @return Vista del cambio de Contraseña
-	 */
+    /**
+     * Cambia la contraseña del usuario
+     *
+     * @param nuevaContrasena        nueva contraseña
+     * @param nuevaContrasenaRepetir repetición de la nueva contraseña
+     * @param request                petición
+     * @param attr                   redirección
+     * @param model                  modelo de la vista
+     * @return Vista del cambio de Contraseña
+     */
     @PostMapping("/cambiar-contrasena")
     public String enviarForm(@RequestParam String nuevaContrasena, @RequestParam String nuevaContrasenaRepetir,
-	    HttpServletRequest request, RedirectAttributes attr, Model model) {
+                             HttpServletRequest request, RedirectAttributes attr, Model model) {
 
-	// Verifica si el usuario esta logueado
-	Usuario usuario = usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
+        // Verifica si el usuario esta logueado
+        Usuario usuario = usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
 
-	// Valida contraseñas iguales, usuario no null, contraseña mayor a 10 y
-	// menor a 15 caracteres
-	if (nuevaContrasena.compareTo(nuevaContrasenaRepetir)!=0) {
-		model.addAttribute("msg", "Las contraseñas no son iguales");
-	    model.addAttribute("nuevaContrasena", nuevaContrasena);
-	    model.addAttribute("nuevaContrasenaRepetir", nuevaContrasenaRepetir);
-	    return "cambiarContrasena";
-	}
-	if (nuevaContrasena.length()<=10 || nuevaContrasena.length()>=15) {
-		model.addAttribute("msg", "La contraseña debe tener entre 10 y 15 caracteres");
-	    model.addAttribute("nuevaContrasena", nuevaContrasena);
-	    model.addAttribute("nuevaContrasenaRepetir", nuevaContrasenaRepetir);
-	    return "cambiarContrasena";
-	}
+        // Valida contraseñas iguales, usuario no null, contraseña mayor a 10 y
+        // menor a 15 caracteres
+        if (nuevaContrasena.compareTo(nuevaContrasenaRepetir) != 0) {
+            model.addAttribute("msg", "Las contraseñas no son iguales");
+            model.addAttribute("nuevaContrasena", nuevaContrasena);
+            model.addAttribute("nuevaContrasenaRepetir", nuevaContrasenaRepetir);
+            return "cambiarContrasena";
+        }
+        if (nuevaContrasena.length() <= 10 || nuevaContrasena.length() >= 15) {
+            model.addAttribute("msg", "La contraseña debe tener entre 10 y 15 caracteres");
+            model.addAttribute("nuevaContrasena", nuevaContrasena);
+            model.addAttribute("nuevaContrasenaRepetir", nuevaContrasenaRepetir);
+            return "cambiarContrasena";
+        }
 
-	// Set del usuario
-	usuario.setContrasena(passwordEncoder.encode(nuevaContrasena));
+        // Set del usuario
+        usuario.setContrasena(passwordEncoder.encode(nuevaContrasena));
 
-	// Guardado
-	usuarioService.guardar(usuario);
+        // Guardado
+        usuarioService.guardar(usuario);
 
-	// Redireccion
-	SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-	logoutHandler.logout(request, null, null);
-	return "redirect:/login?cambio";
+        // Redireccion
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, null, null);
+        return "redirect:/login?cambio";
     }
 
-	/**
-	 * authName para buscar el nombre del usuario en la base de datos
-	 * @return nombre y apellido en formato string
-	 */
-	@ModelAttribute("nombreUser")
-	public String authName() {
-		String rut = SecurityContextHolder.getContext().getAuthentication().getName();
-		Usuario usuario = usuarioService.buscarPorRut(rut);
+    /**
+     * authName para buscar el nombre del usuario en la base de datos
+     *
+     * @return nombre y apellido en formato string
+     */
+    @ModelAttribute("nombreUser")
+    public String authName() {
+        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorRut(rut);
 
-		return usuario.getNombre() + " " + usuario.getApellido();
+        return usuario.getNombre() + " " + usuario.getApellido();
 
-	}
+    }
 
-	/**
-	 * auth para buscar el rut en la base de datos
-	 * @return rut en formato string
-	 */
+    /**
+     * auth para buscar el rut en la base de datos
+     *
+     * @return rut en formato string
+     */
     @ModelAttribute("rutUser")
     public String auth() {
-		return SecurityContextHolder.getContext().getAuthentication().getName();
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

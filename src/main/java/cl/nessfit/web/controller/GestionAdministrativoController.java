@@ -112,19 +112,23 @@ public class GestionAdministrativoController {
         // Redirecciona a la vista de gestion de administrativos
         return "redirect:/administrador/gestion-adm";
     }
+
     /**
      * Maneja la peticion GET para crear un administrativo
+     *
      * @return retorna la vista para crear administrativo
      */
     @GetMapping("/crear")
     public String formUsuario(Usuario usuario) {
         return "/administrador/form-crear-administrativo";
     }
+
     /**
      * Maneja la peticion POST para crear un administrativo
+     *
      * @param usuario usuario de la peticion
-     * @param result el resultado de la peticion
-     * @param attr atributos
+     * @param result  el resultado de la peticion
+     * @param attr    atributos
      * @return retorna la vista para crear administrativos
      */
     @PostMapping("/crear")
@@ -148,6 +152,7 @@ public class GestionAdministrativoController {
 
     /**
      * authName para buscar el nombre del rut logueado
+     *
      * @return Nombre y apellido del usuario logueado
      */
     @ModelAttribute("nombreUser")
@@ -161,6 +166,7 @@ public class GestionAdministrativoController {
 
     /**
      * auth para obtener el rut del usuario logueado
+     *
      * @return retorna el rut
      */
     @ModelAttribute("rutUser")
