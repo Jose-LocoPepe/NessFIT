@@ -263,7 +263,7 @@
                                          class='alert alert-danger' role='alert'>
                                         Por favor corrija los siguientes errores:
                                         <ul>
-                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"/>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                                         </ul>
                                     </div>
 
@@ -402,6 +402,7 @@
             </div>
         </div>
     </div>
+</div>
 
 
 </body>

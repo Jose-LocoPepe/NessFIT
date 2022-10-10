@@ -77,7 +77,7 @@ public class GestionClienteController {
     @GetMapping("")
     public String index(Model model) {
         model.addAttribute("usuarios", usuarioService.verClientes());
-        return "administrativo/gestion-cliente";
+        return "/administrativo/gestion-cliente";
     }
 
     /**
