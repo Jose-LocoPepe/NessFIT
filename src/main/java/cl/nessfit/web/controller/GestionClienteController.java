@@ -128,7 +128,7 @@ public class GestionClienteController {
      * @return retorna la vista para crear clientes
      */
     @GetMapping("/crear")
-    public String formUsuario() {
+    public String formUsuario(Usuario usuario) {
         return "/administrativo/form-crear-cliente";
     }
 
@@ -164,7 +164,7 @@ public class GestionClienteController {
             result.rejectValue("apellido", null, "El apellido debe tener al menos 3 caracteres");
         }
         if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
-            result.rejectValue("telefono", null, "El movil debe tener entre 11 y 16 caracteres");
+            result.rejectValue("telefono", null, "El telefono debe tener entre 11 y 16 caracteres");
         }
 
         String rut = usuario.getRut();

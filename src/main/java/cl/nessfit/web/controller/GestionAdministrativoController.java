@@ -154,7 +154,7 @@ public class GestionAdministrativoController {
             result.rejectValue("apellido", null, "El apellido debe tener al menos 3 caracteres");
         }
         if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
-            result.rejectValue("telefono", null, "El movil debe tener entre 11 y 16 caracteres");
+            result.rejectValue("telefono", null, "El telefono debe tener entre 11 y 16 caracteres");
         }
 
         String rut = usuario.getRut();

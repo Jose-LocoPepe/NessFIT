@@ -34,8 +34,8 @@
     <script type="text/javascript" th:src="@{/vendor/chart.js/Chart.min.js}"></script>
 
     <!-- Page level custom scripts -->
-    <script type="text/javascript" th:src="@{js/demo/chart-area-demo.js}"></script>
-    <script type="text/javascript" th:src="@{js/demo/chart-pie-demo.js}"></script>
+    <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
+    <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
 
 </head>
 
@@ -64,6 +64,7 @@
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Inicio</span></a>
         </li>
+        <!-- Nav Item - Administrador -->
 
         <div sec:authorize="hasAuthority('ADMINISTRADOR')">
             <!-- Divider -->
@@ -74,7 +75,6 @@
                 ADMINISTRADOR
             </div>
 
-            <!-- Nav Item - Menu para el administrador-->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin1Menu"
                    aria-expanded="true" aria-controls="admin1Menu">
@@ -87,12 +87,13 @@
                         <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" th:href="@{administrativo/gestion-cliente}">Gestionar Clientes</a>
+                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
                     </div>
                 </div>
             </li>
         </div>
 
+        <!-- Nav Item - Administativo -->
         <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
             <hr class="sidebar-divider">
             <!-- Heading -->
@@ -125,7 +126,7 @@
             </li>
         </div>
 
-        <!-- Nav Item - Pages Collapse Menu CLIENTE-->
+        <!-- Nav Item - Cliente-->
 
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
@@ -144,13 +145,6 @@
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar)
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>-->
-
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -167,6 +161,20 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
+
+                <!-- Topbar Search
+                <form
+                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>-->
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -255,7 +263,7 @@
                                          class='alert alert-danger' role='alert'>
                                         Por favor corrija los siguientes errores:
                                         <ul>
-                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"/>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                                         </ul>
                                     </div>
 
@@ -266,7 +274,8 @@
                                         <div class="col-md-6 col-sm-6 ">
                                             <input th:field="*{rut}" type="text" required="required"
                                                    class="form-control " th:errorclass="border-danger">
-
+                                            <div th:if="${#fields.hasErrors('rut')}"
+                                                 th:errorclass="text-danger" th:errors="*{rut}"></div>
                                         </div>
                                     </div>
 
@@ -277,7 +286,8 @@
                                         <div class="col-md-6 col-sm-6 ">
                                             <input th:field="*{nombre}" type="text" required="required"
                                                    class="form-control " th:errorclass="border-danger">
-
+                                            <div th:if="${#fields.hasErrors('nombre')}"
+                                                 th:errorclass="text-danger" th:errors="*{nombre}"></div>
                                         </div>
                                     </div>
 
@@ -286,8 +296,10 @@
                                                for="apellido">Apellido:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{apellido}" type="text" required="required"
+                                            <input th:field="*{apellido}" type="text"
                                                    class="form-control " th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('apellido')}"
+                                                 th:errorclass="text-danger" th:errors="*{apellido}"></div>
                                         </div>
                                     </div>
 
@@ -296,8 +308,10 @@
                                                for="telefono">Teléfono:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{telefono}" type="tel" required="required"
+                                            <input th:field="*{telefono}" type ="number" required="required"
                                                    class="form-control" th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('telefono')}"
+                                                 th:errorclass="text-danger" th:errors="*{telefono}"></div>
                                         </div>
                                     </div>
 
@@ -306,8 +320,10 @@
                                                for="email">Email:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{email}" type="text" required="required"
+                                            <input th:field="*{email}" type="email" required="required"
                                                    class="form-control " th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('email')}"
+                                                 th:errorclass="text-danger" th:errors="*{email}"></div>
                                         </div>
                                     </div>
 
@@ -324,18 +340,18 @@
 
                                     <!-- Modificar perfil Modal-->
                                     <div class="modal fade" id="crearClienteModal" tabindex="-1" role="dialog"
-                                         aria-labelledby="Modal_crearcliente"
+                                         aria-labelledby="Modal_crearadmin"
                                          aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="Modal_crearcliente">Seleccione.</h5>
+                                                    <h5 class="modal-title" id="Modal_crearadmin">Seleccione.</h5>
                                                     <button class="close" type="button" data-dismiss="modal"
                                                             aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                 </div>
-                                                <div class="modal-body">¿Está seguro que desea crear al cliente?
+                                                <div class="modal-body">¿Está seguro de que desea crear al cliente?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-secondary" data-dismiss="modal">Cancelar
@@ -394,5 +410,7 @@
 
 
 </body>
+
+</html>
 
 </html>

@@ -87,7 +87,7 @@
                         <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" th:href="@{administrativo/gestion-cliente}">Gestionar Clientes</a>
+                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
                     </div>
                 </div>
             </li>
@@ -285,7 +285,7 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
                                             <input th:field="*{nombre}" type="text" required="required"
-                                                   class="form-control ">
+                                                   class="form-control " th:errorclass="border-danger">
                                             <div th:if="${#fields.hasErrors('nombre')}"
                                                  th:errorclass="text-danger" th:errors="*{nombre}"></div>
                                         </div>
@@ -297,7 +297,9 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
                                             <input th:field="*{apellido}" type="text"
-                                                   class="form-control ">
+                                                   class="form-control " th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('apellido')}"
+                                                 th:errorclass="text-danger" th:errors="*{apellido}"></div>
                                         </div>
                                     </div>
 
@@ -306,8 +308,10 @@
                                                for="telefono">Teléfono:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{telefono}" type="tel" required="required"
-                                                   class="form-control">
+                                            <input th:field="*{telefono}" type ="number" required="required"
+                                                   class="form-control" th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('telefono')}"
+                                                 th:errorclass="text-danger" th:errors="*{telefono}"></div>
                                         </div>
                                     </div>
 
@@ -316,8 +320,10 @@
                                                for="email">Email:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{email}" type="text" required="required"
-                                                   class="form-control ">
+                                            <input th:field="*{email}" type="email" required="required"
+                                                   class="form-control " th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('email')}"
+                                                 th:errorclass="text-danger" th:errors="*{email}"></div>
                                         </div>
                                     </div>
 
@@ -333,7 +339,7 @@
                                     </div>
 
                                     <!-- Modificar perfil Modal-->
-                                    <div class="modal fade" id="crear_AdmModal" tabindex="-1" role="dialog"
+                                    <div class="modal fade" id="crearAdmModal" tabindex="-1" role="dialog"
                                          aria-labelledby="Modal_crearadmin"
                                          aria-hidden="true">
                                         <div class="modal-dialog" role="document">
