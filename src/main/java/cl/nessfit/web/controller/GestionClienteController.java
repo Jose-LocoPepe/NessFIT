@@ -104,6 +104,26 @@ public class GestionClienteController {
      */
     @PostMapping("/editar/{rut}")
     public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
+        //verificar si el correo se encuentra en la base de datos
+        Usuario userEmail = usuarioService.buscarPorEmail(usuario.getEmail());
+        if (userEmail != null) {
+            result.rejectValue("email", null, "El email ya existe");
+        }
+        //Verificador de nombres y rut
+        if (usuario.getNombre().length() < 3) {
+            result.rejectValue("nombre", null, "El nombre debe tener al menos 3 caracteres");
+        }
+        if (usuario.getApellido().length() < 3) {
+            result.rejectValue("apellido", null, "El apellido debe tener al menos 3 caracteres");
+        }
+        if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
+            result.rejectValue("telefono", null, "El telefono debe tener entre 11 y 16 caracteres");
+        }
+        if(hayNumeros(usuario.getNombre())){
+            result.rejectValue("nombre", null, "El nombre no debe contener numeros");
+        } else if (hayNumeros(usuario.getApellido())){
+            result.rejectValue("apellido", null, "El apellido no debe contener numeros");
+        }
         //Si hay errores
         if (result.hasErrors()) {
             return "/administrativo/form-editar-cliente";
@@ -170,6 +190,11 @@ public class GestionClienteController {
         if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
             result.rejectValue("telefono", null, "El telefono debe tener entre 11 y 16 caracteres");
         }
+        if(hayNumeros(usuario.getNombre())){
+            result.rejectValue("nombre", null, "El nombre no debe contener numeros");
+        } else if (hayNumeros(usuario.getApellido())){
+            result.rejectValue("apellido", null, "El apellido no debe contener numeros");
+        }
 
         // Verifica si hay errores
 
@@ -215,6 +240,15 @@ public class GestionClienteController {
     public String auth() {
         //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+    //boolean para ver si hay numeros en un string
+    public boolean hayNumeros(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
     public boolean rutValido(String rut) {
         try {
