@@ -134,13 +134,27 @@ public class GestionAdministrativoController {
     @PostMapping("/crear")
     public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
         //Verificadores del rut
+
+        //verificar el campo rut si es un rut numerico
+
+        if (result.hasErrors()) {
+            return "/administrador/form-crear-administrativo";
+        }
+
+
         Usuario userRut = usuarioService.buscarPorRut(usuario.getRut());
+
         if (userRut != null) {
             result.rejectValue("rut", null, "El rut ya existe");
         }
         if (usuario.getRut().contains(".") || usuario.getRut().contains("-")) {
             result.rejectValue("rut", null, "El rut no debe tener puntos ni guion");
         }
+        if (!rutValido(usuario.getRut())) {
+            result.rejectValue("rut", null, "El rut no es valido");
+        }
+
+
         //verificar si el correo se encuentra en la base de datos
         Usuario userEmail = usuarioService.buscarPorEmail(usuario.getEmail());
         if (userEmail != null) {
@@ -155,19 +169,6 @@ public class GestionAdministrativoController {
         }
         if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
             result.rejectValue("telefono", null, "El telefono debe tener entre 11 y 16 caracteres");
-        }
-
-        String rut = usuario.getRut();
-        int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
-        char dv = rut.charAt(rut.length() - 1);
-        int m = 0, s = 1;
-        for (; rutAux != 0; rutAux /= 10) {
-            s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
-        }
-        char dvCalculado = (char) (s != 0 ? s + 47 : 75);
-
-        if (dvCalculado != dv) {
-            result.rejectValue("rut", null, "El rut ingresado es invalido.");
         }
 
         // Si hay errores
@@ -210,6 +211,27 @@ public class GestionAdministrativoController {
     public String auth() {
         //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    //verificador de rut con verificador de numeros
+    public boolean rutValido(String rut) {
+        try {
+            int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
+            char dv = rut.charAt(rut.length() - 1);
+            int m = 0, s = 1;
+            for (; rutAux != 0; rutAux /= 10) {
+                s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
+            }
+            char dvCalculado = (char) (s != 0 ? s + 47 : 75);
+
+            if (dvCalculado != dv) {
+                return false;
+            }
+            return true;
+
+        } catch (NumberFormatException excepcion) {
+            return false;
+        }
     }
 
 }
