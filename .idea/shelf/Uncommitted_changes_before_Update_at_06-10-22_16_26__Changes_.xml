@@ -1,0 +1,29 @@
+<changelist name="Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]" date="1665084406832" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 06-10-22 16:26 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]/WebSecurityConfig.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/controller/loginController.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/controller/loginController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]/loginController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$3.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$3.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]/WebSecurityConfig$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$1.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]/WebSecurityConfig$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$2.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$2.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_06-10-22_16_26_[Changes]/WebSecurityConfig$2.class" />
+  </binary>
+</changelist>

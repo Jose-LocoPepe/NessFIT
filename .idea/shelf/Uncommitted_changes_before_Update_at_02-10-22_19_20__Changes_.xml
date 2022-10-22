@@ -1,0 +1,84 @@
+<changelist name="Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]" date="1664749214453" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 02-10-22 19:20 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/controller/cambioContrasenaController.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/controller/cambioContrasenaController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/cambioContrasenaController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/model/Rol.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/model/Rol.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/Rol.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/service/IUsuarioService.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/service/IUsuarioService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/IUsuarioService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/controller/HomeController.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/controller/HomeController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/HomeController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/ProyectoNessfitApplication.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/ProyectoNessfitApplication.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/ProyectoNessfitApplication.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/repository/IRolRepository.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/repository/IRolRepository.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/IRolRepository.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/controller/GestionClienteController.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/controller/GestionClienteController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/GestionClienteController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$1.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/WebSecurityConfig$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/controller/GestionAdministrativoController.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/controller/GestionAdministrativoController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/GestionAdministrativoController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$2.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$2.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/WebSecurityConfig$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/util/RutValidacion.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/util/RutValidacion.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/RutValidacion.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$3.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig$3.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/WebSecurityConfig$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/config/WebSecurityConfig.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/WebSecurityConfig.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/model/Usuario.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/model/Usuario.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/Usuario.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/service/UsuarioService.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/service/UsuarioService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/UsuarioService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/cl/nessfit/web/repository/IUsuarioRepository.class" />
+    <option name="AFTER_PATH" value="target/classes/cl/nessfit/web/repository/IUsuarioRepository.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02-10-22_19_20_[Changes]/IUsuarioRepository.class" />
+  </binary>
+</changelist>

@@ -1,0 +1,1518 @@
+Index: src/main/java/cl/nessfit/web/controller/GestionClienteController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.controller;\r\n\r\nimport javax.validation.Valid;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.security.core.context.SecurityContextHolder;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.validation.BindingResult;\r\nimport org.springframework.web.bind.WebDataBinder;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.InitBinder;\r\nimport org.springframework.web.bind.annotation.ModelAttribute;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.servlet.mvc.support.RedirectAttributes;\r\n\r\nimport cl.nessfit.web.model.Rol;\r\nimport cl.nessfit.web.model.Usuario;\r\nimport cl.nessfit.web.service.IUsuarioService;\r\nimport cl.nessfit.web.util.RutValidacion;\r\n\r\n@Controller\r\n//Mapeo de clase (aplica a todas las funciones declaradas.\r\n@RequestMapping(\"/administrativo/gestion-cliente\")\r\npublic class GestionClienteController {\r\n\r\n    /**\r\n     * Inyección del servicio de usuarios\r\n     */\r\n    @Autowired\r\n    private IUsuarioService usuarioService;\r\n\r\n    /**\r\n     * Inyección del bean de encriptación de contraseñas\r\n     */\r\n    @Autowired\r\n    private BCryptPasswordEncoder passwordEncoder;\r\n\r\n    @Autowired\r\n    private RutValidacion validation;\r\n\r\n    @InitBinder\r\n    public void initBinder(WebDataBinder binder) {\r\n\tbinder.addValidators(validation);\r\n    }\r\n\r\n    @GetMapping(\"\")\r\n    public String index(Model model) {\r\n\tmodel.addAttribute(\"usuarios\", usuarioService.verClientes());\r\n\treturn \"administrativo/gestion-cliente\";\r\n    }\r\n\r\n    @GetMapping(\"/editar/{rut}\")\r\n    public String formEditar(@PathVariable(value = \"rut\") String rut, Model model) {\r\n\tUsuario usuario = usuarioService.buscarPorRut(rut);\r\n\tmodel.addAttribute(\"usuario\", usuario);\r\n\treturn \"/administrativo/form-editar-cliente\";\r\n    }\r\n\r\n    @PostMapping(\"/editar/{rut}\")\r\n    public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {\r\n\r\n\t// paso 1 validaciones\r\n\t// result.rejectValue(\"rut\", null, \"rut inválido\");\r\n\r\n\tif (result.hasErrors()) {\r\n\t    return \"/administrativo/form-editar-cliente\";\r\n\t}\r\n\r\n\t// paso 2 set atributos no ingresados por usuario\r\n\tusuario.setContrasena(passwordEncoder.encode(usuario.getRut()));\r\n\tusuario.setEstado(2);\r\n\tRol rolCliente = new Rol();\r\n\trolCliente.setId(3);\r\n\tusuario.setRol(rolCliente);\r\n\r\n\t// paso 3 persistencia\r\n\tusuarioService.guardar(usuario);\r\n\r\n\t// paso 4 redireccionamiento\r\n\treturn \"redirect:/administrativo/gestion-cliente\";\r\n    }\r\n\r\n    @GetMapping(\"/crear\")\r\n    public String formUsuario(Usuario usuario) {\r\n\treturn \"/administrativo/form-crear-cliente\";\r\n    }\r\n\r\n    @PostMapping(\"/crear\")\r\n    public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {\r\n\r\n\t// paso 1 validaciones\r\n\t// result.rejectValue(\"rut\", null, \"rut inválido\");\r\n\r\n\tif (result.hasErrors()) {\r\n\t    return \"/administrativo/form-crear-cliente\";\r\n\t}\r\n\r\n\t// paso 2 set atributos no ingresados por usuario\r\n\tusuario.setContrasena(passwordEncoder.encode(usuario.getRut()));\r\n\tusuario.setEstado(2);\r\n\tRol rolCliente = new Rol();\r\n\trolCliente.setId(3);\r\n\tusuario.setRol(rolCliente);\r\n\tSystem.out.println(usuario.toString());\r\n\r\n\t// paso 3 persistencia\r\n\tusuarioService.guardar(usuario);\r\n\r\n\t// paso 4 redireccionamiento\r\n\treturn \"redirect:/administrativo/gestion-cliente\";\r\n    }\r\n\r\n    @ModelAttribute(\"rutUser\")\r\n    public String auth() {\r\n\t//Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());\r\n\treturn SecurityContextHolder.getContext().getAuthentication().getName();\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/controller/GestionClienteController.java b/src/main/java/cl/nessfit/web/controller/GestionClienteController.java
+--- a/src/main/java/cl/nessfit/web/controller/GestionClienteController.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/controller/GestionClienteController.java	(date 1664747891399)
+@@ -46,7 +46,10 @@
+     public void initBinder(WebDataBinder binder) {
+ 	binder.addValidators(validation);
+     }
+-
++    @GetMapping({"/index","/menu"})
++    public String menu() {
++    	return "/menu";
++    }
+     @GetMapping("")
+     public String index(Model model) {
+ 	model.addAttribute("usuarios", usuarioService.verClientes());
+@@ -91,27 +94,48 @@
+ 
+     @PostMapping("/crear")
+     public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
+-
+-	// paso 1 validaciones
+-	// result.rejectValue("rut", null, "rut inválido");
++        //el largo del nombre debe ser mayor a 3
++        if(usuario.getNombre().length() < 3) {
++            result.rejectValue("nombre", null, "Los nombres o apellidos deben tener más de 2 caracteres");
++        }
++        if(usuario.getApellido().length() < 3) {
++            result.rejectValue("apellido", null, "Los nombres o apellidos deben tener más de 2 caracteres");
++        }
++        //verificar si el rut ya existe
++        Usuario usuarioExistente = usuarioService.buscarPorRut(usuario.getRut());
++        if(usuarioExistente != null) {
++            result.rejectValue("rut", null, "El rut ya existe");
++        }
++        //verificar si el email ya existe
++        Usuario usuarioExistenteEmail = usuarioService.buscarPorEmail(usuario.getEmail());
++        if(usuarioExistenteEmail != null) {
++            result.rejectValue("email", null, "El email ya existe");
++        }
++        if(usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
++            result.rejectValue("telefono", null, "El teléfono móvil ingresado no es valido");
++        }
++        //verificador de rut
++        if(!validation.supports(usuario.getClass())) {
++            result.rejectValue("rut", null, "El rut no es válido");
++        }
+ 
+-	if (result.hasErrors()) {
+-	    return "/administrativo/form-crear-cliente";
+-	}
++        if (result.hasErrors()) {
++            return "/administrativo/form-crear-cliente";
++        }
+ 
+-	// paso 2 set atributos no ingresados por usuario
+-	usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
+-	usuario.setEstado(2);
+-	Rol rolCliente = new Rol();
+-	rolCliente.setId(3);
+-	usuario.setRol(rolCliente);
+-	System.out.println(usuario.toString());
++        // paso 2 set atributos no ingresados por usuario
++        usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
++        usuario.setEstado(2);
++        Rol rolCliente = new Rol();
++        rolCliente.setId(3);
++        usuario.setRol(rolCliente);
++        System.out.println(usuario.toString());
+ 
+-	// paso 3 persistencia
+-	usuarioService.guardar(usuario);
++        // paso 3 persistencia
++        usuarioService.guardar(usuario);
+ 
+-	// paso 4 redireccionamiento
+-	return "redirect:/administrativo/gestion-cliente";
++        // paso 4 redireccionamiento
++        return "redirect:/administrativo/gestion-cliente";
+     }
+ 
+     @ModelAttribute("rutUser")
+Index: src/main/java/cl/nessfit/web/controller/HomeController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.controller;\n\nimport javax.servlet.http.HttpServletRequest;\nimport javax.validation.Valid;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.security.core.context.SecurityContextHolder;\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\nimport org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;\nimport org.springframework.stereotype.Controller;\nimport org.springframework.ui.Model;\nimport org.springframework.validation.BindingResult;\nimport org.springframework.web.bind.annotation.*;\n\nimport cl.nessfit.web.model.Usuario;\nimport cl.nessfit.web.service.IUsuarioService;\n\n@Controller\npublic class HomeController {\n\t@Autowired\n    IUsuarioService usuarioService;\n\n    @Autowired\n    BCryptPasswordEncoder passwordEncoder;\n\t\n\t//@RequestMapping(value = \"/\",method = RequestMethod.GET)\n\t@RequestMapping({\"/\",\"login\"})\n\tpublic String index() {\n\t\treturn \"index\";\t\n\t}\n\t@RequestMapping(\"/menu\")\n\tpublic String menu() {\n\t\treturn \"menu\";\n\t}\n\t@RequestMapping(\"/olvido\")\n\tpublic String olvido() {\n\t\treturn \"olvido\";\n\t}\n\t@RequestMapping(\"/registrar\")\n\tpublic String registrarUsuario() {\n\t\treturn \"register\";\t\n\t}\n\t@GetMapping(\"/bootstrap.js\")  //whichever file it is\n\t  public String falseLoginRedirect(Model model) {\n\t    return \"redirect:/menu\"; //redirect to my preferred default\n\t}\n\t@GetMapping(\"/logout\")\n    public String logout(HttpServletRequest request) {\n    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();\n    logoutHandler.logout(request, null, null);\n    return \"redirect:/login?logout\";\n    }\n\t@GetMapping(\"/cambio\")\n    public String cambio(HttpServletRequest request) {\n    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();\n    logoutHandler.logout(request, null, null);\n    return \"redirect:/login?cambio\";\n    }\n\t@ModelAttribute(\"rutUser\")\n    public String auth() {\n\treturn SecurityContextHolder.getContext().getAuthentication().getName();\n    }\n\t@GetMapping(\"/perfil\")\n    public String perfil(Model model) {\n\tUsuario usuario = usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());\n\tmodel.addAttribute(\"usuario\", usuario);\n\treturn \"perfil\";\n    }\n\n    @PostMapping(\"/perfil\")\n    public String perfilForm(@Valid Usuario usuario, BindingResult result, Model model) {\n\n\tUsuario usuarioAuth = usuarioService\n\t\t.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());\n\n\t// Paso 1.-Validaciones\n\tif (result.hasErrors()) {\n\t    return \"perfil\";\n\t}\n\n\t// Paso 2.- Set´s\n\tusuarioAuth.setNombre(usuario.getNombre());\n\tusuarioAuth.setApellido(usuario.getApellido());\n\tusuarioAuth.setEmail(usuario.getEmail());\n\tusuarioAuth.setTelefono(usuario.getTelefono());\n\n\t// Paso 3.- Persistencia\n\tusuarioService.guardar(usuarioAuth);\n\n\t// Paso 4.- Redireccion\n\treturn \"redirect:/menu\";\n    }\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/controller/HomeController.java b/src/main/java/cl/nessfit/web/controller/HomeController.java
+--- a/src/main/java/cl/nessfit/web/controller/HomeController.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/controller/HomeController.java	(date 1664739828279)
+@@ -24,9 +24,9 @@
+     BCryptPasswordEncoder passwordEncoder;
+ 	
+ 	//@RequestMapping(value = "/",method = RequestMethod.GET)
+-	@RequestMapping({"/","login"})
++	@RequestMapping({"/","inicio","","index"})
+ 	public String index() {
+-		return "index";	
++		return "menu";	
+ 	}
+ 	@RequestMapping("/menu")
+ 	public String menu() {
+Index: src/main/java/cl/nessfit/web/controller/GestionAdministrativoController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.controller;\r\n\r\nimport javax.validation.Valid;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.security.core.context.SecurityContextHolder;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.validation.BindingResult;\r\nimport org.springframework.web.bind.WebDataBinder;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.InitBinder;\r\nimport org.springframework.web.bind.annotation.ModelAttribute;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.servlet.mvc.support.RedirectAttributes;\r\n\r\nimport cl.nessfit.web.model.Rol;\r\nimport cl.nessfit.web.model.Usuario;\r\nimport cl.nessfit.web.service.IUsuarioService;\r\nimport cl.nessfit.web.util.RutValidacion;\r\n\r\n@Controller\r\n//Mapeo de clase (aplica a todas las funciones declaradas.\r\n@RequestMapping(\"/administrador/gestion-adm\")\r\npublic class GestionAdministrativoController {\r\n\r\n    /**\r\n     * Inyección del servicio de usuarios\r\n     */\r\n    @Autowired\r\n    private IUsuarioService usuarioService;\r\n\r\n    /**\r\n     * Inyección del bean de encriptación de contraseñas\r\n     */\r\n    @Autowired\r\n    private BCryptPasswordEncoder passwordEncoder;\r\n\r\n    @Autowired\r\n    private RutValidacion validation;\r\n\r\n    @InitBinder\r\n    public void initBinder(WebDataBinder binder) {\r\n\tbinder.addValidators(validation);\r\n    }\r\n\r\n    @GetMapping(\"\")\r\n    public String index(Model model) {\r\n\tmodel.addAttribute(\"usuarios\", usuarioService.verAdministrativos());\r\n\treturn \"administrador/gestion-adm\";\r\n    }\r\n\r\n    @GetMapping(\"/editar/{rut}\")\r\n    public String formEditar(@PathVariable(value = \"rut\") String rut, Model model) {\r\n\tUsuario usuario = usuarioService.buscarPorRut(rut);\r\n\tmodel.addAttribute(\"usuario\", usuario);\r\n\treturn \"/administrador/form-editar-administrativo\";\r\n    }\r\n\r\n    @PostMapping(\"/editar/{rut}\")\r\n    public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {\r\n\r\n\t// paso 1 validaciones\r\n\t// result.rejectValue(\"rut\", null, \"rut inválido\");\r\n\r\n\tif (result.hasErrors()) {\r\n\t    return \"/administrador/form-editar-administrativo\";\r\n\t}\r\n\r\n\t// paso 2 set atributos no ingresados por usuario\r\n\tusuario.setContrasena(passwordEncoder.encode(usuario.getRut()));\r\n\tusuario.setEstado(1);\r\n\tRol rolAdministrativo = new Rol();\r\n\trolAdministrativo.setId(2);\r\n\tusuario.setRol(rolAdministrativo);\r\n\r\n\t// paso 3 persistencia\r\n\tusuarioService.guardar(usuario);\r\n\r\n\t// paso 4 redireccionamiento\r\n\treturn \"redirect:/administrador/gestion-adm\";\r\n    }\r\n\r\n    @GetMapping(\"/crear\")\r\n    public String formUsuario(Usuario usuario) {\r\n\treturn \"/administrador/form-crear-administrativo\";\r\n    }\r\n\r\n    @PostMapping(\"/crear\")\r\n    public String formCrearUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {\r\n\r\n\t// paso 1 validaciones\r\n\t// result.rejectValue(\"rut\", null, \"rut inválido\");\r\n\r\n\tif (result.hasErrors()) {\r\n\t    return \"/administrador/form-crear-administrativo\";\r\n\t}\r\n\r\n\t// paso 2 set atributos no ingresados por usuario\r\n\tusuario.setContrasena(passwordEncoder.encode(usuario.getRut()));\r\n\tusuario.setEstado(1);\r\n\tRol rolAdministrativo = new Rol();\r\n\trolAdministrativo.setId(2);\r\n\tusuario.setRol(rolAdministrativo);\r\n\tSystem.out.println(usuario.toString());\r\n\r\n\t// paso 3 persistencia\r\n\tusuarioService.guardar(usuario);\r\n\r\n\t// paso 4 redireccionamiento\r\n\treturn \"redirect:/administrador/gestion-adm\";\r\n    }\r\n\r\n    @ModelAttribute(\"rutUser\")\r\n    public String auth() {\r\n\t//Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());\r\n\treturn SecurityContextHolder.getContext().getAuthentication().getName();\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/controller/GestionAdministrativoController.java b/src/main/java/cl/nessfit/web/controller/GestionAdministrativoController.java
+--- a/src/main/java/cl/nessfit/web/controller/GestionAdministrativoController.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/controller/GestionAdministrativoController.java	(date 1664744324792)
+@@ -46,7 +46,10 @@
+     public void initBinder(WebDataBinder binder) {
+ 	binder.addValidators(validation);
+     }
+-
++    @GetMapping({"/index","/menu"})
++    public String menu() {
++    	return "menu";
++    }
+     @GetMapping("")
+     public String index(Model model) {
+ 	model.addAttribute("usuarios", usuarioService.verAdministrativos());
+Index: src/main/resources/templates/administrativo/form-crear-cliente.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n\r\n    <meta charset=\"utf-8\">\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\r\n    <meta name=\"description\" content=\"\">\r\n    <meta name=\"author\" content=\"\">\r\n\r\n    <title>Nessfit - Menu</title>\r\n\r\n    <!-- Custom fonts for this template-->\r\n    <link href=\"static/vendor/fontawesome-free/css/all.min.css\" rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/vendor/fontawesome-free/css/all.min.css}\">\r\n    <link\r\n        href=\"https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i\"\r\n        rel=\"stylesheet\">\r\n\r\n    <!-- Custom styles for this template-->\r\n    <link rel=\"stylesheet\" type=\"text/css\"  href=\"static/css/sb-admin-2.css\" th:href=\"@{/css/sb-admin-2.css}\">\r\n\r\n <!-- Bootstrap core JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery/jquery.min.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/bootstrap/js/bootstrap.bundle.min.js}\"></script>\r\n\r\n    <!-- Core plugin JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery-easing/jquery.easing.min.js}\"></script>\r\n\r\n    <!-- Custom scripts for all pages-->\r\n    <script type=\"text/javascript\" th:src=\"@{js/sb-admin-2.min.js}\"></script>\r\n\r\n    <!-- Page level plugins -->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/chart.js/Chart.min.js}\"></script>\r\n\r\n    <!-- Page level custom scripts -->\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-area-demo.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-pie-demo.js}\"></script>\r\n \r\n</head>\r\n\r\n<body id=\"page-top\">\r\n\r\n    <!-- Page Wrapper -->\r\n    <div id=\"wrapper\">\r\n\r\n        <!-- Sidebar -->\r\n        <ul class=\"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion\" id=\"accordionSidebar\">\r\n\r\n            <!-- Sidebar - Brand -->\r\n            <a class=\"sidebar-brand d-flex align-items-center justify-content-center\" href=\"menu\">\r\n                <div class=\"sidebar-brand-icon\">\r\n                    <i class=\"fa fa-futbol\"></i>\r\n                </div>\r\n                <div class=\"sidebar-brand-text mx-2\">NESSFIT</div>\r\n            </a>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider my-0\">\r\n\r\n            <!-- Nav Item - Dashboard -->\r\n            <li class=\"nav-item active\">\r\n                <a class=\"nav-link\" href=\"menu\">\r\n                    <i class=\"fas fa-fw fa-tachometer-alt\"></i>\r\n                    <span>Inicio</span></a>\r\n            </li>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider\">\r\n\r\n            <!-- Heading -->\r\n            <div class=\"sidebar-heading\">\r\n            \t<div sec:authorize=\"hasAuthority('ADMINISTRADOR')\">\r\n            \tADMINISTRADOR\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            \tADMINISTRATIVO\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n            \tCLIENTE\r\n\t\t\t\t</div>\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu \r\n            <li class=\"nav-item\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapseTwo\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapseTwo\">\r\n                    <i class=\"fas fa-fw fa-cog\"></i>\r\n                    <span>Components</span>\r\n                </a>\r\n                <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Custom Components:</h6>\r\n                        <a class=\"collapse-item\" href=\"buttons.html\">Buttons</a>\r\n                        <a class=\"collapse-item\" href=\"cards.html\">Cards</a>\r\n                    </div>\r\n                </div>\r\n            </li>\r\n\r\n            <div class=\"sidebar-heading\">\r\n                Addons\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu ADMINISTRADOR-->\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRADOR')\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Gestionar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Administrativos:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Gestionar administrativos</a>\r\n                        <div class=\"collapse-divider\"></div>\r\n                        <h6 class=\"collapse-header\">Usuarios:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Gestionar usuarios</a>\r\n                    </div>\r\n                </div>\r\n                </div>\r\n            </li>\r\n            \r\n            <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Gestionar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Arriendos:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Solicitudes de arriendo</a>\r\n                        <div class=\"collapse-divider\"></div>\r\n                        <h6 class=\"collapse-header\">Usuarios:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Gestionar usuarios</a>\r\n                    </div>\r\n                </div>\r\n                </div>    \r\n            </li>\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Registrar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Instalacion:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Instalacion deportiva</a>\r\n                    </div>\r\n                </div>\r\n                </div> \r\n\t\t\t</li>\r\n\t\t\t<li class=\"nav-item\">\r\n\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-chart-area\"></i>\r\n                    <span>Estadisticas</span></a>\r\n                    </div> \r\n            </li>\r\n            \r\n            <!-- Nav Item - Pages Collapse Menu CLIENTE-->\r\n            \r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-table\"></i>\r\n                    <span>Arrendar centro deportivo</span></a>\r\n                    </div>\r\n            </li>\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-chart-area\"></i>\r\n                    <span>Visualizar solicitudes</span></a>\r\n                    </div>\r\n            </li>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider d-none d-md-block\">\r\n\r\n            <!-- Sidebar Toggler (Sidebar)\r\n            <div class=\"text-center d-none d-md-inline\">\r\n                <button class=\"rounded-circle border-0\" id=\"sidebarToggle\"></button>\r\n            </div>-->\r\n\r\n\r\n        </ul>\r\n        <!-- End of Sidebar -->\r\n\r\n        <!-- Content Wrapper -->\r\n        <div id=\"content-wrapper\" class=\"d-flex flex-column\">\r\n\r\n            <!-- Main Content -->\r\n            <div id=\"content\">\r\n\r\n                <!-- Topbar -->\r\n                <nav class=\"navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow\">\r\n\r\n                    <!-- Sidebar Toggle (Topbar) -->\r\n                    <button id=\"sidebarToggleTop\" class=\"btn btn-link d-md-none rounded-circle mr-3\">\r\n                        <i class=\"fa fa-bars\"></i>\r\n                    </button>\r\n\r\n                    <!-- Topbar Search\r\n                    <form\r\n                        class=\"d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search\">\r\n                        <div class=\"input-group\">\r\n                            <input type=\"text\" class=\"form-control bg-light border-0 small\" placeholder=\"Search for...\"\r\n                                aria-label=\"Search\" aria-describedby=\"basic-addon2\">\r\n                            <div class=\"input-group-append\">\r\n                                <button class=\"btn btn-primary\" type=\"button\">\r\n                                    <i class=\"fas fa-search fa-sm\"></i>\r\n                                </button>\r\n                            </div>\r\n                        </div>\r\n                    </form>-->\r\n\r\n                    <!-- Topbar Navbar -->\r\n                    <ul class=\"navbar-nav ml-auto\">\r\n\r\n                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->\r\n                        <li class=\"nav-item dropdown no-arrow d-sm-none\">\r\n                            <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"searchDropdown\" role=\"button\"\r\n                                data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                <i class=\"fas fa-search fa-fw\"></i>\r\n                            </a>\r\n                            <!-- Dropdown - Messages -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in\"\r\n                                aria-labelledby=\"searchDropdown\">\r\n                                <form class=\"form-inline mr-auto w-100 navbar-search\">\r\n                                    <div class=\"input-group\">\r\n                                        <input type=\"text\" class=\"form-control bg-light border-0 small\"\r\n                                            placeholder=\"Buscar...\" aria-label=\"Search\"\r\n                                            aria-describedby=\"basic-addon2\">\r\n                                        <div class=\"input-group-append\">\r\n                                            <button class=\"btn btn-primary\" type=\"button\">\r\n                                                <i class=\"fas fa-search fa-sm\"></i>\r\n                                            </button>\r\n                                        </div>\r\n                                    </div>\r\n                                </form>\r\n                            </div>\r\n                        </li>\r\n\r\n                        \r\n                        <!-- Nav Item - User Information -->\r\n                        <li class=\"nav-item dropdown arrow\">\r\n                            <a href=\"javascript:;\" class=\"nav-link dropdown-toggle\"\r\n\t\t\t\t\t\t\taria-haspopup=\"true\" id=\"navbarDropdown\" data-toggle=\"dropdown\"\r\n\t\t\t\t\t\t\taria-expanded=\"false\" th:text=\"${rutUser}\"> </a>\r\n\t\t\t\t\t\r\n                            <!-- Dropdown - User Information -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right shadow animated--grow-in\"\r\n                                aria-labelledby=\"userDropdown\">\r\n                                <a class=\"dropdown-item\" href=\"#\">\r\n                                    <i class=\"fas fa-user fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Perfil\r\n                                </a>\r\n                                <a class=\"dropdown-item\" href=\"cambiar-contrasena\">\r\n                                    <i class=\"fas fa-list fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Cambiar Contraseña\r\n                                </a>\r\n                                <div class=\"dropdown-divider\"></div>\r\n                                <a class=\"dropdown-item\" href=\"login?logout=true\" data-toggle=\"modal\" data-target=\"#logoutModal\">\r\n                                    <i class=\"fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Logout\r\n                                </a>\r\n                            </div>\r\n                        </li>\r\n\r\n                    </ul>\r\n\r\n                </nav>\r\n                <!-- End of Topbar -->\r\n\r\n                <!-- Begin Page Content -->\r\n                \r\n                \r\n                <div class=\"container-fluid\">\r\n\r\n                    <!-- Page Heading -->\r\n                    <div class=\"d-sm-flex align-items-center justify-content-between mb-4\">\r\n                        <h1 class=\"h3 mb-0 text-gray-800\">Crear cliente</h1>\r\n                        \r\n                    </div>\r\n\r\n                    <!-- Content Row -->\r\n                    \r\n                    <div class=\"row\">\r\n\t\t\t\t\t\t<div class=\"col-md-12 col-sm-12 \">\r\n\t\t\t\t\t\t\t<div class=\"x_panel\">\r\n\t\t\t\t\t\t\t\t<div class=\"x_content\">\r\n\t\t\t\t\t\t\t\t\t<br />\r\n\t\t\t\t\t\t\t\t\t<form th:action=\"@{/administrativo/gestion-cliente/crear}\"\r\n\t\t\t\t\t\t\t\t\t\tmethod=\"post\" id=\"demo-form2\" data-parsley-validate\r\n\t\t\t\t\t\t\t\t\t\tclass=\"user\" th:object=\"${usuario}\">\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div th:if=\"${#fields.hasErrors('*')}\"\r\n\t\t\t\t\t\t\t\t\t\t\tclass='alert alert-danger' role='alert'>\r\n\t\t\t\t\t\t\t\t\t\t\tPor favor corrija los siguientes errores:\r\n\t\t\t\t\t\t\t\t\t\t\t<ul>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<li th:each=\"err : ${#fields.errors('*')}\" th:text=\"${err}\" />\r\n\t\t\t\t\t\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"rut\">Rut: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{rut}\" type=\"text\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \" th:errorclass=\"border-danger\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<div th:if=\"${#fields.hasErrors('rut')}\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tth:errorclass=\"text-danger\" th:errors=\"*{rut}\"></div>\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"nombre\">Nombre: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{nombre}\" type=\"text\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<div th:if=\"${#fields.hasErrors('nombre')}\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tth:errorclass=\"text-danger\" th:errors=\"*{nombre}\"></div>\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"apellido\">Apellido: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{apellido}\" type=\"text\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"telefono\">Teléfono: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{telefono}\" type=\"tel\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control\">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"email\">Email: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{email}\" type=\"text\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"ln_solid\"></div>\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6\">\r\n\t\t\t\t\t\t\t\t\t\t\t <a data-toggle=\"modal\" data-target=\"#crearClienteModal\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary btn-user btn-block\">Crear cliente</button>\r\n\t\t\t\t\t\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t\t\t    <!-- Modificar perfil Modal-->\r\n\t\t\t\t\t\t\t\t\t    <div class=\"modal fade\" id=\"crearClienteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\r\n\t\t\t\t\t\t\t\t\t        aria-hidden=\"true\">\r\n\t\t\t\t\t\t\t\t\t        <div class=\"modal-dialog\" role=\"document\">\r\n\t\t\t\t\t\t\t\t\t            <div class=\"modal-content\">\r\n\t\t\t\t\t\t\t\t\t                <div class=\"modal-header\">\r\n\t\t\t\t\t\t\t\t\t                    <h5 class=\"modal-title\" id=\"exampleModalLabel\">Quieres crear el cliente?</h5>\r\n\t\t\t\t\t\t\t\t\t                    <button class=\"close\" type=\"button\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n\t\t\t\t\t\t\t\t\t                        <span aria-hidden=\"true\">×</span>\r\n\t\t\t\t\t\t\t\t\t                    </button>\r\n\t\t\t\t\t\t\t\t\t                </div>\r\n\t\t\t\t\t\t\t\t\t                <div class=\"modal-body\">Selecciona \"Crear\" debajo si estás seguro que quieres crear un cliente.</div>\r\n\t\t\t\t\t\t\t\t\t                <div class=\"modal-footer\">\r\n\t\t\t\t\t\t\t\t\t                    <button class=\"btn btn-secondary\" data-dismiss=\"modal\">Cancelar</button>\r\n\t\t\t\t\t\t\t\t\t                    <button class=\"btn btn-primary\" type=\"submit\">Crear</button>\r\n\t\t\t\t\t\t\t\t\t                </div>\r\n\t\t\t\t\t\t\t\t\t            </div>\r\n\t\t\t\t\t\t\t\t\t        </div>\r\n\t\t\t\t\t\t\t\t\t    </div>\r\n\t\t\t\t\t\t\t\t\t</form>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n                <!-- /.container-fluid -->\r\n\r\n            </div>\r\n            <!-- End of Main Content -->\r\n\r\n            <!-- Footer -->\r\n            <footer class=\"sticky-footer bg-white\">\r\n                <div class=\"container my-auto\">\r\n                    <div class=\"copyright text-center my-auto\">\r\n                        <span>Copyright &copy; BPCS Corporation 2022</span>\r\n                    </div>\r\n                </div>\r\n            </footer>\r\n            <!-- End of Footer -->\r\n\r\n        </div>\r\n        <!-- End of Content Wrapper -->\r\n\r\n    </div>\r\n    <!-- End of Page Wrapper -->\r\n\r\n    <!-- Scroll to Top Button-->\r\n    <a class=\"scroll-to-top rounded\" href=\"#page-top\">\r\n        <i class=\"fas fa-angle-up\"></i>\r\n    </a>\r\n\r\n    <!-- Logout Modal-->\r\n    <div class=\"modal fade\" id=\"logoutModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\r\n        aria-hidden=\"true\">\r\n        <div class=\"modal-dialog\" role=\"document\">\r\n            <div class=\"modal-content\">\r\n                <div class=\"modal-header\">\r\n                    <h5 class=\"modal-title\" id=\"exampleModalLabel\">Deseas cerrar sesión?</h5>\r\n                    <button class=\"close\" type=\"button\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                        <span aria-hidden=\"true\">×</span>\r\n                    </button>\r\n                </div>\r\n                <div class=\"modal-body\">Selecciona \"Cerrar Sesión\" debajo si estás listo para cerrar tu sesión actual.</div>\r\n                <div class=\"modal-footer\">\r\n                    <button class=\"btn btn-secondary\" type=\"button\" data-dismiss=\"modal\">Cancelar</button>\r\n                    <a class=\"btn btn-primary\" th:href=\"@{/logout}\">Cerrar Sesión</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n\r\n   \r\n\r\n</body>\r\n\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/administrativo/form-crear-cliente.html b/src/main/resources/templates/administrativo/form-crear-cliente.html
+--- a/src/main/resources/templates/administrativo/form-crear-cliente.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/resources/templates/administrativo/form-crear-cliente.html	(date 1664749068660)
+@@ -12,15 +12,16 @@
+     <title>Nessfit - Menu</title>
+ 
+     <!-- Custom fonts for this template-->
+-    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
++    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"
++          th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+     <link
+-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+-        rel="stylesheet">
++            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
++            rel="stylesheet">
+ 
+     <!-- Custom styles for this template-->
+-    <link rel="stylesheet" type="text/css"  href="static/css/sb-admin-2.css" th:href="@{/css/sb-admin-2.css}">
++    <link rel="stylesheet" type="text/css" href="static/css/sb-admin-2.css" th:href="@{/css/sb-admin-2.css}">
+ 
+- <!-- Bootstrap core JavaScript-->
++    <!-- Bootstrap core JavaScript-->
+     <script type="text/javascript" th:src="@{vendor/jquery/jquery.min.js}"></script>
+     <script type="text/javascript" th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+ 
+@@ -36,76 +37,76 @@
+     <!-- Page level custom scripts -->
+     <script type="text/javascript" th:src="@{js/demo/chart-area-demo.js}"></script>
+     <script type="text/javascript" th:src="@{js/demo/chart-pie-demo.js}"></script>
+- 
++
+ </head>
+ 
+ <body id="page-top">
+ 
+-    <!-- Page Wrapper -->
+-    <div id="wrapper">
++<!-- Page Wrapper -->
++<div id="wrapper">
+ 
+-        <!-- Sidebar -->
+-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
++    <!-- Sidebar -->
++    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+ 
+-            <!-- Sidebar - Brand -->
+-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="menu">
+-                <div class="sidebar-brand-icon">
+-                    <i class="fa fa-futbol"></i>
+-                </div>
+-                <div class="sidebar-brand-text mx-2">NESSFIT</div>
+-            </a>
++        <!-- Sidebar - Brand -->
++        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="menu">
++            <div class="sidebar-brand-icon">
++                <i class="fa fa-futbol"></i>
++            </div>
++            <div class="sidebar-brand-text mx-2">NESSFIT</div>
++        </a>
+ 
+-            <!-- Divider -->
+-            <hr class="sidebar-divider my-0">
++        <!-- Divider -->
++        <hr class="sidebar-divider my-0">
+ 
+-            <!-- Nav Item - Dashboard -->
+-            <li class="nav-item active">
+-                <a class="nav-link" href="menu">
+-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+-                    <span>Inicio</span></a>
+-            </li>
++        <!-- Nav Item - Dashboard -->
++        <li class="nav-item active">
++            <a class="nav-link" href="menu">
++                <i class="fas fa-fw fa-tachometer-alt"></i>
++                <span>Inicio</span></a>
++        </li>
+ 
+-            <!-- Divider -->
+-            <hr class="sidebar-divider">
++        <!-- Divider -->
++        <hr class="sidebar-divider">
+ 
+-            <!-- Heading -->
+-            <div class="sidebar-heading">
+-            	<div sec:authorize="hasAuthority('ADMINISTRADOR')">
+-            	ADMINISTRADOR
+-				</div>
+-				<div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+-            	ADMINISTRATIVO
+-				</div>
+-				<div sec:authorize="hasAuthority('CLIENTE')">
+-            	CLIENTE
+-				</div>
+-            </div>
++        <!-- Heading -->
++        <div class="sidebar-heading">
++            <div sec:authorize="hasAuthority('ADMINISTRADOR')">
++                ADMINISTRADOR
++            </div>
++            <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
++                ADMINISTRATIVO
++            </div>
++            <div sec:authorize="hasAuthority('CLIENTE')">
++                CLIENTE
++            </div>
++        </div>
+ 
+-            <!-- Nav Item - Pages Collapse Menu 
+-            <li class="nav-item">
+-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+-                    aria-expanded="true" aria-controls="collapseTwo">
+-                    <i class="fas fa-fw fa-cog"></i>
+-                    <span>Components</span>
+-                </a>
+-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+-                    <div class="bg-white py-2 collapse-inner rounded">
+-                        <h6 class="collapse-header">Custom Components:</h6>
+-                        <a class="collapse-item" href="buttons.html">Buttons</a>
+-                        <a class="collapse-item" href="cards.html">Cards</a>
+-                    </div>
+-                </div>
+-            </li>
++        <!-- Nav Item - Pages Collapse Menu
++        <li class="nav-item">
++            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
++                aria-expanded="true" aria-controls="collapseTwo">
++                <i class="fas fa-fw fa-cog"></i>
++                <span>Components</span>
++            </a>
++            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
++                <div class="bg-white py-2 collapse-inner rounded">
++                    <h6 class="collapse-header">Custom Components:</h6>
++                    <a class="collapse-item" href="buttons.html">Buttons</a>
++                    <a class="collapse-item" href="cards.html">Cards</a>
++                </div>
++            </div>
++        </li>
+ 
+-            <div class="sidebar-heading">
+-                Addons
+-            </div>
++        <div class="sidebar-heading">
++            Addons
++        </div>
+ 
+-            <!-- Nav Item - Pages Collapse Menu ADMINISTRADOR-->
+-            <li class="nav-item">
++        <!-- Nav Item - Pages Collapse Menu ADMINISTRADOR-->
++        <li class="nav-item">
+             <div sec:authorize="hasAuthority('ADMINISTRADOR')">
+                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+-                    aria-expanded="true" aria-controls="collapsePages">
++                   aria-expanded="true" aria-controls="collapsePages">
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Gestionar</span>
+                 </a>
+@@ -118,18 +119,19 @@
+                         <a class="collapse-item" href="#">Gestionar usuarios</a>
+                     </div>
+                 </div>
+-                </div>
+-            </li>
+-            
+-            <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->
+-            <li class="nav-item">
++            </div>
++        </li>
++
++        <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->
++        <li class="nav-item">
+             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+-                    aria-expanded="true" aria-controls="collapsePages">
++                   aria-expanded="true" aria-controls="collapsePages">
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Gestionar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages"
++                     data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Arriendos:</h6>
+                         <a class="collapse-item" href="#">Solicitudes de arriendo</a>
+@@ -138,312 +140,325 @@
+                         <a class="collapse-item" href="#">Gestionar usuarios</a>
+                     </div>
+                 </div>
+-                </div>    
+-            </li>
+-            <li class="nav-item">
++            </div>
++        </li>
++        <li class="nav-item">
+             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+-                    aria-expanded="true" aria-controls="collapsePages">
++                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
++                   aria-expanded="true" aria-controls="collapsePages">
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Registrar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages2" class="collapse" aria-labelledby="headingPages"
++                     data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Instalacion:</h6>
+                         <a class="collapse-item" href="#">Instalacion deportiva</a>
+                     </div>
+                 </div>
+-                </div> 
+-			</li>
+-			<li class="nav-item">
+-			<div sec:authorize="hasAuthority('ADMINISTRATIVO')">
++            </div>
++        </li>
++        <li class="nav-item">
++            <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+                 <a class="nav-link" href="#">
+                     <i class="fas fa-fw fa-chart-area"></i>
+                     <span>Estadisticas</span></a>
+-                    </div> 
+-            </li>
+-            
+-            <!-- Nav Item - Pages Collapse Menu CLIENTE-->
+-            
+-            <li class="nav-item">
++            </div>
++        </li>
++
++        <!-- Nav Item - Pages Collapse Menu CLIENTE-->
++
++        <li class="nav-item">
+             <div sec:authorize="hasAuthority('CLIENTE')">
+                 <a class="nav-link" href="#">
+                     <i class="fas fa-fw fa-table"></i>
+                     <span>Arrendar centro deportivo</span></a>
+-                    </div>
+-            </li>
+-            <li class="nav-item">
++            </div>
++        </li>
++        <li class="nav-item">
+             <div sec:authorize="hasAuthority('CLIENTE')">
+                 <a class="nav-link" href="#">
+                     <i class="fas fa-fw fa-chart-area"></i>
+                     <span>Visualizar solicitudes</span></a>
+-                    </div>
+-            </li>
++            </div>
++        </li>
+ 
+-            <!-- Divider -->
+-            <hr class="sidebar-divider d-none d-md-block">
++        <!-- Divider -->
++        <hr class="sidebar-divider d-none d-md-block">
+ 
+-            <!-- Sidebar Toggler (Sidebar)
+-            <div class="text-center d-none d-md-inline">
+-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+-            </div>-->
++        <!-- Sidebar Toggler (Sidebar)
++        <div class="text-center d-none d-md-inline">
++            <button class="rounded-circle border-0" id="sidebarToggle"></button>
++        </div>-->
+ 
+ 
+-        </ul>
+-        <!-- End of Sidebar -->
++    </ul>
++    <!-- End of Sidebar -->
+ 
+-        <!-- Content Wrapper -->
+-        <div id="content-wrapper" class="d-flex flex-column">
++    <!-- Content Wrapper -->
++    <div id="content-wrapper" class="d-flex flex-column">
+ 
+-            <!-- Main Content -->
+-            <div id="content">
++        <!-- Main Content -->
++        <div id="content">
+ 
+-                <!-- Topbar -->
+-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
++            <!-- Topbar -->
++            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+ 
+-                    <!-- Sidebar Toggle (Topbar) -->
+-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+-                        <i class="fa fa-bars"></i>
+-                    </button>
++                <!-- Sidebar Toggle (Topbar) -->
++                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
++                    <i class="fa fa-bars"></i>
++                </button>
+ 
+-                    <!-- Topbar Search
+-                    <form
+-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+-                        <div class="input-group">
+-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+-                                aria-label="Search" aria-describedby="basic-addon2">
+-                            <div class="input-group-append">
+-                                <button class="btn btn-primary" type="button">
+-                                    <i class="fas fa-search fa-sm"></i>
+-                                </button>
+-                            </div>
+-                        </div>
+-                    </form>-->
++                <!-- Topbar Search
++                <form
++                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
++                    <div class="input-group">
++                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
++                            aria-label="Search" aria-describedby="basic-addon2">
++                        <div class="input-group-append">
++                            <button class="btn btn-primary" type="button">
++                                <i class="fas fa-search fa-sm"></i>
++                            </button>
++                        </div>
++                    </div>
++                </form>-->
+ 
+-                    <!-- Topbar Navbar -->
+-                    <ul class="navbar-nav ml-auto">
++                <!-- Topbar Navbar -->
++                <ul class="navbar-nav ml-auto">
+ 
+-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+-                        <li class="nav-item dropdown no-arrow d-sm-none">
+-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+-                                <i class="fas fa-search fa-fw"></i>
+-                            </a>
+-                            <!-- Dropdown - Messages -->
+-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+-                                aria-labelledby="searchDropdown">
+-                                <form class="form-inline mr-auto w-100 navbar-search">
+-                                    <div class="input-group">
+-                                        <input type="text" class="form-control bg-light border-0 small"
+-                                            placeholder="Buscar..." aria-label="Search"
+-                                            aria-describedby="basic-addon2">
+-                                        <div class="input-group-append">
+-                                            <button class="btn btn-primary" type="button">
+-                                                <i class="fas fa-search fa-sm"></i>
+-                                            </button>
+-                                        </div>
+-                                    </div>
+-                                </form>
+-                            </div>
+-                        </li>
++                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
++                    <li class="nav-item dropdown no-arrow d-sm-none">
++                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
++                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
++                            <i class="fas fa-search fa-fw"></i>
++                        </a>
++                        <!-- Dropdown - Messages -->
++                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
++                             aria-labelledby="searchDropdown">
++                            <form class="form-inline mr-auto w-100 navbar-search">
++                                <div class="input-group">
++                                    <input type="text" class="form-control bg-light border-0 small"
++                                           placeholder="Buscar..." aria-label="Search"
++                                           aria-describedby="basic-addon2">
++                                    <div class="input-group-append">
++                                        <button class="btn btn-primary" type="button">
++                                            <i class="fas fa-search fa-sm"></i>
++                                        </button>
++                                    </div>
++                                </div>
++                            </form>
++                        </div>
++                    </li>
+ 
+-                        
+-                        <!-- Nav Item - User Information -->
+-                        <li class="nav-item dropdown arrow">
+-                            <a href="javascript:;" class="nav-link dropdown-toggle"
+-							aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown"
+-							aria-expanded="false" th:text="${rutUser}"> </a>
+-					
+-                            <!-- Dropdown - User Information -->
+-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+-                                aria-labelledby="userDropdown">
+-                                <a class="dropdown-item" href="#">
+-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+-                                    Perfil
+-                                </a>
+-                                <a class="dropdown-item" href="cambiar-contrasena">
+-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+-                                    Cambiar Contraseña
+-                                </a>
+-                                <div class="dropdown-divider"></div>
+-                                <a class="dropdown-item" href="login?logout=true" data-toggle="modal" data-target="#logoutModal">
+-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+-                                    Logout
+-                                </a>
+-                            </div>
+-                        </li>
++
++                    <!-- Nav Item - User Information -->
++                    <li class="nav-item dropdown arrow">
++                        <a href="javascript:;" class="nav-link dropdown-toggle"
++                           aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown"
++                           aria-expanded="false" th:text="${rutUser}"> </a>
++
++                        <!-- Dropdown - User Information -->
++                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
++                             aria-labelledby="userDropdown">
++                            <a class="dropdown-item" href="#">
++                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
++                                Perfil
++                            </a>
++                            <a class="dropdown-item" href="cambiar-contrasena">
++                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
++                                Cambiar Contraseña
++                            </a>
++                            <div class="dropdown-divider"></div>
++                            <a class="dropdown-item" href="login?logout=true" data-toggle="modal"
++                               data-target="#logoutModal">
++                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
++                                Logout
++                            </a>
++                        </div>
++                    </li>
+ 
+-                    </ul>
++                </ul>
+ 
+-                </nav>
+-                <!-- End of Topbar -->
++            </nav>
++            <!-- End of Topbar -->
+ 
+-                <!-- Begin Page Content -->
+-                
+-                
+-                <div class="container-fluid">
++            <!-- Begin Page Content -->
++
++
++            <div class="container-fluid">
+ 
+-                    <!-- Page Heading -->
+-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+-                        <h1 class="h3 mb-0 text-gray-800">Crear cliente</h1>
+-                        
+-                    </div>
++                <!-- Page Heading -->
++                <div class="d-sm-flex align-items-center justify-content-between mb-4">
++                    <h1 class="h3 mb-0 text-gray-800">Crear cliente</h1>
++
++                </div>
+ 
+-                    <!-- Content Row -->
+-                    
+-                    <div class="row">
+-						<div class="col-md-12 col-sm-12 ">
+-							<div class="x_panel">
+-								<div class="x_content">
+-									<br />
+-									<form th:action="@{/administrativo/gestion-cliente/crear}"
+-										method="post" id="demo-form2" data-parsley-validate
+-										class="user" th:object="${usuario}">
++                <!-- Content Row -->
++
++                <div class="row">
++                    <div class="col-md-12 col-sm-12 ">
++                        <div class="x_panel">
++                            <div class="x_content">
++                                <br/>
++                                <form th:action="@{/administrativo/gestion-cliente/crear}"
++                                      method="post" id="demo-form2" data-parsley-validate
++                                      class="user" th:object="${usuario}">
+ 
+-										<div th:if="${#fields.hasErrors('*')}"
+-											class='alert alert-danger' role='alert'>
+-											Por favor corrija los siguientes errores:
+-											<ul>
+-												<li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+-											</ul>
+-										</div>
++                                    <div th:if="${#fields.hasErrors('*')}"
++                                         class='alert alert-danger' role='alert'>
++                                        Por favor corrija los siguientes errores:
++                                        <ul>
++                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"/>
++                                        </ul>
++                                    </div>
+ 
+-										<div class="item form-group">
+-											<label class="col-form-label col-md-3 col-sm-3 label-align"
+-												for="rut">Rut: <span class="required">*</span>
+-											</label>
+-											<div class="col-md-6 col-sm-6 ">
+-												<input th:field="*{rut}" type="text" required="required"
+-													class="form-control " th:errorclass="border-danger">
+-												<div th:if="${#fields.hasErrors('rut')}"
+-													th:errorclass="text-danger" th:errors="*{rut}"></div>
+-											</div>
+-										</div>
++                                    <div class="item form-group">
++                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
++                                               for="rut">Rut: <span class="required">*</span>
++                                        </label>
++                                        <div class="col-md-6 col-sm-6 ">
++                                            <input th:field="*{rut}" type="text" required="required"
++                                                   class="form-control " th:errorclass="border-danger">
++
++                                        </div>
+ 
+-										<div class="item form-group">
+-											<label class="col-form-label col-md-3 col-sm-3 label-align"
+-												for="nombre">Nombre: <span class="required">*</span>
+-											</label>
+-											<div class="col-md-6 col-sm-6 ">
+-												<input th:field="*{nombre}" type="text" required="required"
+-													class="form-control ">
+-												<div th:if="${#fields.hasErrors('nombre')}"
+-													th:errorclass="text-danger" th:errors="*{nombre}"></div>
+-											</div>
+-										</div>
++                                        <div class="item form-group">
++                                            <label class="col-form-label col-md-3 col-sm-3 label-align"
++                                                   for="nombre">Nombre: <span class="required">*</span>
++                                            </label>
++                                            <div class="col-md-6 col-sm-6 ">
++                                                <input th:field="*{nombre}" type="text" required="required"
++                                                       class="form-control ">
++
++                                            </div>
+ 
+-										<div class="item form-group">
+-											<label class="col-form-label col-md-3 col-sm-3 label-align"
+-												for="apellido">Apellido: <span class="required">*</span>
+-											</label>
+-											<div class="col-md-6 col-sm-6 ">
+-												<input th:field="*{apellido}" type="text"
+-													class="form-control ">
+-											</div>
+-										</div>
++                                            <div class="item form-group">
++                                                <label class="col-form-label col-md-3 col-sm-3 label-align"
++                                                       for="apellido">Apellido: <span class="required">*</span>
++                                                </label>
++                                                <div class="col-md-6 col-sm-6 ">
++                                                    <input th:field="*{apellido}" type="text"
++                                                           class="form-control ">
++
++                                                </div>
+ 
+-										<div class="item form-group">
+-											<label class="col-form-label col-md-3 col-sm-3 label-align"
+-												for="telefono">Teléfono: <span class="required">*</span>
+-											</label>
+-											<div class="col-md-6 col-sm-6 ">
+-												<input th:field="*{telefono}" type="tel" required="required"
+-													class="form-control">
+-											</div>
+-										</div>
++                                                <div class="item form-group">
++                                                    <label class="col-form-label col-md-3 col-sm-3 label-align"
++                                                           for="telefono">Teléfono: <span class="required">*</span>
++                                                    </label>
++                                                    <div class="col-md-6 col-sm-6 ">
++                                                        <input th:field="*{telefono}" type="tel" required="required"
++                                                               class="form-control">
++
++
++                                                    </div>
+ 
+-										<div class="item form-group">
+-											<label class="col-form-label col-md-3 col-sm-3 label-align"
+-												for="email">Email: <span class="required">*</span>
+-											</label>
+-											<div class="col-md-6 col-sm-6 ">
+-												<input th:field="*{email}" type="text" required="required"
+-													class="form-control ">
+-											</div>
+-										</div>
++                                                    <div class="item form-group">
++                                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
++                                                               for="email">Email: <span class="required">*</span>
++                                                        </label>
++                                                        <div class="col-md-6 col-sm-6 ">
++                                                            <input th:field="*{email}" type="text" required="required"
++                                                                   class="form-control ">
++                                                        </div>
++                                                    </div>
+ 
+-										<div class="ln_solid"></div>
+-										<div class="item form-group">
+-											<div class="col-md-6 col-sm-6">
+-											 <a data-toggle="modal" data-target="#crearClienteModal">
+-												<button type="submit" class="btn btn-primary btn-user btn-block">Crear cliente</button>
+-												</a>
+-											</div>
+-										</div>
+-									
+-									    <!-- Modificar perfil Modal-->
+-									    <div class="modal fade" id="crearClienteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+-									        aria-hidden="true">
+-									        <div class="modal-dialog" role="document">
+-									            <div class="modal-content">
+-									                <div class="modal-header">
+-									                    <h5 class="modal-title" id="exampleModalLabel">Quieres crear el cliente?</h5>
+-									                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+-									                        <span aria-hidden="true">×</span>
+-									                    </button>
+-									                </div>
+-									                <div class="modal-body">Selecciona "Crear" debajo si estás seguro que quieres crear un cliente.</div>
+-									                <div class="modal-footer">
+-									                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+-									                    <button class="btn btn-primary" type="submit">Crear</button>
+-									                </div>
+-									            </div>
+-									        </div>
+-									    </div>
+-									</form>
+-								</div>
+-							</div>
+-						</div>
+-					</div>
+-                <!-- /.container-fluid -->
+-
++                                                    <div class="ln_solid"></div>
++                                                    <div class="item form-group">
++                                                        <div class="col-md-6 col-sm-6">
++                                                            <a data-toggle="modal" data-target="#crearClienteModal">
++                                                                <button type="submit"
++                                                                        class="btn btn-primary btn-user btn-block">Crear
++                                                                    cliente
++                                                                </button>
++                                                            </a>
++                                                        </div>
++                                                    </div>
++
++                                                    <!-- Modificar perfil Modal-->
++                                                    <div class="modal fade" id="crearClienteModal" tabindex="-1"
++                                                         role="dialog" aria-labelledby="exampleModalLabel"
++                                                         aria-hidden="true">
++                                                        <div class="modal-dialog" role="document">
++                                                            <div class="modal-content">
++                                                                <div class="modal-header">
++                                                                    <h5 class="modal-title" id="crearCliente">Quieres
++                                                                        crear el cliente?</h5>
++                                                                    <button class="close" type="button"
++                                                                            data-dismiss="modal" aria-label="Close">
++                                                                        <span aria-hidden="true">×</span>
++                                                                    </button>
++                                                                </div>
++                                                                <div class="modal-body">Selecciona "Crear" debajo si
++                                                                    estás seguro que quieres crear un cliente.
++                                                                </div>
++                                                                <div class="modal-footer">
++                                                                    <button class="btn btn-secondary"
++                                                                            data-dismiss="modal">Cancelar
++                                                                    </button>
++                                                                    <button class="btn btn-primary" type="submit">
++                                                                        Crear
++                                                                    </button>
++                                                                </div>
++                                                            </div>
++                                                        </div>
++                                                    </div>
++                                                </div>
++                                            </div>
++                                        </div>
++                                    </div>
++                                </form>
++                            </div>
++                        </div>
++                    </div>
++                </div>
+             </div>
+-            <!-- End of Main Content -->
++        </div>
++    </div>
++    <!-- End of Main Content -->
+ 
+-            <!-- Footer -->
+-            <footer class="sticky-footer bg-white">
+-                <div class="container my-auto">
+-                    <div class="copyright text-center my-auto">
+-                        <span>Copyright &copy; BPCS Corporation 2022</span>
+-                    </div>
+-                </div>
+-            </footer>
+-            <!-- End of Footer -->
++    <!-- Footer -->
++    <footer class="sticky-footer bg-white">
++        <div class="container my-auto">
++            <div class="copyright text-center my-auto">
++                <span>Copyright &copy; BPCS Corporation 2022</span>
++            </div>
++        </div>
++    </footer>
++    <!-- End of Footer -->
+ 
+-        </div>
+-        <!-- End of Content Wrapper -->
++</div>
++<!-- End of Content Wrapper -->
+ 
+-    </div>
+-    <!-- End of Page Wrapper -->
++</div>
++<!-- End of Page Wrapper -->
+ 
+-    <!-- Scroll to Top Button-->
+-    <a class="scroll-to-top rounded" href="#page-top">
+-        <i class="fas fa-angle-up"></i>
+-    </a>
++<!-- Scroll to Top Button-->
++<a class="scroll-to-top rounded" href="#page-top">
++    <i class="fas fa-angle-up"></i>
++</a>
+ 
+-    <!-- Logout Modal-->
+-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+-        aria-hidden="true">
+-        <div class="modal-dialog" role="document">
+-            <div class="modal-content">
+-                <div class="modal-header">
+-                    <h5 class="modal-title" id="exampleModalLabel">Deseas cerrar sesión?</h5>
+-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+-                        <span aria-hidden="true">×</span>
+-                    </button>
+-                </div>
+-                <div class="modal-body">Selecciona "Cerrar Sesión" debajo si estás listo para cerrar tu sesión actual.</div>
+-                <div class="modal-footer">
+-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+-                    <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+-                </div>
+-            </div>
+-        </div>
+-    </div>
++<!-- Logout Modal-->
++<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
++     aria-hidden="true">
++    <div class="modal-dialog" role="document">
++        <div class="modal-content">
++            <div class="modal-header">
++                <h5 class="modal-title" id="exampleModalLabel">Deseas cerrar sesión?</h5>
++                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
++                    <span aria-hidden="true">×</span>
++                </button>
++            </div>
++            <div class="modal-body">Selecciona "Cerrar Sesión" debajo si estás listo para cerrar tu sesión actual.</div>
++            <div class="modal-footer">
++                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
++                <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
++            </div>
++        </div>
++    </div>
++</div>
+ 
+ 
+-   
+-
+ </body>
+ 
+ </html>
+\ No newline at end of file
+Index: src/main/resources/templates/administrativo/gestion-cliente.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n\r\n    <meta charset=\"utf-8\">\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\r\n    <meta name=\"description\" content=\"\">\r\n    <meta name=\"author\" content=\"\">\r\n\r\n    <title>Nessfit - Menu</title>\r\n\r\n    <!-- Custom fonts for this template-->\r\n    <link href=\"static/vendor/fontawesome-free/css/all.min.css\" rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/vendor/fontawesome-free/css/all.min.css}\">\r\n    <link\r\n        href=\"https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i\"\r\n        rel=\"stylesheet\">\r\n\r\n    <!-- Custom styles for this template-->\r\n    <link rel=\"stylesheet\" type=\"text/css\"  href=\"static/css/sb-admin-2.css\" th:href=\"@{/css/sb-admin-2.css}\">\r\n\r\n <!-- Bootstrap core JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery/jquery.min.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/bootstrap/js/bootstrap.bundle.min.js}\"></script>\r\n\r\n    <!-- Core plugin JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery-easing/jquery.easing.min.js}\"></script>\r\n\r\n    <!-- Custom scripts for all pages-->\r\n    <script type=\"text/javascript\" th:src=\"@{js/sb-admin-2.min.js}\"></script>\r\n\r\n    <!-- Page level plugins -->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/chart.js/Chart.min.js}\"></script>\r\n\r\n    <!-- Page level custom scripts -->\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-area-demo.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-pie-demo.js}\"></script>\r\n \r\n</head>\r\n\r\n<body id=\"page-top\">\r\n\r\n    <!-- Page Wrapper -->\r\n    <div id=\"wrapper\">\r\n\r\n        <!-- Sidebar -->\r\n        <ul class=\"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion\" id=\"accordionSidebar\">\r\n\r\n            <!-- Sidebar - Brand -->\r\n            <a class=\"sidebar-brand d-flex align-items-center justify-content-center\" href=\"menu\">\r\n                <div class=\"sidebar-brand-icon\">\r\n                    <i class=\"fa fa-futbol\"></i>\r\n                </div>\r\n                <div class=\"sidebar-brand-text mx-2\">NESSFIT</div>\r\n            </a>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider my-0\">\r\n\r\n            <!-- Nav Item - Dashboard -->\r\n            <li class=\"nav-item active\">\r\n                <a class=\"nav-link\" href=\"menu\">\r\n                    <i class=\"fas fa-fw fa-tachometer-alt\"></i>\r\n                    <span>Inicio</span></a>\r\n            </li>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider\">\r\n\r\n            <!-- Heading -->\r\n            <div class=\"sidebar-heading\">\r\n            \t<div sec:authorize=\"hasAuthority('ADMINISTRADOR')\">\r\n            \tADMINISTRADOR\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            \tADMINISTRATIVO\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n            \tCLIENTE\r\n\t\t\t\t</div>\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu \r\n            <li class=\"nav-item\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapseTwo\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapseTwo\">\r\n                    <i class=\"fas fa-fw fa-cog\"></i>\r\n                    <span>Components</span>\r\n                </a>\r\n                <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Custom Components:</h6>\r\n                        <a class=\"collapse-item\" href=\"buttons.html\">Buttons</a>\r\n                        <a class=\"collapse-item\" href=\"cards.html\">Cards</a>\r\n                    </div>\r\n                </div>\r\n            </li>\r\n\r\n            <div class=\"sidebar-heading\">\r\n                Addons\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Gestionar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Arriendos:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Solicitudes de arriendo</a>\r\n                        <div class=\"collapse-divider\"></div>\r\n                        <h6 class=\"collapse-header\">Clientes:</h6>\r\n                        <a class=\"collapse-item\" href=\"administrativo/gestion-cliente\">Gestionar usuarios</a>\r\n                    </div>\r\n                </div>\r\n                </div>    \r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Registrar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Instalacion:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Instalacion deportiva</a>\r\n                    </div>\r\n                </div>\r\n                </div> \r\n\t\t\t</li>\r\n\t\t\t<li class=\"nav-item\">\r\n\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-chart-area\"></i>\r\n                    <span>Estadisticas</span></a>\r\n                    </div> \r\n            </li>\r\n            \r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider d-none d-md-block\">\r\n\r\n            <!-- Sidebar Toggler (Sidebar)\r\n            <div class=\"text-center d-none d-md-inline\">\r\n                <button class=\"rounded-circle border-0\" id=\"sidebarToggle\"></button>\r\n            </div>-->\r\n\r\n\r\n        </ul>\r\n        <!-- End of Sidebar -->\r\n\r\n        <!-- Content Wrapper -->\r\n        <div id=\"content-wrapper\" class=\"d-flex flex-column\">\r\n\r\n            <!-- Main Content -->\r\n            <div id=\"content\">\r\n\r\n                <!-- Topbar -->\r\n                <nav class=\"navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow\">\r\n\r\n                    <!-- Sidebar Toggle (Topbar) -->\r\n                    <button id=\"sidebarToggleTop\" class=\"btn btn-link d-md-none rounded-circle mr-3\">\r\n                        <i class=\"fa fa-bars\"></i>\r\n                    </button>\r\n\r\n                    <!-- Topbar Search\r\n                    <form\r\n                        class=\"d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search\">\r\n                        <div class=\"input-group\">\r\n                            <input type=\"text\" class=\"form-control bg-light border-0 small\" placeholder=\"Search for...\"\r\n                                aria-label=\"Search\" aria-describedby=\"basic-addon2\">\r\n                            <div class=\"input-group-append\">\r\n                                <button class=\"btn btn-primary\" type=\"button\">\r\n                                    <i class=\"fas fa-search fa-sm\"></i>\r\n                                </button>\r\n                            </div>\r\n                        </div>\r\n                    </form>-->\r\n\r\n                    <!-- Topbar Navbar -->\r\n                    <ul class=\"navbar-nav ml-auto\">\r\n\r\n                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->\r\n                        <li class=\"nav-item dropdown no-arrow d-sm-none\">\r\n                            <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"searchDropdown\" role=\"button\"\r\n                                data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                <i class=\"fas fa-search fa-fw\"></i>\r\n                            </a>\r\n                            <!-- Dropdown - Messages -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in\"\r\n                                aria-labelledby=\"searchDropdown\">\r\n                                <form class=\"form-inline mr-auto w-100 navbar-search\">\r\n                                    <div class=\"input-group\">\r\n                                        <input type=\"text\" class=\"form-control bg-light border-0 small\"\r\n                                            placeholder=\"Buscar...\" aria-label=\"Search\"\r\n                                            aria-describedby=\"basic-addon2\">\r\n                                        <div class=\"input-group-append\">\r\n                                            <button class=\"btn btn-primary\" type=\"button\">\r\n                                                <i class=\"fas fa-search fa-sm\"></i>\r\n                                            </button>\r\n                                        </div>\r\n                                    </div>\r\n                                </form>\r\n                            </div>\r\n                        </li>\r\n\r\n                        \r\n                        <!-- Nav Item - User Information -->\r\n                        <li class=\"nav-item dropdown arrow\">\r\n                            <a href=\"javascript:;\" class=\"nav-link dropdown-toggle\"\r\n\t\t\t\t\t\t\taria-haspopup=\"true\" id=\"navbarDropdown\" data-toggle=\"dropdown\"\r\n\t\t\t\t\t\t\taria-expanded=\"false\" th:text=\"${rutUser}\"> </a>\r\n\t\t\t\t\t\r\n                            <!-- Dropdown - User Information -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right shadow animated--grow-in\"\r\n                                aria-labelledby=\"userDropdown\">\r\n                                <a class=\"dropdown-item\" href=\"#\">\r\n                                    <i class=\"fas fa-user fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Perfil\r\n                                </a>\r\n                                <a class=\"dropdown-item\" href=\"cambiar-contrasena\">\r\n                                    <i class=\"fas fa-list fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Cambiar Contraseña\r\n                                </a>\r\n                                <div class=\"dropdown-divider\"></div>\r\n                                <a class=\"dropdown-item\" href=\"login?logout=true\" data-toggle=\"modal\" data-target=\"#logoutModal\">\r\n                                    <i class=\"fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Logout\r\n                                </a>\r\n                            </div>\r\n                        </li>\r\n\r\n                    </ul>\r\n\r\n                </nav>\r\n                <!-- End of Topbar -->\r\n\r\n                <!-- Begin Page Content -->\r\n                \r\n                \r\n                <div class=\"container-fluid\">\r\n\r\n                    <!-- Page Heading -->\r\n                    <div class=\"d-sm-flex align-items-center justify-content-between mb-4\">\r\n                        <h1 class=\"h3 mb-0 text-gray-800\">Gestion de clientes</h1>\r\n                        \r\n                    </div>\r\n\r\n                    <!-- Content Row -->\r\n                    \r\n                    <div class=\"row\" style=\"display: block;\">\r\n\t\t\t\t\t<div class=\"col-md-12 col-sm-12  \">\r\n\t\t\t\t\t\t<div class=\"x_panel\">\r\n\t\t\t\t\t\t\t<div class=\"x_title\">\r\n\t\t\t\t\t\t\t\t<a th:href=\"@{/administrativo/gestion-cliente/crear}\"\r\n\t\t\t\t\t\t\t\t\tclass=\"btn btn-success text-white\">Crear Cliente</a>\r\n\t\t\t\t\t\t\t\t<div class=\"clearfix\"></div>\r\n\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"x_content\">\r\n\r\n\t\t\t\t\t\t\t\t<table class=\"table\">\r\n\t\t\t\t\t\t\t\t\t<thead>\r\n\t\t\t\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>rut</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Nombre completo</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Email</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Estado</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Acciones</th>\r\n\t\t\t\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t\t\t</thead>\r\n\t\t\t\t\t\t\t\t\t<tbody>\r\n\t\t\t\t\t\t\t\t\t\t<tr th:if=\"${#lists.size(usuarios) == 0}\">\r\n\t\t\t\t\t\t\t\t\t\t\t<th colspan=\"5\" class=\"text-center\">Sin registro</th>\r\n\t\t\t\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t\t\t\t<tr th:unless=\"${#lists.size(usuarios) == 0}\"\r\n\t\t\t\t\t\t\t\t\t\t\tth:each=\"usuario : ${usuarios}\">\r\n\t\t\t\t\t\t\t\t\t\t\t<th th:text=\"${usuario.rut}\" scope=\"row\">1</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<td th:text=\"${usuario.nombre + ' ' + usuario.apellido}\">Mark</td>\r\n\t\t\t\t\t\t\t\t\t\t\t<td th:text=\"${usuario.email}\">Otto</td>\r\n\t\t\t\t\t\t\t\t\t\t\t<td\r\n\t\t\t\t\t\t\t\t\t\t\t\tth:text=\"${usuario.estado==1?'Habilitado':'Deshabilitado'}\">@mdo</td>\r\n\t\t\t\t\t\t\t\t\t\t\t<td><a th:href=\"@{/administrativo/gestion-cliente/editar/{rut} (rut=${usuario.rut})}\" class=\"btn btn-warning\">editar</a></td>\r\n\t\t\t\t\t\t\t\t\t\t</tr>\r\n\r\n\t\t\t\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t\t\t\t</table>\r\n\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n                        \r\n                <!-- /.container-fluid -->\r\n\r\n            </div>\r\n            <!-- End of Main Content -->\r\n\r\n            <!-- Footer -->\r\n            <footer class=\"sticky-footer bg-white\">\r\n                <div class=\"container my-auto\">\r\n                    <div class=\"copyright text-center my-auto\">\r\n                        <span>Copyright &copy; BPCS Corporation 2022</span>\r\n                    </div>\r\n                </div>\r\n            </footer>\r\n            <!-- End of Footer -->\r\n\r\n        </div>\r\n        <!-- End of Content Wrapper -->\r\n\r\n    </div>\r\n    <!-- End of Page Wrapper -->\r\n\r\n    <!-- Scroll to Top Button-->\r\n    <a class=\"scroll-to-top rounded\" href=\"#page-top\">\r\n        <i class=\"fas fa-angle-up\"></i>\r\n    </a>\r\n\r\n    <!-- Logout Modal-->\r\n    <div class=\"modal fade\" id=\"logoutModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\r\n        aria-hidden=\"true\">\r\n        <div class=\"modal-dialog\" role=\"document\">\r\n            <div class=\"modal-content\">\r\n                <div class=\"modal-header\">\r\n                    <h5 class=\"modal-title\" id=\"exampleModalLabel\">Deseas cerrar sesión?</h5>\r\n                    <button class=\"close\" type=\"button\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                        <span aria-hidden=\"true\">×</span>\r\n                    </button>\r\n                </div>\r\n                <div class=\"modal-body\">Selecciona \"Cerrar Sesión\" debajo si estás listo para cerrar tu sesión actual.</div>\r\n                <div class=\"modal-footer\">\r\n                    <button class=\"btn btn-secondary\" type=\"button\" data-dismiss=\"modal\">Cancelar</button>\r\n                    <a class=\"btn btn-primary\" th:href=\"@{/logout}\">Cerrar Sesión</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n\r\n   \r\n\r\n</body>\r\n\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/administrativo/gestion-cliente.html b/src/main/resources/templates/administrativo/gestion-cliente.html
+--- a/src/main/resources/templates/administrativo/gestion-cliente.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/resources/templates/administrativo/gestion-cliente.html	(date 1664748383297)
+@@ -109,7 +109,7 @@
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Gestionar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Arriendos:</h6>
+                         <a class="collapse-item" href="#">Solicitudes de arriendo</a>
+@@ -119,6 +119,7 @@
+                     </div>
+                 </div>
+                 </div>    
++            </li>
+             <li class="nav-item">
+             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+@@ -126,7 +127,7 @@
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Registrar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages2" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Instalacion:</h6>
+                         <a class="collapse-item" href="#">Instalacion deportiva</a>
+Index: target/classes/META-INF/maven/cl.nessfit/nessfit/pom.properties
+===================================================================
+diff --git a/target/classes/META-INF/maven/cl.nessfit/nessfit/pom.properties b/target/classes/META-INF/maven/cl.nessfit/nessfit/pom.properties
+deleted file mode 100644
+--- a/target/classes/META-INF/maven/cl.nessfit/nessfit/pom.properties	(revision efec1501de01553168b638c1b59627894761def5)
++++ /dev/null	(revision efec1501de01553168b638c1b59627894761def5)
+@@ -1,7 +0,0 @@
+-#Generated by Maven Integration for Eclipse
+-#Sun Oct 02 12:51:53 CLST 2022
+-m2e.projectLocation=/Users/pepelota/Spring Workspace/proyecto-nessfit
+-m2e.projectName=proyecto-nessfit
+-groupId=cl.nessfit
+-artifactId=nessfit
+-version=0.0.1-SNAPSHOT
+Index: target/classes/templates/index.html
+===================================================================
+diff --git a/target/classes/templates/index.html b/target/classes/templates/index.html
+deleted file mode 100644
+--- a/target/classes/templates/index.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ /dev/null	(revision efec1501de01553168b638c1b59627894761def5)
+@@ -1,106 +0,0 @@
+-<!DOCTYPE html>
+-<html lang="es">
+-
+-<head>
+-
+-    <meta charset="utf-8">
+-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+-    <meta name="description" content="">
+-    <meta name="author" content="">
+-
+-    <title>NessFit - Login</title>
+-
+-    <!-- Custom fonts for this template-->
+-    <link rel="stylesheet" type="text/css" th:href="@{vendor/fontawesome-free/css/all.min.css}" >
+-    <link
+-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+-        rel="stylesheet">
+-
+-    <!-- Custom styles for this template-->
+-    <link href="static/css/sb-admin-2.css" rel="stylesheet" type="text/css" th:href="@{css/sb-admin-2.css}">
+-    <!-- Bootstrap core JavaScript-->
+-    <script type="text/javascript" th:src="@{vendor/jquery/jquery.min.js}"></script>
+-    <script type="text/javascript" th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+-
+-    <!-- Core plugin JavaScript-->
+-    <script type="text/javascript" th:src="@{vendor/jquery-easing/jquery.easing.min.js}"></script>
+-
+-    <!-- Custom scripts for all pages-->
+-    <script type="text/javascript" th:src="@{js/sb-admin-2.min.js}"></script>
+-</head>
+-
+-<body class="bg-gradient-primary">
+-
+-    <div class="container">
+-
+-        <!-- Outer Row -->
+-        <div class="row justify-content-center">
+-
+-            <div class="col-xl-10 col-lg-12 col-md-9">
+-
+-                <div class="card o-hidden border-0 shadow-lg my-5">
+-                    <div class="card-body p-0">
+-                        <!-- Nested Row within Card Body -->
+-                        <div class="row">
+-                            <div class="col-lg-12">
+-                                <div class="p-4">
+-                                    <!-- Modificar controladores -->
+-                                    <div class="text-center">
+-                                    <img class="img-chica"
+-                                    src="img/nessfit-logo-1.png">
+-                                        <h1 class="h4 text-black mb-4">Inicio de sesión</h1>
+-                                        
+-                                    </div>
+-                                    <hr class="sidebar-divider">
+-                                    
+-                                    <form class="user" th:action="@{/login}" method="post">
+-                                    	<div th:if="${param.error}" class="alert alert-danger text-center" role="alert" default-target-url="/index"  always-use-default-target="false">
+-				            				Las credenciales de acceso son incorrectas o el usuario no está registrado en el sistema.
+-				            			</div>
+-		        						<div th:if="${param.logout}" class="alert alert-success" role="alert" default-target-url="/index"  always-use-default-target="false">
+-		            						Has cerrado sesión correctamente.
+-		        						</div>
+-		        						<div th:if="${param.cambio}" class="alert alert-success" role="alert" default-target-url="/index"  always-use-default-target="false">
+-		            						Has cambiado de contraseña correctamente.
+-		        						</div>
+-		        						
+-		        						<div th:if="${param.deshabilitado}" class="alert alert-danger" role="alert" default-target-url="/index"  always-use-default-target="false">
+-		        							Usuario Deshabilitado. Contacte con el administrador!
+-		        						</div>
+-                                        <div class="form-group">
+-                                            <input type="text" class="form-control form-control-user"
+-                                                id="rut" name="rut" 
+-                                                placeholder="Rut(formato:12345678K)" required>
+-                                        </div>
+-                                        <div class="form-group">
+-                                            <input type="password" class="form-control form-control-user"
+-                                                id="contrasena" name="contrasena" placeholder="Contraseña" required>
+-                                
+-                                        </div>
+-                                        <div class="col-md-12 col-md-offset-3">
+-											<input type="submit" class="btn btn-primary btn-user btn-block" name="login-submit" id="login-submit"
+-												value="Iniciar sesión" />
+-											</div>
+-										</div>
+-                                </form>
+-                                </div>
+-                            </div>
+-                        </div>
+-                    </div>
+-                </div>
+-
+-            </div>
+-
+-        </div>
+-
+-    </div>
+-
+-
+-<script src"../../../../target/classes/static/js/rutValidador.js"></script>
+-<scripts>
+-								
+-</scripts>
+-</body>
+-
+-</html>
+\ No newline at end of file
+Index: target/classes/META-INF/maven/cl.nessfit/nessfit/pom.xml
+===================================================================
+diff --git a/target/classes/META-INF/maven/cl.nessfit/nessfit/pom.xml b/target/classes/META-INF/maven/cl.nessfit/nessfit/pom.xml
+deleted file mode 100644
+--- a/target/classes/META-INF/maven/cl.nessfit/nessfit/pom.xml	(revision efec1501de01553168b638c1b59627894761def5)
++++ /dev/null	(revision efec1501de01553168b638c1b59627894761def5)
+@@ -1,77 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+-	<modelVersion>4.0.0</modelVersion>
+-	<parent>
+-		<groupId>org.springframework.boot</groupId>
+-		<artifactId>spring-boot-starter-parent</artifactId>
+-		<version>2.7.4</version>
+-		<relativePath/> <!-- lookup parent from repository -->
+-	</parent>
+-	<groupId>cl.nessfit</groupId>
+-	<artifactId>nessfit</artifactId>
+-	<version>0.0.1-SNAPSHOT</version>
+-	<name>proyecto-nessfit-html</name>
+-	<description>Nessfit</description>
+-	<properties>
+-		<java.version>17</java.version>
+-	</properties>
+-	<dependencies>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-security</artifactId>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-validation</artifactId>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-web</artifactId>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.thymeleaf.extras</groupId>
+-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+-		</dependency>
+-
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-devtools</artifactId>
+-			<scope>runtime</scope>
+-			<optional>true</optional>
+-		</dependency>
+-		<dependency>
+-			<groupId>mysql</groupId>
+-			<artifactId>mysql-connector-java</artifactId>
+-			<scope>runtime</scope>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.springframework.boot</groupId>
+-			<artifactId>spring-boot-starter-test</artifactId>
+-			<scope>test</scope>
+-		</dependency>
+-		<dependency>
+-			<groupId>org.springframework.security</groupId>
+-			<artifactId>spring-security-test</artifactId>
+-			<scope>test</scope>
+-		</dependency>
+-	</dependencies>
+-
+-	<build>
+-		<plugins>
+-			<plugin>
+-				<groupId>org.springframework.boot</groupId>
+-				<artifactId>spring-boot-maven-plugin</artifactId>
+-			</plugin>
+-		</plugins>
+-	</build>
+-
+-</project>
+Index: target/classes/META-INF/MANIFEST.MF
+===================================================================
+diff --git a/target/classes/META-INF/MANIFEST.MF b/target/classes/META-INF/MANIFEST.MF
+deleted file mode 100644
+--- a/target/classes/META-INF/MANIFEST.MF	(revision efec1501de01553168b638c1b59627894761def5)
++++ /dev/null	(revision efec1501de01553168b638c1b59627894761def5)
+@@ -1,6 +0,0 @@
+-Manifest-Version: 1.0
+-Build-Jdk-Spec: 17
+-Implementation-Title: proyecto-nessfit-html
+-Implementation-Version: 0.0.1-SNAPSHOT
+-Created-By: Maven Integration for Eclipse
+-
+Index: target/classes/templates/administrativo/form-crear-cliente.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n\r\n    <meta charset=\"utf-8\">\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\r\n    <meta name=\"description\" content=\"\">\r\n    <meta name=\"author\" content=\"\">\r\n\r\n    <title>Nessfit - Menu</title>\r\n\r\n    <!-- Custom fonts for this template-->\r\n    <link href=\"static/vendor/fontawesome-free/css/all.min.css\" rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/vendor/fontawesome-free/css/all.min.css}\">\r\n    <link\r\n        href=\"https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i\"\r\n        rel=\"stylesheet\">\r\n\r\n    <!-- Custom styles for this template-->\r\n    <link rel=\"stylesheet\" type=\"text/css\"  href=\"static/css/sb-admin-2.css\" th:href=\"@{/css/sb-admin-2.css}\">\r\n\r\n <!-- Bootstrap core JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery/jquery.min.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/bootstrap/js/bootstrap.bundle.min.js}\"></script>\r\n\r\n    <!-- Core plugin JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery-easing/jquery.easing.min.js}\"></script>\r\n\r\n    <!-- Custom scripts for all pages-->\r\n    <script type=\"text/javascript\" th:src=\"@{js/sb-admin-2.min.js}\"></script>\r\n\r\n    <!-- Page level plugins -->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/chart.js/Chart.min.js}\"></script>\r\n\r\n    <!-- Page level custom scripts -->\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-area-demo.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-pie-demo.js}\"></script>\r\n \r\n</head>\r\n\r\n<body id=\"page-top\">\r\n\r\n    <!-- Page Wrapper -->\r\n    <div id=\"wrapper\">\r\n\r\n        <!-- Sidebar -->\r\n        <ul class=\"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion\" id=\"accordionSidebar\">\r\n\r\n            <!-- Sidebar - Brand -->\r\n            <a class=\"sidebar-brand d-flex align-items-center justify-content-center\" href=\"menu\">\r\n                <div class=\"sidebar-brand-icon\">\r\n                    <i class=\"fa fa-futbol\"></i>\r\n                </div>\r\n                <div class=\"sidebar-brand-text mx-2\">NESSFIT</div>\r\n            </a>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider my-0\">\r\n\r\n            <!-- Nav Item - Dashboard -->\r\n            <li class=\"nav-item active\">\r\n                <a class=\"nav-link\" href=\"menu\">\r\n                    <i class=\"fas fa-fw fa-tachometer-alt\"></i>\r\n                    <span>Inicio</span></a>\r\n            </li>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider\">\r\n\r\n            <!-- Heading -->\r\n            <div class=\"sidebar-heading\">\r\n            \t<div sec:authorize=\"hasAuthority('ADMINISTRADOR')\">\r\n            \tADMINISTRADOR\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            \tADMINISTRATIVO\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n            \tCLIENTE\r\n\t\t\t\t</div>\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu \r\n            <li class=\"nav-item\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapseTwo\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapseTwo\">\r\n                    <i class=\"fas fa-fw fa-cog\"></i>\r\n                    <span>Components</span>\r\n                </a>\r\n                <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Custom Components:</h6>\r\n                        <a class=\"collapse-item\" href=\"buttons.html\">Buttons</a>\r\n                        <a class=\"collapse-item\" href=\"cards.html\">Cards</a>\r\n                    </div>\r\n                </div>\r\n            </li>\r\n\r\n            <div class=\"sidebar-heading\">\r\n                Addons\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu ADMINISTRADOR-->\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRADOR')\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Gestionar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Administrativos:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Gestionar administrativos</a>\r\n                        <div class=\"collapse-divider\"></div>\r\n                        <h6 class=\"collapse-header\">Usuarios:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Gestionar usuarios</a>\r\n                    </div>\r\n                </div>\r\n                </div>\r\n            </li>\r\n            \r\n            <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Gestionar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Arriendos:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Solicitudes de arriendo</a>\r\n                        <div class=\"collapse-divider\"></div>\r\n                        <h6 class=\"collapse-header\">Usuarios:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Gestionar usuarios</a>\r\n                    </div>\r\n                </div>\r\n                </div>    \r\n            </li>\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Registrar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Instalacion:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Instalacion deportiva</a>\r\n                    </div>\r\n                </div>\r\n                </div> \r\n\t\t\t</li>\r\n\t\t\t<li class=\"nav-item\">\r\n\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-chart-area\"></i>\r\n                    <span>Estadisticas</span></a>\r\n                    </div> \r\n            </li>\r\n            \r\n            <!-- Nav Item - Pages Collapse Menu CLIENTE-->\r\n            \r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-table\"></i>\r\n                    <span>Arrendar centro deportivo</span></a>\r\n                    </div>\r\n            </li>\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-chart-area\"></i>\r\n                    <span>Visualizar solicitudes</span></a>\r\n                    </div>\r\n            </li>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider d-none d-md-block\">\r\n\r\n            <!-- Sidebar Toggler (Sidebar)\r\n            <div class=\"text-center d-none d-md-inline\">\r\n                <button class=\"rounded-circle border-0\" id=\"sidebarToggle\"></button>\r\n            </div>-->\r\n\r\n\r\n        </ul>\r\n        <!-- End of Sidebar -->\r\n\r\n        <!-- Content Wrapper -->\r\n        <div id=\"content-wrapper\" class=\"d-flex flex-column\">\r\n\r\n            <!-- Main Content -->\r\n            <div id=\"content\">\r\n\r\n                <!-- Topbar -->\r\n                <nav class=\"navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow\">\r\n\r\n                    <!-- Sidebar Toggle (Topbar) -->\r\n                    <button id=\"sidebarToggleTop\" class=\"btn btn-link d-md-none rounded-circle mr-3\">\r\n                        <i class=\"fa fa-bars\"></i>\r\n                    </button>\r\n\r\n                    <!-- Topbar Search\r\n                    <form\r\n                        class=\"d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search\">\r\n                        <div class=\"input-group\">\r\n                            <input type=\"text\" class=\"form-control bg-light border-0 small\" placeholder=\"Search for...\"\r\n                                aria-label=\"Search\" aria-describedby=\"basic-addon2\">\r\n                            <div class=\"input-group-append\">\r\n                                <button class=\"btn btn-primary\" type=\"button\">\r\n                                    <i class=\"fas fa-search fa-sm\"></i>\r\n                                </button>\r\n                            </div>\r\n                        </div>\r\n                    </form>-->\r\n\r\n                    <!-- Topbar Navbar -->\r\n                    <ul class=\"navbar-nav ml-auto\">\r\n\r\n                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->\r\n                        <li class=\"nav-item dropdown no-arrow d-sm-none\">\r\n                            <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"searchDropdown\" role=\"button\"\r\n                                data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                <i class=\"fas fa-search fa-fw\"></i>\r\n                            </a>\r\n                            <!-- Dropdown - Messages -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in\"\r\n                                aria-labelledby=\"searchDropdown\">\r\n                                <form class=\"form-inline mr-auto w-100 navbar-search\">\r\n                                    <div class=\"input-group\">\r\n                                        <input type=\"text\" class=\"form-control bg-light border-0 small\"\r\n                                            placeholder=\"Buscar...\" aria-label=\"Search\"\r\n                                            aria-describedby=\"basic-addon2\">\r\n                                        <div class=\"input-group-append\">\r\n                                            <button class=\"btn btn-primary\" type=\"button\">\r\n                                                <i class=\"fas fa-search fa-sm\"></i>\r\n                                            </button>\r\n                                        </div>\r\n                                    </div>\r\n                                </form>\r\n                            </div>\r\n                        </li>\r\n\r\n                        \r\n                        <!-- Nav Item - User Information -->\r\n                        <li class=\"nav-item dropdown arrow\">\r\n                            <a href=\"javascript:;\" class=\"nav-link dropdown-toggle\"\r\n\t\t\t\t\t\t\taria-haspopup=\"true\" id=\"navbarDropdown\" data-toggle=\"dropdown\"\r\n\t\t\t\t\t\t\taria-expanded=\"false\" th:text=\"${rutUser}\"> </a>\r\n\t\t\t\t\t\r\n                            <!-- Dropdown - User Information -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right shadow animated--grow-in\"\r\n                                aria-labelledby=\"userDropdown\">\r\n                                <a class=\"dropdown-item\" href=\"#\">\r\n                                    <i class=\"fas fa-user fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Perfil\r\n                                </a>\r\n                                <a class=\"dropdown-item\" href=\"cambiar-contrasena\">\r\n                                    <i class=\"fas fa-list fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Cambiar Contraseña\r\n                                </a>\r\n                                <div class=\"dropdown-divider\"></div>\r\n                                <a class=\"dropdown-item\" href=\"login?logout=true\" data-toggle=\"modal\" data-target=\"#logoutModal\">\r\n                                    <i class=\"fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Logout\r\n                                </a>\r\n                            </div>\r\n                        </li>\r\n\r\n                    </ul>\r\n\r\n                </nav>\r\n                <!-- End of Topbar -->\r\n\r\n                <!-- Begin Page Content -->\r\n                \r\n                \r\n                <div class=\"container-fluid\">\r\n\r\n                    <!-- Page Heading -->\r\n                    <div class=\"d-sm-flex align-items-center justify-content-between mb-4\">\r\n                        <h1 class=\"h3 mb-0 text-gray-800\">Crear cliente</h1>\r\n                        \r\n                    </div>\r\n\r\n                    <!-- Content Row -->\r\n                    \r\n                    <div class=\"row\">\r\n\t\t\t\t\t\t<div class=\"col-md-12 col-sm-12 \">\r\n\t\t\t\t\t\t\t<div class=\"x_panel\">\r\n\t\t\t\t\t\t\t\t<div class=\"x_content\">\r\n\t\t\t\t\t\t\t\t\t<br />\r\n\t\t\t\t\t\t\t\t\t<form th:action=\"@{/administrativo/gestion-cliente/crear}\"\r\n\t\t\t\t\t\t\t\t\t\tmethod=\"post\" id=\"demo-form2\" data-parsley-validate\r\n\t\t\t\t\t\t\t\t\t\tclass=\"user\" th:object=\"${usuario}\">\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div th:if=\"${#fields.hasErrors('*')}\"\r\n\t\t\t\t\t\t\t\t\t\t\tclass='alert alert-danger' role='alert'>\r\n\t\t\t\t\t\t\t\t\t\t\tPor favor corrija los siguientes errores:\r\n\t\t\t\t\t\t\t\t\t\t\t<ul>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<li th:each=\"err : ${#fields.errors('*')}\" th:text=\"${err}\" />\r\n\t\t\t\t\t\t\t\t\t\t\t</ul>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"rut\">Rut: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{rut}\" type=\"text\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \" th:errorclass=\"border-danger\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<div th:if=\"${#fields.hasErrors('rut')}\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tth:errorclass=\"text-danger\" th:errors=\"*{rut}\"></div>\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"nombre\">Nombre: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{nombre}\" type=\"text\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<div th:if=\"${#fields.hasErrors('nombre')}\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tth:errorclass=\"text-danger\" th:errors=\"*{nombre}\"></div>\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"apellido\">Apellido: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{apellido}\" type=\"text\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"telefono\">Teléfono: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{telefono}\" type=\"tel\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control\">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"col-form-label col-md-3 col-sm-3 label-align\"\r\n\t\t\t\t\t\t\t\t\t\t\t\tfor=\"email\">Email: <span class=\"required\">*</span>\r\n\t\t\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6 \">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input th:field=\"*{email}\" type=\"text\" required=\"required\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control \">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"ln_solid\"></div>\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"item form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-md-6 col-sm-6\">\r\n\t\t\t\t\t\t\t\t\t\t\t <a data-toggle=\"modal\" data-target=\"#crearClienteModal\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary btn-user btn-block\">Crear cliente</button>\r\n\t\t\t\t\t\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t\t\t    <!-- Modificar perfil Modal-->\r\n\t\t\t\t\t\t\t\t\t    <div class=\"modal fade\" id=\"crearClienteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\r\n\t\t\t\t\t\t\t\t\t        aria-hidden=\"true\">\r\n\t\t\t\t\t\t\t\t\t        <div class=\"modal-dialog\" role=\"document\">\r\n\t\t\t\t\t\t\t\t\t            <div class=\"modal-content\">\r\n\t\t\t\t\t\t\t\t\t                <div class=\"modal-header\">\r\n\t\t\t\t\t\t\t\t\t                    <h5 class=\"modal-title\" id=\"exampleModalLabel\">Quieres crear el cliente?</h5>\r\n\t\t\t\t\t\t\t\t\t                    <button class=\"close\" type=\"button\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n\t\t\t\t\t\t\t\t\t                        <span aria-hidden=\"true\">×</span>\r\n\t\t\t\t\t\t\t\t\t                    </button>\r\n\t\t\t\t\t\t\t\t\t                </div>\r\n\t\t\t\t\t\t\t\t\t                <div class=\"modal-body\">Selecciona \"Crear\" debajo si estás seguro que quieres crear un cliente.</div>\r\n\t\t\t\t\t\t\t\t\t                <div class=\"modal-footer\">\r\n\t\t\t\t\t\t\t\t\t                    <button class=\"btn btn-secondary\" data-dismiss=\"modal\">Cancelar</button>\r\n\t\t\t\t\t\t\t\t\t                    <button class=\"btn btn-primary\" type=\"submit\">Crear</button>\r\n\t\t\t\t\t\t\t\t\t                </div>\r\n\t\t\t\t\t\t\t\t\t            </div>\r\n\t\t\t\t\t\t\t\t\t        </div>\r\n\t\t\t\t\t\t\t\t\t    </div>\r\n\t\t\t\t\t\t\t\t\t</form>\r\n\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n                <!-- /.container-fluid -->\r\n\r\n            </div>\r\n            <!-- End of Main Content -->\r\n\r\n            <!-- Footer -->\r\n            <footer class=\"sticky-footer bg-white\">\r\n                <div class=\"container my-auto\">\r\n                    <div class=\"copyright text-center my-auto\">\r\n                        <span>Copyright &copy; BPCS Corporation 2022</span>\r\n                    </div>\r\n                </div>\r\n            </footer>\r\n            <!-- End of Footer -->\r\n\r\n        </div>\r\n        <!-- End of Content Wrapper -->\r\n\r\n    </div>\r\n    <!-- End of Page Wrapper -->\r\n\r\n    <!-- Scroll to Top Button-->\r\n    <a class=\"scroll-to-top rounded\" href=\"#page-top\">\r\n        <i class=\"fas fa-angle-up\"></i>\r\n    </a>\r\n\r\n    <!-- Logout Modal-->\r\n    <div class=\"modal fade\" id=\"logoutModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\r\n        aria-hidden=\"true\">\r\n        <div class=\"modal-dialog\" role=\"document\">\r\n            <div class=\"modal-content\">\r\n                <div class=\"modal-header\">\r\n                    <h5 class=\"modal-title\" id=\"exampleModalLabel\">Deseas cerrar sesión?</h5>\r\n                    <button class=\"close\" type=\"button\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                        <span aria-hidden=\"true\">×</span>\r\n                    </button>\r\n                </div>\r\n                <div class=\"modal-body\">Selecciona \"Cerrar Sesión\" debajo si estás listo para cerrar tu sesión actual.</div>\r\n                <div class=\"modal-footer\">\r\n                    <button class=\"btn btn-secondary\" type=\"button\" data-dismiss=\"modal\">Cancelar</button>\r\n                    <a class=\"btn btn-primary\" th:href=\"@{/logout}\">Cerrar Sesión</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n\r\n   \r\n\r\n</body>\r\n\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/templates/administrativo/form-crear-cliente.html b/target/classes/templates/administrativo/form-crear-cliente.html
+--- a/target/classes/templates/administrativo/form-crear-cliente.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/target/classes/templates/administrativo/form-crear-cliente.html	(date 1664748781297)
+@@ -129,7 +129,7 @@
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Gestionar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Arriendos:</h6>
+                         <a class="collapse-item" href="#">Solicitudes de arriendo</a>
+@@ -147,7 +147,7 @@
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Registrar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages2" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Instalacion:</h6>
+                         <a class="collapse-item" href="#">Instalacion deportiva</a>
+@@ -295,7 +295,7 @@
+ 						<div class="col-md-12 col-sm-12 ">
+ 							<div class="x_panel">
+ 								<div class="x_content">
+-									<br />
++                                    <br />
+ 									<form th:action="@{/administrativo/gestion-cliente/crear}"
+ 										method="post" id="demo-form2" data-parsley-validate
+ 										class="user" th:object="${usuario}">
+@@ -315,9 +315,7 @@
+ 											<div class="col-md-6 col-sm-6 ">
+ 												<input th:field="*{rut}" type="text" required="required"
+ 													class="form-control " th:errorclass="border-danger">
+-												<div th:if="${#fields.hasErrors('rut')}"
+-													th:errorclass="text-danger" th:errors="*{rut}"></div>
+-											</div>
++
+ 										</div>
+ 
+ 										<div class="item form-group">
+@@ -327,9 +325,7 @@
+ 											<div class="col-md-6 col-sm-6 ">
+ 												<input th:field="*{nombre}" type="text" required="required"
+ 													class="form-control ">
+-												<div th:if="${#fields.hasErrors('nombre')}"
+-													th:errorclass="text-danger" th:errors="*{nombre}"></div>
+-											</div>
++
+ 										</div>
+ 
+ 										<div class="item form-group">
+@@ -339,7 +335,7 @@
+ 											<div class="col-md-6 col-sm-6 ">
+ 												<input th:field="*{apellido}" type="text"
+ 													class="form-control ">
+-											</div>
++
+ 										</div>
+ 
+ 										<div class="item form-group">
+@@ -349,7 +345,8 @@
+ 											<div class="col-md-6 col-sm-6 ">
+ 												<input th:field="*{telefono}" type="tel" required="required"
+ 													class="form-control">
+-											</div>
++
++											
+ 										</div>
+ 
+ 										<div class="item form-group">
+@@ -377,7 +374,7 @@
+ 									        <div class="modal-dialog" role="document">
+ 									            <div class="modal-content">
+ 									                <div class="modal-header">
+-									                    <h5 class="modal-title" id="exampleModalLabel">Quieres crear el cliente?</h5>
++									                    <h5 class="modal-title" id="crearCliente">Quieres crear el cliente?</h5>
+ 									                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+ 									                        <span aria-hidden="true">×</span>
+ 									                    </button>
+@@ -390,13 +387,14 @@
+ 									            </div>
+ 									        </div>
+ 									    </div>
++                                        </div></div></div></div>
+ 									</form>
++                                    </div>
+ 								</div>
+ 							</div>
+ 						</div>
+ 					</div>
+-                <!-- /.container-fluid -->
+-
++                </div>
+             </div>
+             <!-- End of Main Content -->
+ 
+Index: target/classes/templates/administrativo/gestion-cliente.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n\r\n    <meta charset=\"utf-8\">\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\r\n    <meta name=\"description\" content=\"\">\r\n    <meta name=\"author\" content=\"\">\r\n\r\n    <title>Nessfit - Menu</title>\r\n\r\n    <!-- Custom fonts for this template-->\r\n    <link href=\"static/vendor/fontawesome-free/css/all.min.css\" rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/vendor/fontawesome-free/css/all.min.css}\">\r\n    <link\r\n        href=\"https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i\"\r\n        rel=\"stylesheet\">\r\n\r\n    <!-- Custom styles for this template-->\r\n    <link rel=\"stylesheet\" type=\"text/css\"  href=\"static/css/sb-admin-2.css\" th:href=\"@{/css/sb-admin-2.css}\">\r\n\r\n <!-- Bootstrap core JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery/jquery.min.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/bootstrap/js/bootstrap.bundle.min.js}\"></script>\r\n\r\n    <!-- Core plugin JavaScript-->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/jquery-easing/jquery.easing.min.js}\"></script>\r\n\r\n    <!-- Custom scripts for all pages-->\r\n    <script type=\"text/javascript\" th:src=\"@{js/sb-admin-2.min.js}\"></script>\r\n\r\n    <!-- Page level plugins -->\r\n    <script type=\"text/javascript\" th:src=\"@{vendor/chart.js/Chart.min.js}\"></script>\r\n\r\n    <!-- Page level custom scripts -->\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-area-demo.js}\"></script>\r\n    <script type=\"text/javascript\" th:src=\"@{js/demo/chart-pie-demo.js}\"></script>\r\n \r\n</head>\r\n\r\n<body id=\"page-top\">\r\n\r\n    <!-- Page Wrapper -->\r\n    <div id=\"wrapper\">\r\n\r\n        <!-- Sidebar -->\r\n        <ul class=\"navbar-nav bg-gradient-primary sidebar sidebar-dark accordion\" id=\"accordionSidebar\">\r\n\r\n            <!-- Sidebar - Brand -->\r\n            <a class=\"sidebar-brand d-flex align-items-center justify-content-center\" href=\"menu\">\r\n                <div class=\"sidebar-brand-icon\">\r\n                    <i class=\"fa fa-futbol\"></i>\r\n                </div>\r\n                <div class=\"sidebar-brand-text mx-2\">NESSFIT</div>\r\n            </a>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider my-0\">\r\n\r\n            <!-- Nav Item - Dashboard -->\r\n            <li class=\"nav-item active\">\r\n                <a class=\"nav-link\" href=\"menu\">\r\n                    <i class=\"fas fa-fw fa-tachometer-alt\"></i>\r\n                    <span>Inicio</span></a>\r\n            </li>\r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider\">\r\n\r\n            <!-- Heading -->\r\n            <div class=\"sidebar-heading\">\r\n            \t<div sec:authorize=\"hasAuthority('ADMINISTRADOR')\">\r\n            \tADMINISTRADOR\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            \tADMINISTRATIVO\r\n\t\t\t\t</div>\r\n\t\t\t\t<div sec:authorize=\"hasAuthority('CLIENTE')\">\r\n            \tCLIENTE\r\n\t\t\t\t</div>\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu \r\n            <li class=\"nav-item\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapseTwo\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapseTwo\">\r\n                    <i class=\"fas fa-fw fa-cog\"></i>\r\n                    <span>Components</span>\r\n                </a>\r\n                <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Custom Components:</h6>\r\n                        <a class=\"collapse-item\" href=\"buttons.html\">Buttons</a>\r\n                        <a class=\"collapse-item\" href=\"cards.html\">Cards</a>\r\n                    </div>\r\n                </div>\r\n            </li>\r\n\r\n            <div class=\"sidebar-heading\">\r\n                Addons\r\n            </div>\r\n\r\n            <!-- Nav Item - Pages Collapse Menu ADMINISTRATIVO-->\r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Gestionar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Arriendos:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Solicitudes de arriendo</a>\r\n                        <div class=\"collapse-divider\"></div>\r\n                        <h6 class=\"collapse-header\">Clientes:</h6>\r\n                        <a class=\"collapse-item\" href=\"administrativo/gestion-cliente\">Gestionar usuarios</a>\r\n                    </div>\r\n                </div>\r\n                </div>    \r\n            <li class=\"nav-item\">\r\n            <div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n            <a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapsePages\"\r\n                    aria-expanded=\"true\" aria-controls=\"collapsePages\">\r\n                    <i class=\"fas fa-fw fa-folder\"></i>\r\n                    <span>Registrar</span>\r\n                </a>\r\n                <div id=\"collapsePages\" class=\"collapse\" aria-labelledby=\"headingPages\" data-parent=\"#accordionSidebar\">\r\n                    <div class=\"bg-white py-2 collapse-inner rounded\">\r\n                        <h6 class=\"collapse-header\">Instalacion:</h6>\r\n                        <a class=\"collapse-item\" href=\"#\">Instalacion deportiva</a>\r\n                    </div>\r\n                </div>\r\n                </div> \r\n\t\t\t</li>\r\n\t\t\t<li class=\"nav-item\">\r\n\t\t\t<div sec:authorize=\"hasAuthority('ADMINISTRATIVO')\">\r\n                <a class=\"nav-link\" href=\"#\">\r\n                    <i class=\"fas fa-fw fa-chart-area\"></i>\r\n                    <span>Estadisticas</span></a>\r\n                    </div> \r\n            </li>\r\n            \r\n\r\n            <!-- Divider -->\r\n            <hr class=\"sidebar-divider d-none d-md-block\">\r\n\r\n            <!-- Sidebar Toggler (Sidebar)\r\n            <div class=\"text-center d-none d-md-inline\">\r\n                <button class=\"rounded-circle border-0\" id=\"sidebarToggle\"></button>\r\n            </div>-->\r\n\r\n\r\n        </ul>\r\n        <!-- End of Sidebar -->\r\n\r\n        <!-- Content Wrapper -->\r\n        <div id=\"content-wrapper\" class=\"d-flex flex-column\">\r\n\r\n            <!-- Main Content -->\r\n            <div id=\"content\">\r\n\r\n                <!-- Topbar -->\r\n                <nav class=\"navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow\">\r\n\r\n                    <!-- Sidebar Toggle (Topbar) -->\r\n                    <button id=\"sidebarToggleTop\" class=\"btn btn-link d-md-none rounded-circle mr-3\">\r\n                        <i class=\"fa fa-bars\"></i>\r\n                    </button>\r\n\r\n                    <!-- Topbar Search\r\n                    <form\r\n                        class=\"d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search\">\r\n                        <div class=\"input-group\">\r\n                            <input type=\"text\" class=\"form-control bg-light border-0 small\" placeholder=\"Search for...\"\r\n                                aria-label=\"Search\" aria-describedby=\"basic-addon2\">\r\n                            <div class=\"input-group-append\">\r\n                                <button class=\"btn btn-primary\" type=\"button\">\r\n                                    <i class=\"fas fa-search fa-sm\"></i>\r\n                                </button>\r\n                            </div>\r\n                        </div>\r\n                    </form>-->\r\n\r\n                    <!-- Topbar Navbar -->\r\n                    <ul class=\"navbar-nav ml-auto\">\r\n\r\n                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->\r\n                        <li class=\"nav-item dropdown no-arrow d-sm-none\">\r\n                            <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"searchDropdown\" role=\"button\"\r\n                                data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n                                <i class=\"fas fa-search fa-fw\"></i>\r\n                            </a>\r\n                            <!-- Dropdown - Messages -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in\"\r\n                                aria-labelledby=\"searchDropdown\">\r\n                                <form class=\"form-inline mr-auto w-100 navbar-search\">\r\n                                    <div class=\"input-group\">\r\n                                        <input type=\"text\" class=\"form-control bg-light border-0 small\"\r\n                                            placeholder=\"Buscar...\" aria-label=\"Search\"\r\n                                            aria-describedby=\"basic-addon2\">\r\n                                        <div class=\"input-group-append\">\r\n                                            <button class=\"btn btn-primary\" type=\"button\">\r\n                                                <i class=\"fas fa-search fa-sm\"></i>\r\n                                            </button>\r\n                                        </div>\r\n                                    </div>\r\n                                </form>\r\n                            </div>\r\n                        </li>\r\n\r\n                        \r\n                        <!-- Nav Item - User Information -->\r\n                        <li class=\"nav-item dropdown arrow\">\r\n                            <a href=\"javascript:;\" class=\"nav-link dropdown-toggle\"\r\n\t\t\t\t\t\t\taria-haspopup=\"true\" id=\"navbarDropdown\" data-toggle=\"dropdown\"\r\n\t\t\t\t\t\t\taria-expanded=\"false\" th:text=\"${rutUser}\"> </a>\r\n\t\t\t\t\t\r\n                            <!-- Dropdown - User Information -->\r\n                            <div class=\"dropdown-menu dropdown-menu-right shadow animated--grow-in\"\r\n                                aria-labelledby=\"userDropdown\">\r\n                                <a class=\"dropdown-item\" href=\"#\">\r\n                                    <i class=\"fas fa-user fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Perfil\r\n                                </a>\r\n                                <a class=\"dropdown-item\" href=\"cambiar-contrasena\">\r\n                                    <i class=\"fas fa-list fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Cambiar Contraseña\r\n                                </a>\r\n                                <div class=\"dropdown-divider\"></div>\r\n                                <a class=\"dropdown-item\" href=\"login?logout=true\" data-toggle=\"modal\" data-target=\"#logoutModal\">\r\n                                    <i class=\"fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400\"></i>\r\n                                    Logout\r\n                                </a>\r\n                            </div>\r\n                        </li>\r\n\r\n                    </ul>\r\n\r\n                </nav>\r\n                <!-- End of Topbar -->\r\n\r\n                <!-- Begin Page Content -->\r\n                \r\n                \r\n                <div class=\"container-fluid\">\r\n\r\n                    <!-- Page Heading -->\r\n                    <div class=\"d-sm-flex align-items-center justify-content-between mb-4\">\r\n                        <h1 class=\"h3 mb-0 text-gray-800\">Gestion de clientes</h1>\r\n                        \r\n                    </div>\r\n\r\n                    <!-- Content Row -->\r\n                    \r\n                    <div class=\"row\" style=\"display: block;\">\r\n\t\t\t\t\t<div class=\"col-md-12 col-sm-12  \">\r\n\t\t\t\t\t\t<div class=\"x_panel\">\r\n\t\t\t\t\t\t\t<div class=\"x_title\">\r\n\t\t\t\t\t\t\t\t<a th:href=\"@{/administrativo/gestion-cliente/crear}\"\r\n\t\t\t\t\t\t\t\t\tclass=\"btn btn-success text-white\">Crear Cliente</a>\r\n\t\t\t\t\t\t\t\t<div class=\"clearfix\"></div>\r\n\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"x_content\">\r\n\r\n\t\t\t\t\t\t\t\t<table class=\"table\">\r\n\t\t\t\t\t\t\t\t\t<thead>\r\n\t\t\t\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>rut</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Nombre completo</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Email</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Estado</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<th>Acciones</th>\r\n\t\t\t\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t\t\t</thead>\r\n\t\t\t\t\t\t\t\t\t<tbody>\r\n\t\t\t\t\t\t\t\t\t\t<tr th:if=\"${#lists.size(usuarios) == 0}\">\r\n\t\t\t\t\t\t\t\t\t\t\t<th colspan=\"5\" class=\"text-center\">Sin registro</th>\r\n\t\t\t\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t\t\t\t\t<tr th:unless=\"${#lists.size(usuarios) == 0}\"\r\n\t\t\t\t\t\t\t\t\t\t\tth:each=\"usuario : ${usuarios}\">\r\n\t\t\t\t\t\t\t\t\t\t\t<th th:text=\"${usuario.rut}\" scope=\"row\">1</th>\r\n\t\t\t\t\t\t\t\t\t\t\t<td th:text=\"${usuario.nombre + ' ' + usuario.apellido}\">Mark</td>\r\n\t\t\t\t\t\t\t\t\t\t\t<td th:text=\"${usuario.email}\">Otto</td>\r\n\t\t\t\t\t\t\t\t\t\t\t<td\r\n\t\t\t\t\t\t\t\t\t\t\t\tth:text=\"${usuario.estado==1?'Habilitado':'Deshabilitado'}\">@mdo</td>\r\n\t\t\t\t\t\t\t\t\t\t\t<td><a th:href=\"@{/administrativo/gestion-cliente/editar/{rut} (rut=${usuario.rut})}\" class=\"btn btn-warning\">editar</a></td>\r\n\t\t\t\t\t\t\t\t\t\t</tr>\r\n\r\n\t\t\t\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t\t\t\t</table>\r\n\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n                        \r\n                <!-- /.container-fluid -->\r\n\r\n            </div>\r\n            <!-- End of Main Content -->\r\n\r\n            <!-- Footer -->\r\n            <footer class=\"sticky-footer bg-white\">\r\n                <div class=\"container my-auto\">\r\n                    <div class=\"copyright text-center my-auto\">\r\n                        <span>Copyright &copy; BPCS Corporation 2022</span>\r\n                    </div>\r\n                </div>\r\n            </footer>\r\n            <!-- End of Footer -->\r\n\r\n        </div>\r\n        <!-- End of Content Wrapper -->\r\n\r\n    </div>\r\n    <!-- End of Page Wrapper -->\r\n\r\n    <!-- Scroll to Top Button-->\r\n    <a class=\"scroll-to-top rounded\" href=\"#page-top\">\r\n        <i class=\"fas fa-angle-up\"></i>\r\n    </a>\r\n\r\n    <!-- Logout Modal-->\r\n    <div class=\"modal fade\" id=\"logoutModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\r\n        aria-hidden=\"true\">\r\n        <div class=\"modal-dialog\" role=\"document\">\r\n            <div class=\"modal-content\">\r\n                <div class=\"modal-header\">\r\n                    <h5 class=\"modal-title\" id=\"exampleModalLabel\">Deseas cerrar sesión?</h5>\r\n                    <button class=\"close\" type=\"button\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                        <span aria-hidden=\"true\">×</span>\r\n                    </button>\r\n                </div>\r\n                <div class=\"modal-body\">Selecciona \"Cerrar Sesión\" debajo si estás listo para cerrar tu sesión actual.</div>\r\n                <div class=\"modal-footer\">\r\n                    <button class=\"btn btn-secondary\" type=\"button\" data-dismiss=\"modal\">Cancelar</button>\r\n                    <a class=\"btn btn-primary\" th:href=\"@{/logout}\">Cerrar Sesión</a>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n\r\n   \r\n\r\n</body>\r\n\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/templates/administrativo/gestion-cliente.html b/target/classes/templates/administrativo/gestion-cliente.html
+--- a/target/classes/templates/administrativo/gestion-cliente.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/target/classes/templates/administrativo/gestion-cliente.html	(date 1664748781296)
+@@ -109,7 +109,7 @@
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Gestionar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Arriendos:</h6>
+                         <a class="collapse-item" href="#">Solicitudes de arriendo</a>
+@@ -119,6 +119,7 @@
+                     </div>
+                 </div>
+                 </div>    
++            </li>
+             <li class="nav-item">
+             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+@@ -126,7 +127,7 @@
+                     <i class="fas fa-fw fa-folder"></i>
+                     <span>Registrar</span>
+                 </a>
+-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
++                <div id="collapsePages2" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                     <div class="bg-white py-2 collapse-inner rounded">
+                         <h6 class="collapse-header">Instalacion:</h6>
+                         <a class="collapse-item" href="#">Instalacion deportiva</a>
+Index: src/main/java/cl/nessfit/web/model/Usuario.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.model;\n\nimport java.io.*;\n\nimport javax.persistence.*;\n\n@Entity\n@Table(name = \"usuarios\")\npublic class Usuario implements Serializable{\n\n\tprivate static final long serialVersionUID = -3699177985262131693L;\n\t@Id\n\tprivate String rut;\n\tprivate String apellido;\n\tprivate String contrasena;\n\tprivate String email;\n\tprivate int estado;\n\tprivate String nombre;\n\tprivate String telefono;\n\t\n\t\n\t\n\t\n\t@ManyToOne(fetch = FetchType.EAGER)\n\t@JoinColumn(name = \"id_rol\", referencedColumnName = \"id\")\n\tprivate Rol rol;\n\n\tpublic String getRut() {\n\t\treturn rut;\n\t}\n\n\tpublic void setRut(String rut) {\n\t\tthis.rut = rut;\n\t}\n\n\tpublic String getNombre() {\n\t\treturn nombre;\n\t}\n\n\tpublic void setNombre(String nombre) {\n\t\tthis.nombre = nombre;\n\t}\n\n\tpublic String getApellido() {\n\t\treturn apellido;\n\t}\n\n\tpublic void setApellido(String apellido) {\n\t\tthis.apellido = apellido;\n\t}\n\n\tpublic String getTelefono() {\n\t\treturn telefono;\n\t}\n\n\tpublic void setTelefono(String telefono) {\n\t\tthis.telefono = telefono;\n\t}\n\n\tpublic String getEmail() {\n\t\treturn email;\n\t}\n\n\tpublic void setEmail(String email) {\n\t\tthis.email = email;\n\t}\n\n\tpublic int getEstado() {\n\t\treturn estado;\n\t}\n\n\tpublic void setEstado(int estado) {\n\t\tthis.estado = estado;\n\t}\n\n\tpublic String getContrasena() {\n\t\treturn contrasena;\n\t}\n\n\tpublic void setContrasena(String contrasena) {\n\t\tthis.contrasena = contrasena;\n\t}\n\n\tpublic Rol getRol() {\n\t\treturn rol;\n\t}\n\n\tpublic void setRol(Rol rol) {\n\t\tthis.rol = rol;\n\t}\n\n\tpublic static long getSerialversionuid() {\n\t\treturn serialVersionUID;\n\t}\n\t\n\t\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/model/Usuario.java b/src/main/java/cl/nessfit/web/model/Usuario.java
+--- a/src/main/java/cl/nessfit/web/model/Usuario.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/model/Usuario.java	(date 1664747713136)
+@@ -3,6 +3,8 @@
+ import java.io.*;
+ 
+ import javax.persistence.*;
++import javax.validation.constraints.Email;
++import javax.validation.constraints.Size;
+ 
+ @Entity
+ @Table(name = "usuarios")
+@@ -13,6 +15,7 @@
+ 	private String rut;
+ 	private String apellido;
+ 	private String contrasena;
++	@Email
+ 	private String email;
+ 	private int estado;
+ 	private String nombre;
+Index: src/main/java/cl/nessfit/web/service/IUsuarioService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.service;\n\nimport java.util.List;\n\nimport cl.nessfit.web.model.Usuario;\nimport cl.nessfit.web.repository.IUsuarioRepository;\n\npublic interface IUsuarioService {\n\t\n\tpublic List<Usuario> verTodosLosUsuarios();\n\n    public List<Usuario> verAdministrativos();\n\n    public void guardar(Usuario usuario);\n\n    public Usuario buscarPorRut(String rut);\n\n\tList<Usuario> verClientes();\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/service/IUsuarioService.java b/src/main/java/cl/nessfit/web/service/IUsuarioService.java
+--- a/src/main/java/cl/nessfit/web/service/IUsuarioService.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/service/IUsuarioService.java	(date 1664746105886)
+@@ -15,6 +15,7 @@
+ 
+     public Usuario buscarPorRut(String rut);
+ 
++    public Usuario buscarPorEmail(String email);
+ 	List<Usuario> verClientes();
+ 
+ }
+Index: src/main/java/cl/nessfit/web/config/WebSecurityConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.config;\r\n\r\nimport java.io.IOException;\r\nimport javax.servlet.ServletException;\r\nimport javax.servlet.http.HttpServletRequest;\r\nimport javax.servlet.http.HttpServletResponse;\r\nimport javax.sql.DataSource;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.security.access.AccessDeniedException;\r\nimport org.springframework.security.authentication.BadCredentialsException;\r\nimport org.springframework.security.authentication.DisabledException;\r\nimport org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;\r\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\r\nimport org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\r\nimport org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;\r\nimport org.springframework.security.core.Authentication;\r\nimport org.springframework.security.core.AuthenticationException;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.security.web.access.AccessDeniedHandler;\r\nimport org.springframework.security.web.authentication.AuthenticationSuccessHandler;\r\nimport org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;\r\nimport org.springframework.security.web.util.matcher.AntPathRequestMatcher;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\n\r\n@Configuration\r\n@EnableWebSecurity\r\npublic class WebSecurityConfig extends WebSecurityConfigurerAdapter {\r\n\r\n    /**\r\n     * Inyección de origen de datos (base de datos)\r\n     */\r\n    @Autowired\r\n    private DataSource dataSource;\r\n\r\n\r\n    /**\r\n     * Bean para encriptar contraseñas con BCrypt\r\n    */\r\n    @Bean\r\n    public BCryptPasswordEncoder passwordEncoder() {\r\n\treturn new BCryptPasswordEncoder(4);\r\n    }\r\n    \r\n    /**\r\n     * Configura el usuario y el rol para acceder al sistema\r\n     */\r\n    @Override\r\n    protected void configure(AuthenticationManagerBuilder auth) throws Exception {\r\n\tauth.jdbcAuthentication().dataSource(dataSource)\r\n\t\t// Busca al usuario por el parámetro rut en la base de datos\r\n\t\t.usersByUsernameQuery(\"select rut, contrasena, estado from usuarios where rut=?\")\r\n\t\t// Busca el rol asociado al rut\r\n\t\t.authoritiesByUsernameQuery(\r\n\t\t\t\"select u.rut, r.nombre from usuarios u inner join roles r on u.id_rol = r.id where u.rut=?\");\r\n    }\r\n    \r\n\r\n    /**\r\n     * Configura el filter Chain para acceso a las rutas\r\n     */\r\n    @Override\r\n    protected void configure(HttpSecurity http) throws Exception {\r\n\thttp.authorizeRequests()\r\n\t\t// Los recursos estáticos no requieren autenticación\r\n\t\t.antMatchers(\"/scss/**\", \"/css/**\", \"/img/**\", \"/js/**\", \"/vendors/**\").permitAll()\r\n\t\t// Las vistas públicas no requieren autenticación\r\n\t\t.antMatchers(\"/login**\").anonymous()\r\n\t\t// Las vistas con el subdominio administrador quedan protegidas al ROL\r\n\t\t// administrador\r\n\t\t.antMatchers(\"/administrador/**\").hasAuthority(\"ADMINISTRADOR\")\r\n\t\t// Las vistas con el subdominio administrador quedan protegidas al ROL\r\n\t\t// administrativo\r\n\t\t.antMatchers(\"/administrativo/**\").hasAuthority(\"ADMINISTRATIVO\")\r\n\t\t// Las vistas con el subdominio administrador quedan protegidas al ROL\r\n\t\t// cliente\r\n\t\t.antMatchers(\"/cliente/**\").hasAuthority(\"CLIENTE\")\r\n\t\t// Todas las demás URLs de la Aplicación requieren autenticación\r\n\t\t.anyRequest().authenticated()\r\n\t\t// El formulario de Login redirecciona a la url /login\r\n\t\t.and().formLogin().loginPage(\"/login\").usernameParameter(\"rut\").passwordParameter(\"contrasena\")\r\n\t\t// Si las credenciales son válidas, utiliza el manejador de autenticación\r\n\t\t.successHandler(new AuthenticationSuccessHandler() {\r\n\r\n\t\t    @Override\r\n\t\t    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,\r\n\t\t\t    Authentication authentication) throws IOException, ServletException {\r\n\t\t\t// Tiempo máximo de sesión\r\n\t\t\trequest.getSession().setMaxInactiveInterval(0);\r\n\t\t\t// Si la autenticación fue exitosa redirecciona a /menu\r\n\t\t\tresponse.sendRedirect(\"/menu\");\r\n\t\t    }\r\n\t\t})\r\n\t\t// Si las credenciales son inválidas utiliza el manejador de errores\r\n\t\t.failureHandler(new SimpleUrlAuthenticationFailureHandler() {\r\n\t\t    @Override\r\n\t\t    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,\r\n\t\t\t    AuthenticationException exception) throws IOException, ServletException {\r\n\t\t\t// Si el fallo es una instancia de la excepción BadCredential agrega el flag\r\n\t\t\t// error\r\n\t\t\tif (exception instanceof BadCredentialsException) {\r\n\t\t\t    super.setDefaultFailureUrl(\"/login?error=true\");\r\n\t\t\t    // Si el fallo es una instancia de la excepción Disable agrega el flag\r\n\t\t\t    // dehabilitado\r\n\t\t\t} else if (exception instanceof DisabledException) {\r\n\t\t\t    super.setDefaultFailureUrl(\"/login?deshabilitado=true\");\r\n\t\t\t}\r\n\t\t\tsuper.onAuthenticationFailure(request, response, exception);\r\n\t\t    }\r\n\t\t    // Si algun Match de url falla utiliza el manejador de excepciones\r\n\t\t}).and().exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {\r\n\r\n\t\t    @Override\r\n\t\t    public void handle(HttpServletRequest request, HttpServletResponse response,\r\n\t\t\t    AccessDeniedException accessDeniedException) throws IOException, ServletException {\r\n\t\t\t// Cualquiera sea el fallo redirecciona a /login\r\n\t\t\tresponse.sendRedirect(\"/login\");\r\n\r\n\t\t    }\r\n\t\t});\r\n    }    \r\n\r\n    \r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/config/WebSecurityConfig.java b/src/main/java/cl/nessfit/web/config/WebSecurityConfig.java
+--- a/src/main/java/cl/nessfit/web/config/WebSecurityConfig.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/config/WebSecurityConfig.java	(date 1664740556976)
+@@ -66,7 +66,7 @@
+ 		// Los recursos estáticos no requieren autenticación
+ 		.antMatchers("/scss/**", "/css/**", "/img/**", "/js/**", "/vendors/**").permitAll()
+ 		// Las vistas públicas no requieren autenticación
+-		.antMatchers("/login**").anonymous()
++		.antMatchers("/login**","/olvido**").anonymous()
+ 		// Las vistas con el subdominio administrador quedan protegidas al ROL
+ 		// administrador
+ 		.antMatchers("/administrador/**").hasAuthority("ADMINISTRADOR")
+@@ -80,6 +80,7 @@
+ 		.anyRequest().authenticated()
+ 		// El formulario de Login redirecciona a la url /login
+ 		.and().formLogin().loginPage("/login").usernameParameter("rut").passwordParameter("contrasena")
++		.loginProcessingUrl("/login")
+ 		// Si las credenciales son válidas, utiliza el manejador de autenticación
+ 		.successHandler(new AuthenticationSuccessHandler() {
+ 
+Index: src/main/java/cl/nessfit/web/service/UsuarioService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.service;\n\nimport java.util.List;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\n\nimport cl.nessfit.web.model.Usuario;\nimport cl.nessfit.web.repository.IUsuarioRepository;\n\n@Service\npublic class UsuarioService implements IUsuarioService {\n\n\t@Autowired\n    private IUsuarioRepository usuarioRepository;\n\n    @Override\n    public List<Usuario> verTodosLosUsuarios() {\n\treturn usuarioRepository.findAll();\n    }\n\n    @Override\n    public List<Usuario> verAdministrativos() {\n\treturn usuarioRepository.findByRolId(2);\n    }\n    \n    @Override\n    public List<Usuario> verClientes() {\n\treturn usuarioRepository.findByRolId(3);\n    }\n\n    @Override\n    public void guardar(Usuario usuario) {\n\tusuarioRepository.save(usuario);\n    }\n\n    @Override\n    public Usuario buscarPorRut(String rut) {\n\tUsuario usuario = usuarioRepository.findByRut(rut);\n\treturn usuario;\n    }\n}\n    \n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/service/UsuarioService.java b/src/main/java/cl/nessfit/web/service/UsuarioService.java
+--- a/src/main/java/cl/nessfit/web/service/UsuarioService.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/service/UsuarioService.java	(date 1664746288131)
+@@ -39,5 +39,10 @@
+ 	Usuario usuario = usuarioRepository.findByRut(rut);
+ 	return usuario;
+     }
++    @Override
++    public Usuario buscarPorEmail(String email) {
++    Usuario usuario = usuarioRepository.findByEmail(email);
++    return usuario;
++    }
+ }
+     
+Index: src/main/resources/templates/olvido.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\n<html lang=\"en\">\n\n\n<head>\n\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"\">\n\n    <title>Nessfit - Olvido contraseña</title>\n\n    <!-- Custom fonts for this template-->\n    <link href=\"static/vendor/fontawesome-free/css/all.min.css\" rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/vendor/fontawesome-free/css/all.min.css}\">>\n    <link\n        href=\"https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i\"\n        rel=\"stylesheet\">\n\n    <!-- Custom styles for this template-->\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"static/css/sb-admin-2.css\" th:href=\"@{/css/sb-admin-2.css}\">\n\n\n \n</head>\n\n<body class=\"bg-gradient-primary\">\n\n    <div class=\"container\">\n\n        <!-- Outer Row -->\n        <div class=\"row justify-content-center\">\n\n            <div class=\"col-xl-10 col-lg-12 col-md-9\">\n\n                <div class=\"card o-hidden border-0 shadow-lg my-5\">\n                    <div class=\"card-body p-0\">\n                        <!-- Nested Row within Card Body -->\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"p-5\">\n                                    <div class=\"text-center\">\n                                        <h1 class=\"h4 text-gray-900 mb-2\">¿Olvidaste tu contraseña?</h1>\n                                        <p class=\"mb-4\">No te preocupes. Ingresa aquí tu Rut para poder obtener un link de recuperación de tu contraseña.</p>\n                                    </div>\n                                    <form class=\"user\">\n                                        <div class=\"form-group\">\n                                            <input type=\"text\" class=\"form-control form-control-user\"\n                                                id=\"exampleInputEmail\" aria-describedby=\"emailHelp\"\n                                                placeholder=\"Ingrese su RUT...\">\n                                        </div>\n                                        <a href=\"login.html\" class=\"btn btn-primary btn-user btn-block\">\n                                            Recuperar contraseña\n                                        </a>\n                                    </form>\n                                    <hr>\n                                    \n                                    <div class=\"text-center\">\n                                        <a class=\"small\" href=\"login\">Volver</a>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n\n            </div>\n\n        </div>\n\n    </div>\n\n    <!-- Bootstrap core JavaScript-->\n    <script src=\"vendor/jquery/jquery.min.js\"></script>\n    <script src=\"vendor/bootstrap/js/bootstrap.bundle.min.js\"></script>\n\n    <!-- Core plugin JavaScript-->\n    <script src=\"vendor/jquery-easing/jquery.easing.min.js\"></script>\n\n    <!-- Custom scripts for all pages-->\n    <script src=\"js/sb-admin-2.min.js\"></script>\n\n</body>\n\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/olvido.html b/src/main/resources/templates/olvido.html
+--- a/src/main/resources/templates/olvido.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/resources/templates/olvido.html	(date 1664740637148)
+@@ -50,7 +50,7 @@
+                                                 id="exampleInputEmail" aria-describedby="emailHelp"
+                                                 placeholder="Ingrese su RUT...">
+                                         </div>
+-                                        <a href="login.html" class="btn btn-primary btn-user btn-block">
++                                        <a href="#" class="btn btn-primary btn-user btn-block">
+                                             Recuperar contraseña
+                                         </a>
+                                     </form>
+Index: target/classes/templates/olvido.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\n<html lang=\"en\">\n\n\n<head>\n\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"description\" content=\"\">\n    <meta name=\"author\" content=\"\">\n\n    <title>Nessfit - Olvido contraseña</title>\n\n    <!-- Custom fonts for this template-->\n    <link href=\"static/vendor/fontawesome-free/css/all.min.css\" rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/vendor/fontawesome-free/css/all.min.css}\">>\n    <link\n        href=\"https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i\"\n        rel=\"stylesheet\">\n\n    <!-- Custom styles for this template-->\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"static/css/sb-admin-2.css\" th:href=\"@{/css/sb-admin-2.css}\">\n\n\n \n</head>\n\n<body class=\"bg-gradient-primary\">\n\n    <div class=\"container\">\n\n        <!-- Outer Row -->\n        <div class=\"row justify-content-center\">\n\n            <div class=\"col-xl-10 col-lg-12 col-md-9\">\n\n                <div class=\"card o-hidden border-0 shadow-lg my-5\">\n                    <div class=\"card-body p-0\">\n                        <!-- Nested Row within Card Body -->\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"p-5\">\n                                    <div class=\"text-center\">\n                                        <h1 class=\"h4 text-gray-900 mb-2\">¿Olvidaste tu contraseña?</h1>\n                                        <p class=\"mb-4\">No te preocupes. Ingresa aquí tu Rut para poder obtener un link de recuperación de tu contraseña.</p>\n                                    </div>\n                                    <form class=\"user\">\n                                        <div class=\"form-group\">\n                                            <input type=\"text\" class=\"form-control form-control-user\"\n                                                id=\"exampleInputEmail\" aria-describedby=\"emailHelp\"\n                                                placeholder=\"Ingrese su RUT...\">\n                                        </div>\n                                        <a href=\"login.html\" class=\"btn btn-primary btn-user btn-block\">\n                                            Recuperar contraseña\n                                        </a>\n                                    </form>\n                                    <hr>\n                                    \n                                    <div class=\"text-center\">\n                                        <a class=\"small\" href=\"login\">Volver</a>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n\n            </div>\n\n        </div>\n\n    </div>\n\n    <!-- Bootstrap core JavaScript-->\n    <script src=\"vendor/jquery/jquery.min.js\"></script>\n    <script src=\"vendor/bootstrap/js/bootstrap.bundle.min.js\"></script>\n\n    <!-- Core plugin JavaScript-->\n    <script src=\"vendor/jquery-easing/jquery.easing.min.js\"></script>\n\n    <!-- Custom scripts for all pages-->\n    <script src=\"js/sb-admin-2.min.js\"></script>\n\n</body>\n\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/templates/olvido.html b/target/classes/templates/olvido.html
+--- a/target/classes/templates/olvido.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/target/classes/templates/olvido.html	(date 1664745982331)
+@@ -50,7 +50,7 @@
+                                                 id="exampleInputEmail" aria-describedby="emailHelp"
+                                                 placeholder="Ingrese su RUT...">
+                                         </div>
+-                                        <a href="login.html" class="btn btn-primary btn-user btn-block">
++                                        <a href="#" class="btn btn-primary btn-user btn-block">
+                                             Recuperar contraseña
+                                         </a>
+                                     </form>
+Index: src/main/java/cl/nessfit/web/controller/cambioContrasenaController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.controller;\r\n\r\nimport javax.servlet.http.HttpServletRequest;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.security.core.context.SecurityContextHolder;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.ModelAttribute;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\nimport org.springframework.web.servlet.mvc.support.RedirectAttributes;\r\n\r\nimport cl.nessfit.web.model.Usuario;\r\nimport cl.nessfit.web.service.IUsuarioService;\r\n\r\n\r\n@Controller\r\npublic class cambioContrasenaController {\r\n\r\n    @Autowired\r\n    private IUsuarioService usuarioService;\r\n\r\n    @Autowired\r\n    private BCryptPasswordEncoder passwordEncoder;\r\n\r\n    @GetMapping(\"/cambiar-contrasena\")\r\n    public String cambiarContrasenaForm(Model model) {\r\n\tmodel.addAttribute(\"nuevaContrasena\", \"\");\r\n\tmodel.addAttribute(\"nuevaContrasenaRepetir\", \"\");\r\n\treturn \"cambiarContrasena\";\r\n    }\r\n\r\n    @PostMapping(\"/cambiar-contrasena\")\r\n    public String enviarForm(@RequestParam String nuevaContrasena, @RequestParam String nuevaContrasenaRepetir,\r\n\t    HttpServletRequest request, RedirectAttributes attr, Model model) {\r\n\r\n\t// 1.- usuario logeado\r\n\tUsuario usuario = usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());\r\n\r\n\t// 2.- valida contraseñas iguales, usuario no null, contraseña mayor a 10 y\r\n\t// menor a 15 caracteres\r\n\tif (nuevaContrasena.compareTo(nuevaContrasenaRepetir)!=0) {\r\n\t\tmodel.addAttribute(\"msg\", \"Las contraseñas no son iguales\");\r\n\t    model.addAttribute(\"nuevaContrasena\", nuevaContrasena);\r\n\t    model.addAttribute(\"nuevaContrasenaRepetir\", nuevaContrasenaRepetir);\r\n\t    return \"cambiarContrasena\";\r\n\t}\r\n\tif (nuevaContrasena.length()<=10 || nuevaContrasena.length()>=15) {\r\n\t\tmodel.addAttribute(\"msg\", \"La contraseña debe tener entre 10 y 15 caracteres\");\r\n\t    model.addAttribute(\"nuevaContrasena\", nuevaContrasena);\r\n\t    model.addAttribute(\"nuevaContrasenaRepetir\", nuevaContrasenaRepetir);\r\n\t    return \"cambiarContrasena\";\r\n\t}\r\n\r\n\t// 3.- set usuario\r\n\tusuario.setContrasena(passwordEncoder.encode(nuevaContrasena));\r\n\r\n\t// 4.- persistencia\r\n\tusuarioService.guardar(usuario);\r\n\r\n\t// 5.- redirección\r\n\tSecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();\r\n\tlogoutHandler.logout(request, null, null);\r\n\treturn \"redirect:/login?cambio\";\r\n    }\r\n\r\n    @ModelAttribute(\"rutUser\")\r\n    public String auth() {\r\n\treturn SecurityContextHolder.getContext().getAuthentication().getName();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/controller/cambioContrasenaController.java b/src/main/java/cl/nessfit/web/controller/cambioContrasenaController.java
+--- a/src/main/java/cl/nessfit/web/controller/cambioContrasenaController.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/controller/cambioContrasenaController.java	(date 1664738086854)
+@@ -49,7 +49,7 @@
+ 	    model.addAttribute("nuevaContrasenaRepetir", nuevaContrasenaRepetir);
+ 	    return "cambiarContrasena";
+ 	}
+-	if (nuevaContrasena.length()<=10 || nuevaContrasena.length()>=15) {
++	if (nuevaContrasena.length() < 10 || nuevaContrasena.length()>=15) {
+ 		model.addAttribute("msg", "La contraseña debe tener entre 10 y 15 caracteres");
+ 	    model.addAttribute("nuevaContrasena", nuevaContrasena);
+ 	    model.addAttribute("nuevaContrasenaRepetir", nuevaContrasenaRepetir);
+Index: src/main/resources/templates/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/index.html b/src/main/resources/templates/login.html
+rename from src/main/resources/templates/index.html
+rename to src/main/resources/templates/login.html
+--- a/src/main/resources/templates/index.html	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/resources/templates/login.html	(date 1664740451033)
+@@ -69,13 +69,15 @@
+ 		        							Usuario Deshabilitado. Contacte con el administrador!
+ 		        						</div>
+                                         <div class="form-group">
++                                        	<label class="form-label">Rut:</label>
+                                             <input type="text" class="form-control form-control-user"
+                                                 id="rut" name="rut" 
+-                                                placeholder="Rut(formato:12345678K)" required>
++                                                placeholder="12345678K" required>
+                                         </div>
+                                         <div class="form-group">
++                                        <label class="form-label">Contraseña:</label>
+                                             <input type="password" class="form-control form-control-user"
+-                                                id="contrasena" name="contrasena" placeholder="Contraseña" required>
++                                                id="contrasena" name="contrasena" placeholder="********" required>
+                                 
+                                         </div>
+                                         <div class="col-md-12 col-md-offset-3">
+@@ -83,7 +85,15 @@
+ 												value="Iniciar sesión" />
+ 											</div>
+ 										</div>
+-                                </form>
++										<hr class="sidebar-divider">
++											<div class="col-md-12 col-md-offset-5ß">
++												<div class="text-center">
++                                        			<a class="small" href="olvido">¿Olvidaste tu password?</a>
++                                    			</div>
++                                    		</div>
++                                    		<hr class="sidebar-divider">
++                                    	</div>
++                                	</form>
+                                 </div>
+                             </div>
+                         </div>
+Index: src/main/java/cl/nessfit/web/repository/IUsuarioRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package cl.nessfit.web.repository;\n\nimport java.util.List;\n\nimport org.springframework.data.jpa.repository.JpaRepository;\n\nimport cl.nessfit.web.model.*;\npublic interface IUsuarioRepository extends JpaRepository<Usuario, String>{\n\n    // SELECT * FROM usuarios u INNER JOIN r.id ON u.id_rol = r.id;\n    public List<Usuario> findByRolId(int rol);\n\n    // SELECT * FROM usuarios u WHERE u.rut = rut;\n    public Usuario findByRut(String rut);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/cl/nessfit/web/repository/IUsuarioRepository.java b/src/main/java/cl/nessfit/web/repository/IUsuarioRepository.java
+--- a/src/main/java/cl/nessfit/web/repository/IUsuarioRepository.java	(revision efec1501de01553168b638c1b59627894761def5)
++++ b/src/main/java/cl/nessfit/web/repository/IUsuarioRepository.java	(date 1664746105903)
+@@ -12,4 +12,7 @@
+ 
+     // SELECT * FROM usuarios u WHERE u.rut = rut;
+     public Usuario findByRut(String rut);
++
++    // SELECT * FROM usuarios u WHERE u.email = email;
++    public Usuario findByEmail(String email);
+ }
