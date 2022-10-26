@@ -104,20 +104,12 @@ public class GestionClienteController {
      */
     @PostMapping("/editar/{rut}")
     public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
-        //verificar si el correo se encuentra en la base de datos
-        Usuario userEmail = usuarioService.buscarPorEmail(usuario.getEmail());
-        if (userEmail != null) {
-            result.rejectValue("email", null, "El email ya existe");
-        }
         //Verificador de nombres y rut
         if (usuario.getNombre().length() < 3) {
             result.rejectValue("nombre", null, "El nombre debe tener al menos 3 caracteres");
         }
         if (usuario.getApellido().length() < 3) {
             result.rejectValue("apellido", null, "El apellido debe tener al menos 3 caracteres");
-        }
-        if (usuario.getTelefono().length() < 11 || usuario.getTelefono().length() > 16) {
-            result.rejectValue("telefono", null, "El telefono debe tener entre 11 y 16 caracteres");
         }
         if(hayNumeros(usuario.getNombre())){
             result.rejectValue("nombre", null, "El nombre no debe contener numeros");
@@ -130,11 +122,14 @@ public class GestionClienteController {
         }
         //Datos del cliente a editar
         usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
-        usuario.setEstado(2);
         Rol rolCliente = new Rol();
         rolCliente.setId(3);
         usuario.setRol(rolCliente);
-
+        if(usuarioService.buscarEstado(usuario.getRut()) == 1){
+            usuario.setEstado(1);
+        } else {
+            usuario.setEstado(0);
+        }
         //Guarda el cliente
         usuarioService.guardar(usuario);
 
@@ -204,7 +199,7 @@ public class GestionClienteController {
 
         // Atributos del formulario
         usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
-        usuario.setEstado(2);
+        usuario.setEstado(1);
         Rol rolCliente = new Rol();
         rolCliente.setId(3);
         usuario.setRol(rolCliente);

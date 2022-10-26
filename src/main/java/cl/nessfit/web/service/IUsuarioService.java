@@ -17,5 +17,5 @@ public interface IUsuarioService {
 
     public Usuario buscarPorEmail(String email);
     List<Usuario> verClientes();
-
+    int buscarEstado(String rut);
 }

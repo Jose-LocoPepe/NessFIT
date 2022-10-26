@@ -48,5 +48,10 @@ public class UsuarioService implements IUsuarioService {
         Usuario usuario = usuarioRepository.findByEmail(email);
         return usuario;
     }
+    @Override
+    public int buscarEstado(String rut) {
+        Usuario usuario = usuarioRepository.findByRut(rut);
+        return usuario.getEstado();
+    }
 }
     
