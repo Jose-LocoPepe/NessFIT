@@ -240,12 +240,26 @@
                 <div class="row" style="display: block;">
                     <div class="col-md-12 col-sm-12  ">
                         <div class="x_panel">
-                            <div class="x_title">
-                                <a th:href="@{/administrador/gestion-adm/crear}"
-                                   class="btn btn-success text-white">Crear Administrativo</a>
-                                <div class="clearfix"></div>
-
-                            </div>
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                           placeholder="Buscar por RUT..." aria-label="Search"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                        <div class="col-md-12 col-sm-12" align="right">
+                                        <div class="x_title">
+                                            <a th:href="@{/administrador/gestion-adm/crear}"
+                                               class="btn btn-success text-white">Crear Administrativo</a>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <hr size="8px" color="white" />
                             <div class="x_content">
 
                                 <table class="table">
@@ -270,8 +284,14 @@
                                         <td
                                                 th:text="${usuario.estado==1?'Habilitado':'Deshabilitado'}">@mdo
                                         </td>
+
                                         <td><a th:href="@{/administrador/gestion-adm/editar/{rut} (rut=${usuario.rut})}"
                                                class="btn btn-warning">editar</a></td>
+                                               <!-- Cambio de estado boton
+                                            <a th:onclick="return ventana (${usuario.nombre} + ' ' + ${usuario.apellido})",
+                                               th:href="@{/administrador/gestion-adm/estado/{rut} (rut=${usuario.rut})}"
+                                               class="btn btn-info">Cambiar Estado</a></td>-->
+
                                     </tr>
 
                                     </tbody>
@@ -313,6 +333,27 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                     <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Habilitation Modal-->
+    <div class="modal fade" id="habilitationModal" tabindex="-1" role="dialog" aria-labelledby="Modal_habilitacion"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Modal_habilitacion">Seleccione.</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <td th:text="'¿Desea deshabilitar/habilitar a NOMBRE del sistema?'"></td>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" th:href="@{/administrador/gestion-adm}">Confirmar</a>
                 </div>
             </div>
         </div>

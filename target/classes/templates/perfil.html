@@ -276,13 +276,10 @@
 												for="rut">RUT:
 											</label>
 											<div class="col-md-6 col-sm-6 ">
-												<input th:field="*{rut}" type="text" hidden
-													class="form-control ">
 												<input th:field="*{rut}" type="text" disabled="disabled"
 													class="form-control ">
 												<div th:if="${#fields.hasErrors('rut')}"
 													th:errorclass="text-danger" th:errors="*{rut}"></div>
-											</div>
 										</div>
 
 										<div class="item form-group">
