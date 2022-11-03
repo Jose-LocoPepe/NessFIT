@@ -84,6 +84,13 @@ public class GestionAdministrativoController {
         return "/administrador/form-editar-administrativo";
     }
 
+    @GetMapping("/estado/{rut}")
+    public String formEstado(@PathVariable(value = "rut") String rut, Model model) {
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+        model.addAttribute("usuario", usuario);
+        return "/administrador/estado";
+    }
+
     /**
      * Maneja la peticion POST para la vista de la edicion de administrativos
      *
@@ -92,6 +99,32 @@ public class GestionAdministrativoController {
      * @param attr
      * @return vista del menu de edicion de administrativos
      */
+
+    @PostMapping("/estado/{rut}")
+    public String formEstadoUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
+
+
+        usuario.setNombre(usuario.getNombre());
+        usuario.setApellido(usuario.getApellido());
+        usuario.setEmail(usuario.getEmail());
+        usuario.setTelefono(usuario.getTelefono());
+        usuario.setContrasena(passwordEncoder.encode(usuario.getRut()));
+        Rol rolAdministrativo = new Rol();
+        rolAdministrativo.setId(2);
+        usuario.setRol(rolAdministrativo);
+        if(usuarioService.buscarEstado(usuario.getRut()) == 1){
+            usuario.setEstado(0);
+        } else {
+            usuario.setEstado(1);
+        }
+
+        // Paso 3.- Persistencia
+        usuarioService.guardar(usuario);
+
+        // Paso 4.- Redireccion
+        return "redirect:/administrador/gestion-adm";
+    }
+
     @PostMapping("/editar/{rut}")
     public String formEditarUsuario(@Valid Usuario usuario, BindingResult result, RedirectAttributes attr) {
 
@@ -243,6 +276,8 @@ public class GestionAdministrativoController {
         }
         return false;
     }
+
+
 
     //verificador de rut con verificador de numeros
     public boolean rutValido(String rut) {

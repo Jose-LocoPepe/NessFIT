@@ -38,6 +38,20 @@
     <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
 
+    <!--Datatable plugin CSS file -->
+    <link rel="stylesheet" href=
+            "https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <!--jQuery library file -->
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <!--Datatable plugin JS library file -->
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
+
 </head>
 
 <body id="page-top">
@@ -262,7 +276,7 @@
                             <hr size="8px" color="white" />
                             <div class="x_content">
 
-                                <table class="table">
+                                <table class="display" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th>RUT</th>
@@ -286,16 +300,23 @@
                                         </td>
 
                                         <td><a th:href="@{/administrador/gestion-adm/editar/{rut} (rut=${usuario.rut})}"
-                                               class="btn btn-warning">editar</a></td>
-                                               <!-- Cambio de estado boton
+                                               class="btn btn-warning">editar</a>
+                                               <!-- Cambio de estado boton-->
                                             <a th:onclick="return ventana (${usuario.nombre} + ' ' + ${usuario.apellido})",
                                                th:href="@{/administrador/gestion-adm/estado/{rut} (rut=${usuario.rut})}"
-                                               class="btn btn-info">Cambiar Estado</a></td>-->
+                                               class="btn btn-info">Cambiar Estado</a></td>
 
                                     </tr>
 
                                     </tbody>
                                 </table>
+
+                                <script>
+                                    /* Initialization of datatables */
+                                    $(document).ready(function () {
+                                        $('table.display').DataTable();
+                                    });
+                                </script>
 
                             </div>
                         </div>

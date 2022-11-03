@@ -326,12 +326,6 @@
 													class="form-control ">
 											</div>
                                             <hr size="4px" color="white" />
-										<div class="item form-group">
-                                            <input type="radio" name="habilitacion" id="habilitado">
-                                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="habilitado">Habilitado</label>
-                                            <input type="radio" name="habilitacion" id="deshabilitado">
-                                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="deshabilitado">Deshabilitado</label>
-                                        </div>
 
 										<div class="ln_solid"></div>
 										<div class="item form-group">
@@ -341,6 +335,26 @@
 												</a>
 											</div>
 										</div>
+
+									    <!-- Modificar perfil Modal-->
+									    <div class="modal fade" id="editarAdmModal" tabindex="-1" role="dialog" aria-labelledby="Modal_editaradmin"
+									        aria-hidden="true">
+									        <div class="modal-dialog" role="document">
+									            <div class="modal-content">
+									                <div class="modal-header">
+									                    <h5 class="modal-title" id="Modal_editaradmin">Selesccione.</h5>
+									                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+									                        <span aria-hidden="true">×</span>
+									                    </button>
+									                </div>
+									                <div class="modal-body">¿Está seguro de editar al administrativo?</div>
+									                <div class="modal-footer">
+									                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+									                    <button class="btn btn-primary" type="submit">Confirmar edición</button>
+									                </div>
+									            </div>
+									        </div>
+									    </div>
 									</form>
 								</div>
 							</div>
@@ -386,8 +400,6 @@
         </div>
     </div>
 
-
-   
 
 </body>
 
