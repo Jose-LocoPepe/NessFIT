@@ -173,6 +173,11 @@ public class GestionAdministrativoController {
         return "/administrador/form-crear-administrativo";
     }
 
+    @GetMapping("/habilitacion-cliente")
+    public String formHabilitacionCliente(Usuario usuario) {
+        return "/administrador/habilitacion-cliente";
+    }
+
     /**
      * Maneja la peticion POST para crear un administrativo
      *

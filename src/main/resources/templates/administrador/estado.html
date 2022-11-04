@@ -278,7 +278,7 @@
                                                for="rut">RUT:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{rut}" type="text" required="required"
+                                            <input th:field="*{rut}" type="text" readonly=»readonly»
                                                    class="form-control " th:errorclass="border-danger">
                                             <div th:if="${#fields.hasErrors('rut')}"
                                                  th:errorclass="text-danger" th:errors="*{rut}"></div>
@@ -290,7 +290,7 @@
                                                for="nombre">Nombre:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{nombre}" type="text" required="required"
+                                            <input th:field="*{nombre}" type="text" readonly=»readonly»
                                                    class="form-control ">
                                             <div th:if="${#fields.hasErrors('nombre')}"
                                                  th:errorclass="text-danger" th:errors="*{nombre}"></div>
@@ -302,7 +302,7 @@
                                                for="apellido">Apellido:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{apellido}" type="text"
+                                            <input th:field="*{apellido}" type="text" readonly=»readonly»
                                                    class="form-control ">
                                         </div>
                                     </div>
@@ -312,7 +312,7 @@
                                                for="telefono">Teléfono:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{telefono}" type="tel" required="required"
+                                            <input th:field="*{telefono}" type="tel" readonly=»readonly»
                                                    class="form-control">
                                         </div>
                                     </div>
@@ -322,7 +322,7 @@
                                                for="email">Email:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{email}" type="text" required="required"
+                                            <input th:field="*{email}" type="text" readonly=»readonly»
                                                    class="form-control ">
                                         </div>
                                         <hr size="4px" color="white" />
@@ -342,7 +342,7 @@
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="Modal_estado">Selesccione.</h5>
+                                                        <h5 class="modal-title" id="Modal_estado">Seleccione.</h5>
                                                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">×</span>
                                                         </button>

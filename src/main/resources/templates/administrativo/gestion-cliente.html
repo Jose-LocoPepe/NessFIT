@@ -37,7 +37,20 @@
     <!-- Page level custom scripts -->
     <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
- 
+
+    <!--Datatable plugin CSS file -->
+    <link rel="stylesheet" href=
+            "https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <!--jQuery library file -->
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <!--Datatable plugin JS library file -->
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
 </head>
 
 <body id="page-top">
@@ -219,9 +232,10 @@
 								<div class="clearfix"></div>
 								
 							</div>
+                            <hr size="8px" color="white" />
 							<div class="x_content">
 
-								<table class="table">
+								<table class="display" style="width:100%">
 									<thead>
 										<tr>
 											<th>RUT</th>
@@ -242,12 +256,21 @@
 											<td th:text="${usuario.email}">Otto</td>
 											<td
 												th:text="${usuario.estado==1?'Habilitado':'Deshabilitado'}">@mdo</td>
-											<td><a th:href="@{/administrativo/gestion-cliente/editar/{rut} (rut=${usuario.rut})}" class="btn btn-warning">editar</a></td>
+											<td><a th:href="@{/administrativo/gestion-cliente/editar/{rut} (rut=${usuario.rut})}" class="btn btn-warning">editar</a>
+                                            <!-- Cambio de estado boton-->
+                                            <a th:onclick="return ventana (${usuario.nombre} + ' ' + ${usuario.apellido})",
+                                               th:href="@{/administrativo/gestion-cliente/estado-clientes/{rut} (rut=${usuario.rut})}"
+                                               class="btn btn-info">Cambiar Estado</a></td>
 										</tr>
 
 									</tbody>
 								</table>
-
+                                <script>
+                                    /* Initialization of datatables */
+                                    $(document).ready(function () {
+                                        $('table.display').DataTable();
+                                    });
+                                </script>
 							</div>
 						</div>
 					</div>

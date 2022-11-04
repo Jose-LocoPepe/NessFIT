@@ -12,7 +12,7 @@
     <title>Nessfit - Menu</title>
 
     <!-- Custom fonts for this template-->
-    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"
+    <link rel="stylesheet" type="text/css"
           th:href="@{/vendor/fontawesome-free/css/all.min.css}">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -38,6 +38,20 @@
     <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
 
+    <!--Datatable plugin CSS file -->
+    <link rel="stylesheet" href=
+            "https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <!--jQuery library file -->
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <!--Datatable plugin JS library file -->
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
+
 </head>
 
 <body id="page-top">
@@ -49,7 +63,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="menu">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/menu}">
             <div class="sidebar-brand-icon">
                 <i class="fa fa-futbol"></i>
             </div>
@@ -61,10 +75,11 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="menu">
+            <a class="nav-link" th:href="@{/menu}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Inicio</span></a>
         </li>
+
         <div sec:authorize="hasAuthority('ADMINISTRADOR')">
             <!-- Divider -->
             <hr class="sidebar-divider ">
@@ -84,10 +99,10 @@
                 <div id="admin1Menu" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-1 collapse-inner rounded">
                         <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" href="/administrador/gestion-adm">Gestionar administrativos</a>
+                        <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="/administrador/habilitacion-cliente" >Habilitación Clientes</a>
+                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
                     </div>
                 </div>
             </li>
@@ -113,7 +128,7 @@
 
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="administrativo/gestion-cliente">Gestionar clientes</a>
+                        <a class="collapse-item" th:href="@{/administrativo/gestion-cliente}">Gestionar clientes</a>
 
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Camping:</h6>
@@ -142,9 +157,9 @@
             </div>
         </li>
 
-
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
+
 
     </ul>
     <!-- End of Sidebar -->
@@ -162,20 +177,6 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search
-                <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>-->
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -212,15 +213,14 @@
                             <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
                                th:text=" ${nombreUser}"></i>
                         </a>
-
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="perfil">
+                            <a class="dropdown-item" th:href="@{/perfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Perfil
                             </a>
-                            <a class="dropdown-item" href="cambiar-contrasena">
+                            <a class="dropdown-item" th:href="@{/cambiar-contrasena}">
                                 <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Cambiar Contraseña
                             </a>
@@ -239,125 +239,105 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
+
+
             <div class="container-fluid">
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Menú Principal</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Habilitacion de clientes</h1>
+
                 </div>
 
                 <!-- Content Row -->
-                <div class="row">
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Reservas actuales
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row" style="display: block;">
+                    <div class="col-md-12 col-sm-12  ">
+                        <div class="x_panel">
+                            <hr size="8px" color="white" />
+                            <div class="x_content">
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Reservas Pendientes
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Canchas Disponibles
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">3</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Canchas Ocupadas
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
+                                <table class="display" style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th>RUT</th>
+                                        <th>Nombre completo</th>
+                                        <th>Email</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${#lists.size(usuarios) == 0}">
+                                        <th colspan="5" class="text-center">Sin registro</th>
+                                    </tr>
+                                    <tr th:unless="${#lists.size(usuarios) == 0}"
+                                        th:each="usuario : ${usuarios}">
+                                        <th th:text="${usuario.rut}" scope="row">1</th>
+                                        <td th:text="${usuario.nombre + ' ' + usuario.apellido}">Mark</td>
+                                        <td th:text="${usuario.email}">Otto</td>
+                                        <td
+                                                th:text="${usuario.estado==1?'Habilitado':'Deshabilitado'}">@mdo
+                                        </td>
+
+                                        <td>
+                                            <a th:onclick="return ventana (${usuario.nombre} + ' ' + ${usuario.apellido})",
+                                               th:href="@{/administrador/habilitacion-cliente/estado-cliente/{rut} (rut=${usuario.rut})}"
+                                               class="btn btn-info">Cambiar Estado</a></td>
+
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <script>
+                                    /* Initialization of datatables */
+                                    $(document).ready(function () {
+                                        $('table.display').DataTable();
+                                    });
+                                </script>
+
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- /.container-fluid -->
+
             </div>
-            <!-- /.container-fluid -->
+            <!-- End of Main Content -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Page Wrapper -->
 
-</div>
-<!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="Modal_cerrarsesion"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="Modal_cerrarsesion">Seleccione.</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">¿Está seguro que desea cerrar la sesion?</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="Modal_cerrarsesion"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Modal_cerrarsesion">Seleccione.</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">¿Está seguro que desea cerrar la sesion?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 
 </body>
 
