@@ -268,7 +268,46 @@
                                 <script>
                                     /* Initialization of datatables */
                                     $(document).ready(function () {
-                                        $('table.display').DataTable();
+                                        $('table.display').DataTable({
+                                            "language": {
+                                                "sProcessing":    "Procesando...",
+                                                "sLengthMenu":    "Mostrar _MENU_",
+                                                "sZeroRecords":   "El usuario que busca no se encuentra en el sistema",
+                                                "sEmptyTable":    "Ningún usuario disponible en esta tabla",
+                                                "sInfo":          "Mostrando del _START_ al _END_ de un total de _TOTAL_ usuarios",
+                                                "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                                "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                                                "sInfoPostFix":   "",
+                                                "sSearch":        "Buscar:",
+                                                "sUrl":           "",
+                                                "sInfoThousands":  ",",
+                                                "sLoadingRecords": "Cargando...",
+                                                "oPaginate": {
+                                                    "sFirst":    "Primero",
+                                                    "sLast":    "Último",
+                                                    "sNext":    "Siguiente",
+                                                    "sPrevious": "Anterior"
+                                                },
+                                                "oAria": {
+                                                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                                },
+                                                "searchPanes": {
+                                                    "clearMessage": "Borrar todo",
+                                                    "collapse": {
+                                                        "0": "Paneles de búsqueda",
+                                                        "_": "Paneles de búsqueda (%d)"
+                                                    },
+                                                    "count": "{total}",
+                                                    "countFiltered": "{shown} ({total})",
+                                                    "emptyPanes": "Sin paneles de búsqueda",
+                                                    "loadMessage": "Cargando paneles de búsqueda",
+                                                    "title": "Filtros Activos - %d",
+                                                    "showMessage": "Mostrar Todo",
+                                                    "collapseMessage": "Colapsar Todo"
+                                                }
+                                            }
+                                            });
                                     });
                                 </script>
 							</div>
