@@ -12,14 +12,13 @@
     <title>Nessfit - Menu</title>
 
     <!-- Custom fonts for this template-->
-    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"
-          th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" type="text/css" href="static/css/sb-admin-2.css" th:href="@{/css/sb-admin-2.css}">
+    <link rel="stylesheet" type="text/css"  href="static/css/sb-admin-2.css" th:href="@{/css/sb-admin-2.css}">
 
     <!-- Bootstrap core JavaScript-->
     <script type="text/javascript" th:src="@{/vendor/jquery/jquery.min.js}"></script>
@@ -49,7 +48,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="menu">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/menu}">
             <div class="sidebar-brand-icon">
                 <i class="fa fa-futbol"></i>
             </div>
@@ -61,10 +60,12 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="menu">
+            <a class="nav-link" th:href="@{/menu}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Inicio</span></a>
         </li>
+
+        <!-- Menú de administrador -->
         <div sec:authorize="hasAuthority('ADMINISTRADOR')">
             <!-- Divider -->
             <hr class="sidebar-divider ">
@@ -84,10 +85,10 @@
                 <div id="admin1Menu" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-1 collapse-inner rounded">
                         <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" href="/administrador/gestion-adm">Gestionar administrativos</a>
+                        <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="/administrador/habilitacion-cliente" >Habilitación Clientes</a>
+                        <a class="collapse-item" th:href="@{administrativo/gestion-cliente}">Gestionar Clientes</a>
                     </div>
                 </div>
             </li>
@@ -113,11 +114,11 @@
 
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="administrativo/gestion-cliente">Gestionar clientes</a>
+                        <a class="collapse-item" th:href="@{/administrativo/gestion-cliente}">Gestionar clientes</a>
 
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Complejos:</h6>
-                        <a class="collapse-item" href="administrativo/gestion-complejo">Gestionar Complejos</a>
+                        <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
                         <a class="collapse-item" href="#">Estadisticas</a>
                     </div>
                 </div>
@@ -144,6 +145,12 @@
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar)
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>-->
+
 
     </ul>
     <!-- End of Sidebar -->
@@ -215,17 +222,16 @@
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="perfil">
+                            <a class="dropdown-item" th:href="@{/perfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Perfil
                             </a>
-                            <a class="dropdown-item" href="cambiar-contrasena">
+                            <a class="dropdown-item" th:href="@{/cambiar-contrasena}">
                                 <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Cambiar Contraseña
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="login?logout=true" data-toggle="modal"
-                               data-target="#logoutModal">
+                            <a class="dropdown-item" href="login?logout=true" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Cerrar sesión
                             </a>
@@ -238,124 +244,160 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
+
+
             <div class="container-fluid">
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Menú Principal</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Editar complejo</h1>
+
                 </div>
 
                 <!-- Content Row -->
+
                 <div class="row">
+                    <div class="col-md-12 col-sm-12 ">
+                        <div class="x_panel">
+                            <div class="x_content">
+                                <br />
+                                <form th:action="@{/administrativo/gestion-complejo/editar/{nombre} (nombre=${instalacion.nombre})}"
+                                      method="post" id="demo-form2" data-parsley-validate
+                                      class="user" th:object="${instalacion}">
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Reservas actuales
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                    <div th:if="${#fields.hasErrors('*')}"
+                                         class='alert alert-danger' role='alert'>
+                                        Por favor corrija los siguientes errores:
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                                        </ul>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Reservas Pendientes
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="nombre">Nombre:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input th:field="*{nombre}" type="text" readonly=»readonly»
+                                                   class="form-control " th:errorclass="border-danger">
+                                            <div th:if="${#fields.hasErrors('nombre')}"
+                                                 th:errorclass="text-danger" th:errors="*{nombre}"></div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Canchas Disponibles
+
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="direccion">Dirección:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input th:field="*{direccion}" type="text" required="required"
+                                                   class="form-control ">
+                                            <div th:if="${#fields.hasErrors('direccion')}"
+                                                 th:errorclass="text-danger" th:errors="*{direccion}"></div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">3</div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Canchas Ocupadas
+
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="tipo">Tipo:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <select th:field="*{tipo}" class="form-control" th:errorclass="border-danger">
+                                                <option value="" selected disabled>--SELECCIONE UN TIPO--</option>
+                                                <option value="cancha">cancha</option>
+                                                <option value="gimnasio">gimnasio</option>
+                                                <option value="piscina">piscina</option>
+                                                <option value="quincho">quincho</option>
+                                                <option value="estadio">estadio</option>
+                                            </select>
+                                            <div th:if="${#fields.hasErrors('tipo')}"
+                                                 th:errorclass="text-danger" th:errors="*{tipo}"></div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="costo">Costo:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input th:field="*{costo}" type="number" required="required"
+                                                   class="form-control">
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="item form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <a data-toggle="modal" data-target="#editarComplejoModal">
+                                                <button type="submit" class="btn btn-primary btn-user btn-block">Editar complejo</button>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <!-- Modificar perfil Modal-->
+                                    <div class="modal fade" id="editarComplejoModal" tabindex="-1" role="dialog" aria-labelledby="Modal_editarComplejo"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="Modal_editarComplejo">Seleccione.</h5>
+                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">¿Está seguro que desea editar el complejo?</div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                    <button class="btn btn-primary" type="submit">Confirmar edición</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- /.container-fluid -->
+
             </div>
-            <!-- /.container-fluid -->
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+
+            <!-- End of Footer -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Page Wrapper -->
 
-</div>
-<!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="Modal_cerrarsesion"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="Modal_cerrarsesion">Seleccione.</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">¿Está seguro que desea cerrar la sesion?</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="Modal_cerrarsesion"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Modal_cerrarsesion">Seleccione.</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">¿Está seguro que desea cerrar la sesion?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+
 
 
 </body>

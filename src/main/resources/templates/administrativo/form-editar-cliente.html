@@ -117,9 +117,8 @@
                             <a class="collapse-item" th:href="@{/administrativo/gestion-cliente}">Gestionar clientes</a>
 
                             <div class="collapse-divider"></div>
-                            <h6 class="collapse-header">Camping:</h6>
-                            <a class="collapse-item" href="#">Registrar Complejo</a>
-                            <a class="collapse-item" href="#">Gestionar Complejo</a>
+                            <h6 class="collapse-header">Complejos:</h6>
+                            <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
                             <a class="collapse-item" href="#">Estadisticas</a>
                         </div>
                     </div>
@@ -251,7 +250,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Cambiar contraseña</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Editar Cliente</h1>
                         
                     </div>
 
@@ -279,7 +278,7 @@
 												for="rut">RUT:
 											</label>
 											<div class="col-md-6 col-sm-6 ">
-												<input th:field="*{rut}" type="text" required="required"
+												<input th:field="*{rut}" type="text" readonly=»readonly»
 													class="form-control " th:errorclass="border-danger">
 												<div th:if="${#fields.hasErrors('rut')}"
 													th:errorclass="text-danger" th:errors="*{rut}"></div>
