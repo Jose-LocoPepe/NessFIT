@@ -1,12 +1,17 @@
 package cl.nessfit.web.controller;
 
 import cl.nessfit.web.model.Usuario;
+import cl.nessfit.web.model.Solicitud;
+import cl.nessfit.web.model.Instalacion;
+import cl.nessfit.web.service.IInstalacionService;
+import cl.nessfit.web.service.ISolicitudService;
 import cl.nessfit.web.service.IUsuarioService;
 import cl.nessfit.web.util.RutValidacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class solicitudesController {
+    @Autowired
+    private IInstalacionService instalacionService;
+
+    private ISolicitudService solicitudService;
     /**
      * Inyección del servicio de usuarios
      */
