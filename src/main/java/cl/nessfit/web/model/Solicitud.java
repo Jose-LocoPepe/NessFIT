@@ -14,10 +14,27 @@ public class Solicitud implements Serializable {
     @Id
     private String Id;
 
-    private Date fecha;
+    private Date fechaEmision;
 
     private int estado;
 
+    private Date fechaEstado;
+
+    public Solicitud(String id, int estado, Date fechaEstado, Usuario usuario, Instalacion instalacion) {
+        Id = id;
+        this.estado = estado;
+        this.usuario = usuario;
+        this.instalacion = instalacion;
+        this.fechaEmision = new Date();
+        this.fechaEstado = fechaEstado;
+    }
+    public Solicitud(String id, int estado, Usuario usuario, Instalacion instalacion) {
+        Id = id;
+        this.estado = estado;
+        this.usuario = usuario;
+        this.instalacion = instalacion;
+        this.fechaEmision = new Date();
+    }
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RutCliente", referencedColumnName = "rut")
     private Usuario usuario;
@@ -34,12 +51,12 @@ public class Solicitud implements Serializable {
         Id = id;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public Date getFechaEmision() {
+        return fechaEmision;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFechaEmision(Date fechaEmision) {
+        this.fechaEmision = fechaEmision;
     }
 
     public int getEstado() {
@@ -48,6 +65,14 @@ public class Solicitud implements Serializable {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public Date getFechaEstado() {
+        return fechaEstado;
+    }
+
+    public void setFechaEstado(Date fechaEstado) {
+        this.fechaEstado = fechaEstado;
     }
 
     public Usuario getUsuario() {
