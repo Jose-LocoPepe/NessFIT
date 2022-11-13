@@ -8,6 +8,7 @@ import java.util.*;
 public interface ISolicitudRepository extends JpaRepository<Solicitud, String> {
 
     //SELECT * FROM solicitudes WHERE solicitudes.Id = Id;
-
     public Optional<Solicitud> findById(String Id);
+
+
 }

@@ -7,8 +7,6 @@ import java.util.*;
 @Entity
 @Table(name = "solicitudes")
 public class Solicitud implements Serializable {
-
-
     private static final long serialVersionUID = 1523675848350542810L;
 
     @Id
@@ -20,21 +18,6 @@ public class Solicitud implements Serializable {
 
     private Date fechaEstado;
 
-    public Solicitud(String id, int estado, Date fechaEstado, Usuario usuario, Instalacion instalacion) {
-        Id = id;
-        this.estado = estado;
-        this.usuario = usuario;
-        this.instalacion = instalacion;
-        this.fechaEmision = new Date();
-        this.fechaEstado = fechaEstado;
-    }
-    public Solicitud(String id, int estado, Usuario usuario, Instalacion instalacion) {
-        Id = id;
-        this.estado = estado;
-        this.usuario = usuario;
-        this.instalacion = instalacion;
-        this.fechaEmision = new Date();
-    }
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RutCliente", referencedColumnName = "rut")
     private Usuario usuario;
@@ -42,6 +25,14 @@ public class Solicitud implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdInstalacion", referencedColumnName = "id")
     private Instalacion instalacion;
+
+    public String getIdInstalacion(){
+        return instalacion.getId();
+    }
+
+    public String getRutUsuario() {
+        return usuario.getRut();
+    }
 
     public String getId() {
         return Id;

@@ -3,10 +3,12 @@ package cl.nessfit.web.service;
 import cl.nessfit.web.model.Solicitud;
 import cl.nessfit.web.repository.ISolicitudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.Optional;
 
+@Service
 public class SolicitudService implements ISolicitudService{
 
     @Autowired

@@ -229,6 +229,27 @@
                     <th>Estado</th>
                   </tr>
                   </thead>
+                  <tbody>
+                  <tr th:if="${#lists.size(solicitudes) == 0}">
+                    <th colspan="5" class="text-center">Sin registro</th>
+                  </tr>
+                  <tr th:unless="${#lists.size(solicitudes) == 0}"
+                      th:each="solicitud : ${solicitudes}">
+                    <th th:text="${solicitud.Id}" scope="row">1</th>
+                    <td th:text="${solicitud.getRutUsuario()}">Mark</td>
+                    <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
+                    <td th:text="${solicitud.fechaEmision}">Otto</td>
+                    <td th:text="${solicitud.estado}">Otto</td>
+                    <td
+                            th:text="${solicitud.estado==1?'Pendiente':'A/R'}">ada</td>
+                    <td><a href="#" class="btn btn-warning">editar</a>
+                      <!-- Cambio de estado boton-->
+                      <a th:onclick="return ventana (${solicitud.Id})",
+                         href="#"
+                         class="btn btn-info">Cambiar Estado</a></td>
+                  </tr>
+
+                  </tbody>
 
 
                 </table>
