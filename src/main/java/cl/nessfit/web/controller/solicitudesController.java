@@ -94,4 +94,13 @@ public class solicitudesController {
         return "redirect:/administrativo/administrar-solicitudes-arriendo";
     }
 
+    @ModelAttribute("nombreUser")
+    public String authName () {
+        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+
+        return usuario.getNombre() + " " + usuario.getApellido();
+
+    }
+
 }
