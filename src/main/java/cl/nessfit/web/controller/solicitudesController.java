@@ -26,6 +26,8 @@ public class solicitudesController {
     @Autowired
     private IInstalacionService instalacionService;
 
+    public Solicitud solicitudUso;
+
     @Autowired
     private ISolicitudService solicitudService;
     /**
@@ -39,56 +41,57 @@ public class solicitudesController {
      */
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    /**
-     * Inyección del bean de validación de rut
-     */
-    @Autowired
-    private RutValidacion validation;
-
-    /**
-     * Inicializa el binder para la validación de rut
-     *
-     * @param binder binder
-     */
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(validation);
-    }
 
     @GetMapping("")
     public String listarSolicitudes(Model model) {
         model.addAttribute("solicitudes", solicitudService.verTodasSolicitudes());
-        return "administrativo/administrar-solicitudes-arriendo";
+        return "/administrativo/administrar-solicitudes-arriendo";
     }
-    @GetMapping("/aceptar-solicitud-arriendo/{Id}")
-    public String formAceptarSolicitud(@PathVariable(value = "Id") String Id, Model model){
+    @GetMapping("/r/{id}")
+    public String formRechazarSolicitud(@PathVariable("id") String Id, Model model) {
         Optional<Solicitud> solicitud = solicitudService.buscarPorId(Id);
-        model.addAttribute("solicitud",solicitud);
-        return "administrativo/aceptar-solicitud-arriendo";
+        model.addAttribute("solicitud",solicitud.get());
+        solicitudUso = solicitud.get();
+        return "administrativo/solicitud-informacion-rechazo";
     }
-    @PostMapping("/aceptar-solicitud-arriendo/{Id}")
-    public String formAceptarSolicitudCliente(@Valid Solicitud solicitud, BindingResult result, RedirectAttributes attr){
-        solicitud.setUsuario(solicitud.getUsuario());
-        solicitud.setInstalacion(solicitud.getInstalacion());
-        solicitud.setFechaEstado(solicitud.getFechaEstado());
-        solicitud.setFechaEmision(solicitud.getFechaEmision());
-        if(solicitudService.buscarEstadoSolicitud(solicitud.getId()) == 1){
-            solicitud.setEstado(2);
-        }else{
-            solicitud.setEstado(3); //No deberia ocurrir nunca -_-
-        }
+    @PostMapping("/r/{id}")
+    public String formRechazarSolicitudCliente(@Valid Solicitud solicitud, BindingResult result, RedirectAttributes attr){
+        solicitud.setId(solicitudUso.getId());
+        solicitud.setFechaEmision(solicitudUso.getFechaEmision());
+        solicitud.setFechaEstado(solicitudUso.getFechaEstado());
+        solicitud.setInstalacion(solicitudUso.getInstalacion());
+        solicitud.setUsuario(solicitudUso.getUsuario());
+
+        solicitud.setEstado(3);
 
         solicitudService.guardar(solicitud);
 
-        return "redirect:/administrador/administrar-solicitudes-arriendo";
+        return "redirect:/administrativo/administrar-solicitudes-arriendo";
     }
 
-    @ModelAttribute("nombreUser")
-    public String authName() {
-        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = usuarioService.buscarPorRut(rut);
-
-        return usuario.getNombre() + " " + usuario.getApellido();
-
+    @GetMapping("/c/{id}")
+    public String formAceptarSolicitud(@PathVariable(value = "id") String Id, Model model){
+        Optional<Solicitud> solicitud = solicitudService.buscarPorId(Id);
+        model.addAttribute("solicitud",solicitud.get());
+        solicitudUso = solicitud.get();
+        return "administrativo/solicitud-informacion";
     }
+    @PostMapping("/c/{id}")
+    public String formAceptarSolicitudCliente(@Valid Solicitud solicitud, BindingResult result, RedirectAttributes attr){
+           //Si hay errores
+        solicitud.setId(solicitudUso.getId());
+        solicitud.setFechaEmision(solicitudUso.getFechaEmision());
+        solicitud.setFechaEstado(solicitudUso.getFechaEstado());
+        solicitud.setInstalacion(solicitudUso.getInstalacion());
+        solicitud.setUsuario(solicitudUso.getUsuario());
+
+        solicitud.setEstado(2);
+
+
+
+        solicitudService.guardar(solicitud);
+
+        return "redirect:/administrativo/administrar-solicitudes-arriendo";
+    }
+
 }

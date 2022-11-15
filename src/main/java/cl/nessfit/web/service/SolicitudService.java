@@ -24,6 +24,9 @@ public class SolicitudService implements ISolicitudService{
         solicitudRepository.save(solicitud);
 
     }
+//buscar por id
+
+
     @Override
     public Optional<Solicitud> buscarPorId(String id) {
         Optional<Solicitud> solicitud = solicitudRepository.findById(id);
