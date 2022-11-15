@@ -30,4 +30,11 @@ public class SolicitudService implements ISolicitudService{
         return solicitud;
     }
 
+    @Override
+    public int buscarEstadoSolicitud(String Id) {
+        Optional<Solicitud> solicitud = solicitudRepository.findById(Id);
+        return solicitud.get().getEstado();
+
+    }
+
 }

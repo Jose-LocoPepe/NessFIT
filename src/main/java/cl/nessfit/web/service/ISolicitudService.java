@@ -14,4 +14,6 @@ public interface ISolicitudService {
 
     public Optional<Solicitud> buscarPorId(String Id);
 
+    public int buscarEstadoSolicitud(String Id);
+
 }

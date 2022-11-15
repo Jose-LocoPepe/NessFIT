@@ -247,10 +247,10 @@
                     <td th:text="${solicitud.fechaEstado}">Otto</td>
                     <td th:text="${solicitud.getEstado()==1?'Pendiente':'Habilitado'}">Otto</td>
                     <td>
-                      <a th:href="@{/solicitudes/arriendo/{id}(id=${solicitud.Id})}" class="btn btn-primary">Aceptar</a>
+                      <a th:href="@{/administrativo/aceptar-solicitud-arriendo/{Id} (Id=${solicitud.Id})}" class="btn btn-primary">Aceptar</a>
                     </td>
                     <td>
-                      <a th:href="@{/solicitudes/arriendo/{id}(id=${solicitud.Id})}" class="btn btn-primary">Rechazar</a>
+                      <a th:href="@{/administrativo/rechazar-solicitud-arriendo/{Id} (Id=${solicitud.Id})}" class="btn btn-primary">Rechazar</a>
                     </td>
                   </tr>
 
