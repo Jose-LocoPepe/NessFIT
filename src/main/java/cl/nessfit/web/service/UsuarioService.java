@@ -28,6 +28,7 @@ public class UsuarioService implements IUsuarioService {
         return usuarioRepository.findByRolId(2);
     }
 
+
     @Override
     public List<Usuario> verClientes() {
         return usuarioRepository.findByRolId(3);

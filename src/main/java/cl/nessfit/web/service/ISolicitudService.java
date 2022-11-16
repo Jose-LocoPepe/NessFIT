@@ -16,4 +16,7 @@ public interface ISolicitudService {
 
     public int buscarEstadoSolicitud(String Id);
 
+    public List<Solicitud> verSolicitudesAprobadas();
+
+
 }

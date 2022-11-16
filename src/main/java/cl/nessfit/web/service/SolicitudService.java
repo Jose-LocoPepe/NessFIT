@@ -40,4 +40,16 @@ public class SolicitudService implements ISolicitudService{
 
     }
 
+    @Override
+    public List<Solicitud> verSolicitudesAprobadas() {
+        List<Solicitud> solicitudes = verTodasSolicitudes();
+        List<Solicitud> solicitudesAprobadas = null;
+        for (int i=0;i<solicitudes.size();i++) {
+            if(solicitudes.get(i).getEstado() == 2){
+                solicitudesAprobadas.add(solicitudes.get(i));
+            }
+        }
+        return solicitudesAprobadas;
+    }
+
 }

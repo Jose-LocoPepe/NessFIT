@@ -47,6 +47,7 @@ public class solicitudesController {
         model.addAttribute("solicitudes", solicitudService.verTodasSolicitudes());
         return "/administrativo/administrar-solicitudes-arriendo";
     }
+
     @GetMapping("/r/{id}")
     public String formRechazarSolicitud(@PathVariable("id") String Id, Model model) {
         Optional<Solicitud> solicitud = solicitudService.buscarPorId(Id);
