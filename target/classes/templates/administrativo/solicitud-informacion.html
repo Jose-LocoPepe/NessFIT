@@ -65,35 +65,6 @@
                 <span>Inicio</span></a>
         </li>
 
-
-        <div sec:authorize="hasAuthority('ADMINISTRADOR')">
-            <!-- Divider -->
-            <hr class="sidebar-divider ">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                ADMINISTRADOR
-            </div>
-
-            <!-- Nav Item - Menu para el administrador-->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin1Menu"
-                   aria-expanded="true" aria-controls="admin1Menu">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Gestionar</span>
-                </a>
-                <div id="admin1Menu" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-1 collapse-inner rounded">
-                        <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
-                    </div>
-                </div>
-            </li>
-        </div>
-
         <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
             <hr class="sidebar-divider">
             <!-- Heading -->
@@ -145,12 +116,6 @@
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
-        <!-- Sidebar Toggler (Sidebar)
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>-->
-
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -167,20 +132,6 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search
-                <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>-->
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -249,7 +200,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Estado solicitud</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Informacion de la solicitud</h1>
 
                 </div>
 
@@ -259,11 +210,19 @@
                     <div class="col-md-12 col-sm-12 ">
                         <div class="x_panel">
                             <div class="x_content">
-                                <br />
                                 <form th:action="@{/administrativo/administrar-solicitudes-arriendo/c/{id} (id=${solicitud.id})}"
                                       method="post" id="demo-form2" data-parsley-validate
                                       class="user" th:object="${solicitud}">
 
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="fechaPedido">Fecha pedido:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input th:field="*{fechaEmision}" type="text" readonly=»readonly»
+                                                   class="form-control ">
+                                        </div>
+                                    </div>
                                     <div class="item form-group">
                                         <label class="col-form-label col-md-3 col-sm-3 label-align"
                                                for="rut">ID:
@@ -273,19 +232,40 @@
                                                    class="form-control " th:errorclass="border-danger">
                                         </div>
                                     </div>
-                                    <div class="item form-group">
                                         <label class="col-form-label col-md-3 col-sm-3 label-align"
-                                               for="rut">Fecha pedido:
+                                               for="nombreCDeportivo">Centro deportivo:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{fechaEmision}" type="text" readonly=»readonly»
+                                            <input placeholder="Cancha" type="text" readonly=»readonly»
                                                    class="form-control ">
                                         </div>
-                                    </div>
 
-                                        <hr size="4px" color="white" />
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="costoTotal">Costo total:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input placeholder="4000" type="text" readonly=»readonly»
+                                                   class="form-control " >
+                                        </div>
 
-                                        <div class="ln_solid"></div>
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="rut">Rut cliente:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input placeholder="208810332" type="text" readonly=»readonly»
+                                                   class="form-control ">
+                                        </div>
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
+                                               for="nombre">Nombre cliente:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 ">
+                                            <input placeholder="joaquin pinto" type="text" readonly=»readonly»
+                                                   class="form-control ">
+                                        </div>
+
+                                    <hr size="4px" color="white"/>
+
+                                    <div class="ln_solid">
                                         <div class="item form-group">
                                             <div class="col-md-6 col-sm-6">
                                                 <a data-toggle="modal" data-target="#confirmarModal">

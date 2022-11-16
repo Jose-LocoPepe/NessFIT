@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
  * Controlador de la vista de Login
  *
  * @author BPCS Corporation
- *
  */
 @Controller
 public class loginController {

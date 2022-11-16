@@ -20,7 +20,6 @@ import cl.nessfit.web.service.IUsuarioService;
  *
  * @author BPCS Corporation
  */
-
 @Controller
 public class HomeController {
     /**

@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.Optional;
 
+/**
+ * Clase de servicio de la Solicitud
+ * @author BPCS Corp
+ */
 @Service
 public class SolicitudService implements ISolicitudService{
 
@@ -18,28 +22,26 @@ public class SolicitudService implements ISolicitudService{
     public List<Solicitud> verTodasSolicitudes() {
         return solicitudRepository.findAll();
     }
-
     @Override
     public void guardar(Solicitud solicitud) {
         solicitudRepository.save(solicitud);
 
     }
-//buscar por id
-
-
+    @Override
+    public long contarSolicitudes() {
+        return solicitudRepository.count();
+    }
     @Override
     public Optional<Solicitud> buscarPorId(String id) {
         Optional<Solicitud> solicitud = solicitudRepository.findById(id);
         return solicitud;
     }
-
     @Override
     public int buscarEstadoSolicitud(String Id) {
         Optional<Solicitud> solicitud = solicitudRepository.findById(Id);
         return solicitud.get().getEstado();
 
     }
-
     @Override
     public List<Solicitud> verSolicitudesAprobadas() {
         List<Solicitud> solicitudes = verTodasSolicitudes();

@@ -14,6 +14,8 @@ public interface ISolicitudService {
 
     public Optional<Solicitud> buscarPorId(String Id);
 
+    public long contarSolicitudes();
+
     public int buscarEstadoSolicitud(String Id);
 
     public List<Solicitud> verSolicitudesAprobadas();

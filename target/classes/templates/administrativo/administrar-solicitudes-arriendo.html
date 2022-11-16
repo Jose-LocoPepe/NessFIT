@@ -70,6 +70,10 @@
     <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
       <hr class="sidebar-divider">
       <!-- Heading -->
+      <div class="sidebar-heading">
+        ADMINISTRATIVO
+      </div>
+
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
            aria-expanded="true" aria-controls="admin2Menu">
@@ -184,11 +188,9 @@
 
 
       <!-- Begin Page Content -->
-
-
       <div class="container-fluid">
 
-        <!-- Page Heading -->
+        <!-- Header Solicitudes Pendientes -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
           <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Pendientes</h1>
 
@@ -219,9 +221,10 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="solicitud : ${solicitudes}"
-                      th:if="${#lists.size(solicitudes) == 0}">
-                    <th colspan="5" class="text-center">Sin registro de solicitudes pendientes.</th>
+
+
+                  <tr th:if="${contadorSolicitudesPendientes == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
                   </tr>
 
                   <tr th:unless="${#lists.size(solicitudes) == 0}"
@@ -255,6 +258,8 @@
 
         <!-- divider -->
         <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Header Solicitudes Aceptadas -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
           <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Aceptadas</h1>
 
@@ -283,10 +288,8 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="solicitud : ${solicitudes}"
-                    th:if="${#lists.size(solicitudes) == 0}">
-
-                    <th colspan="5" class="text-center">Sin registro de solicitudes aprobadas.</th>
+                  <tr th:if="${contadorSolicitudesAceptadas == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
                   </tr>
 
                   <tr th:unless="${#lists.size(solicitudes) == 0}"
@@ -311,6 +314,8 @@
         </div>
         <!-- divider -->
         <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Header Solicitudes Rechazadas -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
           <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Rechazadas</h1>
 
@@ -339,9 +344,8 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="solicitud : ${solicitudes}"
-                          th:if="${#lists.size(solicitudes) == 0}">
-                    <th colspan="5" class="text-center">Sin registro de solicitudes rechazadas.</th>
+                  <tr th:if="${contadorSolicitudesRechazadas == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
                   </tr>
 
                   <tr th:unless="${#lists.size(solicitudes) == 0}"

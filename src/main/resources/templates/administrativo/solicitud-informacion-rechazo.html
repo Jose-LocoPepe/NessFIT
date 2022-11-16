@@ -65,35 +65,6 @@
                 <span>Inicio</span></a>
         </li>
 
-
-        <div sec:authorize="hasAuthority('ADMINISTRADOR')">
-            <!-- Divider -->
-            <hr class="sidebar-divider ">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                ADMINISTRADOR
-            </div>
-
-            <!-- Nav Item - Menu para el administrador-->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin1Menu"
-                   aria-expanded="true" aria-controls="admin1Menu">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Gestionar</span>
-                </a>
-                <div id="admin1Menu" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-1 collapse-inner rounded">
-                        <h6 class="collapse-header">Administrativos:</h6>
-                        <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
-                    </div>
-                </div>
-            </li>
-        </div>
-
         <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
             <hr class="sidebar-divider">
             <!-- Heading -->
@@ -124,33 +95,8 @@
                 </div>
             </li>
         </div>
-
-        <!-- Nav Item - Pages Collapse Menu CLIENTE-->
-
-        <li class="nav-item">
-            <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Arrendar centro deportivo</span></a>
-            </div>
-        </li>
-        <li class="nav-item">
-            <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Visualizar solicitudes</span></a>
-            </div>
-        </li>
-
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar)
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>-->
-
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -167,20 +113,6 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search
-                <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>-->
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">

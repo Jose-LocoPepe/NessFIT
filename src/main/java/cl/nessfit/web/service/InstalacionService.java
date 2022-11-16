@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Clase de servicio de la Instalacion
+ * @author BPCS Corp
+ */
 @Service
 public class InstalacionService implements IInstalacionService {
 
