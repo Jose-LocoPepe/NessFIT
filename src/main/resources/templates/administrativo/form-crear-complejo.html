@@ -297,11 +297,11 @@
                                         <div class="col-md-6 col-sm-6 ">
                                             <select th:field="*{tipo}" class="form-control" th:errorclass="border-danger">
                                                 <option value="" selected disabled>--SELECCIONE UN TIPO--</option>
-                                                <option value="cancha">cancha</option>
-                                                <option value="gimnasio">gimnasio</option>
-                                                <option value="piscina">piscina</option>
-                                                <option value="quincho">quincho</option>
-                                                <option value="estadio">estadio</option>
+                                                <option value="Cancha">Cancha</option>
+                                                <option value="Gimnasio">Gimnasio</option>
+                                                <option value="Piscina">Piscina</option>
+                                                <option value="Quincho">Quincho</option>
+                                                <option value="Estadio">Estadio</option>
                                             </select>
                                             <div th:if="${#fields.hasErrors('tipo')}"
                                                  th:errorclass="text-danger" th:errors="*{tipo}"></div>

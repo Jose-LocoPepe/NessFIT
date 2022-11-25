@@ -37,11 +37,16 @@
   <!-- Page level custom scripts -->
   <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
   <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
+  <!--Datatable plugin CSS file -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" />
 
+  <!--jQuery library file -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <!--Datatable plugin JS library file -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body id="page-top">
-
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -70,6 +75,10 @@
     <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
       <hr class="sidebar-divider">
       <!-- Heading -->
+      <div class="sidebar-heading">
+        ADMINISTRATIVO
+      </div>
+
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
            aria-expanded="true" aria-controls="admin2Menu">
@@ -184,13 +193,11 @@
 
 
       <!-- Begin Page Content -->
-
-
       <div class="container-fluid">
 
-        <!-- Page Heading -->
+        <!-- Header Solicitudes Pendientes -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-          <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Pendientes</h1>
+          <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo</h1>
 
         </div>
 
@@ -201,175 +208,118 @@
             <div class="x_panel">
               <div class="x_title">
                 <div class="clearfix"></div>
-
               </div>
+              <hr size="8px" color="white" />
               <div class="x_content">
-
-                <table class="table">
+                <table class="display" style = "width:100%">
                   <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>RUT Cliente</th>
-                    <th>ID Instalacion</th>
-                    <th>Fecha solicitud</th>
-                    <th>Fecha estado</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                    <th></th>
-
-                  </tr>
+                    <tr>
+                      <th>ID</th>
+                      <th>RUT Cliente</th>
+                      <th>ID Instalacion</th>
+                      <th>Fecha solicitud</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="solicitud : ${solicitudes}"
-                      th:if="${#lists.size(solicitudes) > 0 and solicitud.getEstado() > 1}">
-                    <th colspan="5" class="text-center">Sin registro de solicitudes pendientes.</th>
+                  <!-- divider -->
+                  <tr th:if="${contadorSolicitudes == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
                   </tr>
-
-                  <tr th:unless="${#lists.size(solicitudes) == 0}"
-                      th:each="solicitud : ${solicitudes}"
-                      th:if="${solicitud.getEstado() == 1}">
+                  <tr th:unless="${contadorSolicitudes == 0}"
+                      th:each="solicitud : ${solicitudes}">
                     <th th:text="${solicitud.Id}" scope="row">1</th>
                     <td th:text="${solicitud.getRutUsuario()}">Mark</td>
                     <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
                     <td th:text="${solicitud.fechaEmision}">Otto</td>
-                    <td th:text="${solicitud.fechaEstado}">Otto</td>
-                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Habilitado'}">Otto</td>
+
                     <td>
-                      <a th:href="@{/administrativo/administrar-solicitudes-arriendo/c/{id} (id=${solicitud.id})}"
-                        class="btn btn-primary btn-sm">Aceptar</a>
+                      <a th:if="${solicitud.getEstado() == 1}">Pendiente</a>
+                      <a th:if="${solicitud.getEstado() == 2}">Aceptado</a>
+                      <a th:if="${solicitud.getEstado() == 3}">Rechazado</a>
+                    </td>
+
+
+                    <td>
+                      <a th:if="${solicitud.getEstado() == 1}">
+                        <a th:href="@{/administrativo/administrar-solicitudes-arriendo/c/{id} (id=${solicitud.id})}"
+                         class="btn btn-primary btn-sm">Aceptar</a>
+                        <a th:href="@{/administrativo/administrar-solicitudes-arriendo/r/{id} (id=${solicitud.id})}"
+                         class="btn btn-secondary btn-sm">Rechazar</a>
+                      </a>
+                      <a th:unless="${solicitud.getEstado() == 1}">
+                        <a> No hay acciones.</a>
                       </a>
                     </td>
-                    <td>
-                      <a th:href="@{/administrativo/administrar-solicitudes-arriendo/r/{id} (id=${solicitud.id})}"
-                         class="btn btn-secondary btn-sm">Rechazar</a></td>
-                    </td>
-                  </tr>
-
-                  </tbody>
-
-
-                </table>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-          <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Aceptadas</h1>
-
-        </div>
-
-        <!-- Content Row -->
-
-        <div class="row" style="display: block;">
-          <div class="col-md-12 col-sm-12  ">
-            <div class="x_panel">
-              <div class="x_title">
-                <div class="clearfix"></div>
-
-              </div>
-              <div class="x_content">
-
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>RUT Cliente</th>
-                    <th>ID Instalacion</th>
-                    <th>Fecha solicitud</th>
-                    <th>Fecha estado</th>
-                    <th>Estado</th>
-
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr th:each="solicitud : ${solicitudes}"
-                    th:if="${#lists.size(solicitudes) == 0 and solicitud.getEstado() != 2}">
-
-                    <th colspan="5" class="text-center">Sin registro de solicitudes aprobadas.</th>
-                  </tr>
-
-                  <tr th:unless="${#lists.size(solicitudes) == 0}"
-                      th:each="solicitud : ${solicitudes}"
-                      th:if="${solicitud.getEstado() == 2}">
-                    <th th:text="${solicitud.Id}" scope="row">1</th>
-                    <td th:text="${solicitud.getRutUsuario()}">Mark</td>
-                    <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
-                    <td th:text="${solicitud.fechaEmision}">Otto</td>
-                    <td th:text="${solicitud.fechaEstado}">Otto</td>
-                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Habilitado'}">Otto</td>
 
                   </tr>
 
                   </tbody>
-
-
                 </table>
+                <script>
+                  /* Initialization of datatables */
+                  $(document).ready(function () {
+                    $('table.display').DataTable({
 
+                      "language": {
+                        "sProcessing":    "Procesando...",
+                        "sLengthMenu":    "Mostrar _MENU_",
+                        "sZeroRecords":   "La solicitud que busca no se encuentra en el sistema",
+                        "sEmptyTable":    "Ningún complejo deportivo disponible en esta tabla",
+                        "sInfo":          "Mostrando del _START_ al _END_ de un total de _TOTAL_ instalaciones",
+                        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":   "",
+                        "sSearch":        "Buscar:",
+                        "sUrl":           "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                          "sFirst":    "Primero",
+                          "sLast":    "Último",
+                          "sNext":    "Siguiente",
+                          "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                          "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                          "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+
+                        "searchPanes": {
+                          "clearMessage": "Borrar todo",
+                          "collapse": {
+                            "0": "Paneles de búsqueda",
+                            "_": "Paneles de búsqueda (%d)"
+                          },
+                          "count": "{total}",
+                          "countFiltered": "{shown} ({total})",
+                          "emptyPanes": "Sin paneles de búsqueda",
+                          "loadMessage": "Cargando paneles de búsqueda",
+                          "title": "Filtros Activos - %d",
+                          "showMessage": "Mostrar Todo",
+                          "collapseMessage": "Colapsar Todo"
+                        }
+                      },
+                      columnDefs: [
+                        { orderable: false, targets: -1 },
+                        { orderable: false, targets: 1 },
+                        { orderable: false, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: false, targets: 4 },
+                        { orderable: false, targets: 5 }
+                      ],
+
+                  });
+                });
+                </script>
               </div>
             </div>
           </div>
         </div>
-        <!-- divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-          <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Rechazadas</h1>
+    </div>
+    </div>
 
-        </div>
-
-        <!-- Content Row -->
-
-        <div class="row" style="display: block;">
-          <div class="col-md-12 col-sm-12  ">
-            <div class="x_panel">
-              <div class="x_title">
-                <div class="clearfix"></div>
-
-              </div>
-              <div class="x_content">
-
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>RUT Cliente</th>
-                    <th>ID Instalacion</th>
-                    <th>Fecha solicitud</th>
-                    <th>Fecha estado</th>
-                    <th>Estado</th>
-
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr th:each="solicitud : ${solicitudes}"
-                          th:if="${#lists.size(solicitudes) == 0 and solicitud.getEstado() != 3}">
-                    <th colspan="5" class="text-center">Sin registro de solicitudes rechazadas.</th>
-                  </tr>
-
-                  <tr th:unless="${#lists.size(solicitudes) == 0}"
-                      th:each="solicitud : ${solicitudes}"
-                      th:if="${solicitud.getEstado() == 3}">
-                    <th th:text="${solicitud.Id}" scope="row">1</th>
-                    <td th:text="${solicitud.getRutUsuario()}">Mark</td>
-                    <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
-                    <td th:text="${solicitud.fechaEmision}">Otto</td>
-                    <td th:text="${solicitud.fechaEstado}">Otto</td>
-                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Rechazado'}">Otto</td>
-
-                  </tr>
-
-                  </tbody>
-
-
-                </table>
-
-              </div>
-            </div>
-          </div>
-        </div>
 
   <!-- End of Page Wrapper -->
 
@@ -397,10 +347,6 @@
       </div>
     </div>
   </div>
-</div>
-
-
 
 </body>
-
 </html>
