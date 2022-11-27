@@ -52,14 +52,6 @@ public class Solicitud implements Serializable {
         this.estado = estado;
     }
 
-    public Date getFechaEstado() {
-        return fechaEstado;
-    }
-
-    public void setFechaEstado(Date fechaEstado) {
-        this.fechaEstado = fechaEstado;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
