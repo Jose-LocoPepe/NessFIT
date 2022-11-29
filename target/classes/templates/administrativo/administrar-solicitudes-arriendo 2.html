@@ -70,6 +70,10 @@
     <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
       <hr class="sidebar-divider">
       <!-- Heading -->
+      <div class="sidebar-heading">
+        ADMINISTRATIVO
+      </div>
+
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
            aria-expanded="true" aria-controls="admin2Menu">
@@ -121,20 +125,6 @@
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
           <i class="fa fa-bars"></i>
         </button>
-
-        <!-- Topbar Search
-        <form
-            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                    aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-        </form>-->
 
         <!-- Topbar Navbar -->
         <ul class="navbar-nav ml-auto">
@@ -198,11 +188,9 @@
 
 
       <!-- Begin Page Content -->
-
-
       <div class="container-fluid">
 
-        <!-- Page Heading -->
+        <!-- Header Solicitudes Pendientes -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
           <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Pendientes</h1>
 
@@ -226,15 +214,17 @@
                     <th>RUT Cliente</th>
                     <th>ID Instalacion</th>
                     <th>Fecha solicitud</th>
-                    <th>Fecha estado</th>
                     <th>Estado</th>
                     <th>Acciones</th>
+                    <th></th>
 
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:if="${#lists.size(solicitudes) == 0}">
-                    <th colspan="5" class="text-center">Sin registro</th>
+
+
+                  <tr th:if="${contadorSolicitudesPendientes == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
                   </tr>
 
                   <tr th:unless="${#lists.size(solicitudes) == 0}"
@@ -244,13 +234,15 @@
                     <td th:text="${solicitud.getRutUsuario()}">Mark</td>
                     <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
                     <td th:text="${solicitud.fechaEmision}">Otto</td>
-                    <td th:text="${solicitud.fechaEstado}">Otto</td>
-                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Habilitado'}">Otto</td>
+                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Aceptado'}">Otto</td>
                     <td>
-                      <a th:href="@{/solicitudes/arriendo/{id}(id=${solicitud.Id})}" class="btn btn-primary">Aceptar</a>
+                      <a th:href="@{/administrativo/administrar-solicitudes-arriendo/c/{id} (id=${solicitud.id})}"
+                        class="btn btn-primary btn-sm">Aceptar</a>
+                      </a>
                     </td>
                     <td>
-                      <a th:href="@{/solicitudes/arriendo/{id}(id=${solicitud.Id})}" class="btn btn-primary">Rechazar</a>
+                      <a th:href="@{/administrativo/administrar-solicitudes-arriendo/r/{id} (id=${solicitud.id})}"
+                         class="btn btn-secondary btn-sm">Rechazar</a></td>
                     </td>
                   </tr>
 
@@ -264,8 +256,118 @@
           </div>
         </div>
 
+        <!-- divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Header Solicitudes Aceptadas -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Aceptadas</h1>
+
+        </div>
+
+        <!-- Content Row -->
+
+        <div class="row" style="display: block;">
+          <div class="col-md-12 col-sm-12  ">
+            <div class="x_panel">
+              <div class="x_title">
+                <div class="clearfix"></div>
+
+              </div>
+              <div class="x_content">
+
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>RUT Cliente</th>
+                    <th>ID Instalacion</th>
+                    <th>Fecha solicitud</th>
+                    <th>Estado</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:if="${contadorSolicitudesAceptadas == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
+                  </tr>
+
+                  <tr th:unless="${#lists.size(solicitudes) == 0}"
+                      th:each="solicitud : ${solicitudes}"
+                      th:if="${solicitud.getEstado() == 2}">
+                    <th th:text="${solicitud.Id}" scope="row">1</th>
+                    <td th:text="${solicitud.getRutUsuario()}">Mark</td>
+                    <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
+                    <td th:text="${solicitud.fechaEmision}">Otto</td>
+                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Aceptado'}">Otto</td>
+
+                  </tr>
+
+                  </tbody>
 
 
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+        <!-- Header Solicitudes Rechazadas -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">Solicitudes de Arriendo Rechazadas</h1>
+
+        </div>
+
+
+        <!-- Content Row -->
+
+        <div class="row" style="display: block;">
+          <div class="col-md-12 col-sm-12  ">
+            <div class="x_panel">
+              <div class="x_title">
+                <div class="clearfix"></div>
+
+              </div>
+              <div class="x_content">
+
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>RUT Cliente</th>
+                    <th>ID Instalacion</th>
+                    <th>Fecha solicitud</th>
+                    <th>Estado</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:if="${contadorSolicitudesRechazadas == 0 }">
+                    <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
+                  </tr>
+
+                  <tr th:unless="${#lists.size(solicitudes) == 0}"
+                      th:each="solicitud : ${solicitudes}"
+                      th:if="${solicitud.getEstado() == 3}">
+                    <th th:text="${solicitud.Id}" scope="row">1</th>
+                    <td th:text="${solicitud.getRutUsuario()}">Mark</td>
+                    <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
+                    <td th:text="${solicitud.fechaEmision}">Otto</td>
+                    <td th:text="${solicitud.getEstado()==1?'Pendiente':'Rechazado'}">Otto</td>
+
+                  </tr>
+
+                  </tbody>
+
+
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
 
   <!-- End of Page Wrapper -->
 

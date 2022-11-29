@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="proyecto-nessfit" />
         <module name="nessfit" />
-        <module name="NessFIT" />
       </profile>
     </annotationProcessing>
   </component>
