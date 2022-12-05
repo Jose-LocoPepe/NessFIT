@@ -19,8 +19,8 @@ public class Fecha_Solicitud implements Serializable {
     private Date fecha;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Solicitud_ArriendoId", referencedColumnName = "id")
-    private Long solicitud_arriendoid;
+    @JoinColumn(name = "Solicitud_ArriendoId", referencedColumnName = "Id")
+    private Solicitud solicitud;
 
     public String getId() {
         return id;
@@ -37,10 +37,12 @@ public class Fecha_Solicitud implements Serializable {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-    public Long getSolicitud_arriendoid() {
-        return solicitud_arriendoid;
+
+    public Solicitud getSolicitud() {
+        return solicitud;
     }
-    public void setSolicitud_arriendoid(Long solicitud_arriendoid) {
-        this.solicitud_arriendoid = solicitud_arriendoid;
+
+    public void setSolicitud(Solicitud solicitud) {
+        this.solicitud = solicitud;
     }
 }
