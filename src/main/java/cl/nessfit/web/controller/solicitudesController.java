@@ -90,7 +90,6 @@ public class solicitudesController {
     public String formRechazarSolicitudCliente(@Valid Solicitud solicitud, BindingResult result, RedirectAttributes attr){
         solicitud.setId(solicitudUso.getId());
         solicitud.setFechaEmision(solicitudUso.getFechaEmision());
-        solicitud.setFechaEstado(solicitudUso.getFechaEstado());
         solicitud.setInstalacion(solicitudUso.getInstalacion());
         solicitud.setUsuario(solicitudUso.getUsuario());
         solicitud.setEstado(3);
@@ -125,7 +124,6 @@ public class solicitudesController {
            //Si hay errores
         solicitud.setId(solicitudUso.getId());
         solicitud.setFechaEmision(solicitudUso.getFechaEmision());
-        solicitud.setFechaEstado(solicitudUso.getFechaEstado());
         solicitud.setInstalacion(solicitudUso.getInstalacion());
         solicitud.setUsuario(solicitudUso.getUsuario());
 

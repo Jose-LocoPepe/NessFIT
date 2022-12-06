@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("administrativo/estadisticas")
+@RequestMapping("administrativo/ver-estadisticas")
 public class estadisticaController {
-
     IFecha_SolicitudService fecha_solicitudService;
-
     @GetMapping("")
     public String estadistica (Model model, @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01") String inicio,  @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01") String fin) throws ParseException {
 
@@ -67,6 +65,5 @@ public class estadisticaController {
         model.addAttribute("fin", fin);
 
         return "administrativo/ver-estadisticas";
-
     }
 }
