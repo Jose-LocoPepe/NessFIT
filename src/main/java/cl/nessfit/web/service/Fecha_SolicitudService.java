@@ -31,6 +31,6 @@ public class Fecha_SolicitudService implements IFecha_SolicitudService {
 
     @Override
     public List<Fecha_Solicitud> buscarPorRangoFecha(Date inicio, Date termino) {
-        return fecha_solicitudRepository.findByFechaCreacionBetween(inicio,termino);
+        return fecha_solicitudRepository.findFecha_SolicitudByFechaBetween(inicio,termino);
     }
 }

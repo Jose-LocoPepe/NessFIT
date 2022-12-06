@@ -13,6 +13,6 @@ public interface IFecha_SolicitudRepository extends JpaRepository<Fecha_Solicitu
 
     public Fecha_Solicitud findByFecha(Date fecha);
 
-    public List<Fecha_Solicitud> findByFechaCreacionBetween(Date fechaInicio, Date fechaTermino);
+    public List<Fecha_Solicitud> findFecha_SolicitudByFechaBetween(Date fechaInicio, Date fechaTermino);
 
 }

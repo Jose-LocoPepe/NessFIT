@@ -32,7 +32,6 @@ public class estadisticaController {
         int contadorQuincho = 0;
         int contadorEstadio = 0;
 
-
         List<Fecha_Solicitud> solicitudes = fecha_solicitudService.buscarPorRangoFecha(date, finDate);
 
         for (Fecha_Solicitud fecha_solicitud: solicitudes) {
