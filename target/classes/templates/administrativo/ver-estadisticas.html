@@ -119,7 +119,7 @@
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Complejo:</h6>
                         <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
-                        <a class="collapse-item" href="#">Estadisticas</a>
+                        <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                     </div>
                 </div>
             </li>
@@ -149,7 +149,6 @@
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>-->
-
 
     </ul>
     <!-- End of Sidebar -->
@@ -217,7 +216,6 @@
                             <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
                                th:text=" ${nombreUser}"></i>
                         </a>
-
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
@@ -242,7 +240,32 @@
             </nav>
             <!-- End of Topbar -->
 
-            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Estadísticas</h1>
+
+                </div>
+
+                <!-- Content Row -->
+
+                <div class="row" style="display: block;">
+                    <div class="col-md-12 col-sm-12  ">
+                        <div class="x_panel">
+                            <div class="x_title">
+
+                                <div class="clearfix"></div>
+
+                            </div>
+
+                            <hr size="8px" color="white" />
+                            <div class="x_content">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             <!-- End of Main Content -->
 
@@ -280,7 +303,5 @@
             </div>
         </div>
     </div>
-
-</body>
 
 </html>

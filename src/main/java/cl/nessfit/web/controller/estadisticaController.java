@@ -7,13 +7,17 @@ import java.util.List;
 
 import cl.nessfit.web.model.Fecha_Solicitud;
 import cl.nessfit.web.model.Solicitud;
+import cl.nessfit.web.model.Usuario;
 import cl.nessfit.web.service.IFecha_SolicitudService;
 import cl.nessfit.web.service.ISolicitudService;
+import cl.nessfit.web.service.IUsuarioService;
 import cl.nessfit.web.service.SolicitudService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class estadisticaController {
     @Autowired
     private ISolicitudService solicitudService;
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
 
     @GetMapping("")
     public String estadistica (Model model, @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01 12:34:56") String inicio,  @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01 12:34:56") String fin) throws ParseException {
@@ -70,5 +78,13 @@ public class estadisticaController {
         model.addAttribute("fin", fin);
 
         return "administrativo/ver-estadisticas";
+    }
+    @ModelAttribute("nombreUser")
+    public String authName () {
+        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+
+        return usuario.getNombre() + " " + usuario.getApellido();
+
     }
 }
