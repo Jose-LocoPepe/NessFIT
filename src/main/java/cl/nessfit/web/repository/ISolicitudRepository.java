@@ -10,5 +10,8 @@ public interface ISolicitudRepository extends JpaRepository<Solicitud, String> {
     //SELECT * FROM solicitudes WHERE solicitudes.Id = Id;
     public Optional<Solicitud> findById(String Id);
 
+    //SELECT * FROM solicitudes WHERE solicitudes.fecha BETWEEN inicio AND termino;
+    public Optional<Solicitud> findSolicitudByfechaEmisionBetween(Date inicio, Date termino);
+
 
 }

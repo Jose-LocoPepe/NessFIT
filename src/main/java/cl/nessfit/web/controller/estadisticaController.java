@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import cl.nessfit.web.model.Fecha_Solicitud;
+import cl.nessfit.web.model.Solicitud;
 import cl.nessfit.web.service.IFecha_SolicitudService;
+import cl.nessfit.web.service.ISolicitudService;
+import cl.nessfit.web.service.SolicitudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("administrativo/ver-estadisticas")
 public class estadisticaController {
-    IFecha_SolicitudService fecha_solicitudService;
+    @Autowired
+    private ISolicitudService solicitudService;
+
     @GetMapping("")
-    public String estadistica (Model model, @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01") String inicio,  @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01") String fin) throws ParseException {
+    public String estadistica (Model model, @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01 12:34:56") String inicio,  @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01 12:34:56") String fin) throws ParseException {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = formatter.parse(inicio);
@@ -30,10 +35,11 @@ public class estadisticaController {
         int contadorQuincho = 0;
         int contadorEstadio = 0;
 
-        List<Fecha_Solicitud> solicitudes = fecha_solicitudService.buscarPorRangoFecha(date, finDate);
+        List<Solicitud> solicitudes = solicitudService.verTodasSolicitudes();
 
-        for (Fecha_Solicitud fecha_solicitud: solicitudes) {
-            switch (fecha_solicitud.getSolicitud().getInstalacion().getTipo()) {
+
+        for (Solicitud solicitud : solicitudes) {
+            switch (solicitud.getInstalacion().getTipo()) {
                 case "Cancha":
                     contadorCancha++;
                     break;
@@ -53,8 +59,7 @@ public class estadisticaController {
                     break;
             }
         }
-
-        model.addAttribute("solicitudes", solicitudes);
+        //model.addAttribute("solicitudes", solicitudes);
         model.addAttribute("cuentaCancha", contadorCancha);
         model.addAttribute("cuentaGimnasio", contadorGimnasio);
         model.addAttribute("cuentaPiscina", contadorPiscina);

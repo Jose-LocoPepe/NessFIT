@@ -39,5 +39,11 @@ public class SolicitudService implements ISolicitudService{
         return solicitud.get().getEstado();
 
     }
+    //buscar por rango fecha
+    @Override
+    public Optional<Solicitud> buscarPorRangoFecha(Date inicio, Date termino) {
+        Optional<Solicitud> solicitud = solicitudRepository.findSolicitudByfechaEmisionBetween(inicio,termino);
+        return solicitud;
+    }
 
 }
