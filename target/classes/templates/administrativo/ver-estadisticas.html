@@ -38,7 +38,12 @@
     <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
 
 </head>
-
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+    }
+</style>
 <body id="page-top">
 
 <!-- Page Wrapper -->
@@ -219,7 +224,7 @@
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" th:href="@{/perfil}">
+                            <a class="dropdown-p,.opñklñkolpp'¿´´'¿0' vbnmitem" th:href="@{/perfil}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Perfil
                             </a>
@@ -249,19 +254,84 @@
                 </div>
 
                 <!-- Content Row -->
-
                 <div class="row" style="display: block;">
                     <div class="col-md-12 col-sm-12  ">
                         <div class="x_panel">
                             <div class="x_title">
 
                                 <div class="clearfix"></div>
-
+                                <!-- mostrar cuentaCancha -->
                             </div>
 
                             <hr size="8px" color="white" />
                             <div class="x_content">
+                                <form method="get" th:action="@{/administrativo/ver-estadisticas}">
+                                    <div class="row invoice-info">
+                                        <div class="col-sm-5 invoice-col">
+                                            <label class="form-label">Fecha Inicio:</label> <input
+                                                class="form-control" type="date" name="inicio">
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-5 invoice-col">
+                                            <label class="form-label">Fecha Término:</label> <input
+                                                class="form-control" type="date" name="fin">
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-1 invoice-col">
+                                            <label class="form-label"></label>
+                                            <input type="submit" value="Enviar" class="form-control btn btn-success">
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- info row -->
+                                <div class="row invoice-info">
+                                    <div id="chartdiv"></div>
 
+                                </div>
+                                <hr>
+                                <div class="clearfix"></div>
+
+                                <!-- Table row -->
+                                <h4>Días solicitados</h4>
+                                <div class="row">
+                                    <div class="  table">
+                                        <table class="display" style = "width:100%">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>RUT Cliente</th>
+                                                <th>ID Instalacion</th>
+                                                <th>Fecha solicitud</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <!-- divider -->
+                                            <tr th:if="${contarSolicitudes == 0 }">
+                                                <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
+                                            </tr>
+                                            <tr th:unless="${contarSolicitudes == 0}"
+                                                th:each="solicitud : ${solicitudes}">
+                                                <th th:text="${solicitud.Id}" scope="row">1</th>
+                                                <td th:text="${solicitud.getRutUsuario()}">Mark</td>
+                                                <td th:text="${solicitud.getIdInstalacion()}">Otto</td>
+                                                <td th:text="${solicitud.fechaEmision}">Otto</td>
+
+                                                <td>
+                                                    <a th:if="${solicitud.getEstado() == 1}">Pendiente</a>
+                                                    <a th:if="${solicitud.getEstado() == 2}">Aceptado</a>
+                                                    <a th:if="${solicitud.getEstado() == 3}">Rechazado</a>
+                                                </td>
+
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
                             </div>
                         </div>
                     </div>
@@ -303,5 +373,86 @@
             </div>
         </div>
     </div>
+        <!-- Resources -->
+        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+
+        <script th:inline="javascript">
+
+            /*<![CDATA[*/
+
+            let cuentaCancha = /*[[${cuentaCancha}]]*/
+                let cuentaGimnasio = /*[[${cuentaGimnasio}]]*/
+                let cuentaPiscina = /*[[${cuentaPiscina}]]*/
+                let cuentaQuincho = /*[[${cuentaQuincho}]]*/
+                let cuentaEstadio = /*[[${cuentaEstadio}]]*/
+
+                /*]]>*/
+
+                am5.ready(function() {
+
+                    // Create root element
+                    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+                    var root = am5.Root.new("chartdiv");
+
+                    // Set themes
+                    // https://www.amcharts.com/docs/v5/concepts/themes/
+                    root.setThemes([
+                        am5themes_Animated.new(root)
+                    ]);
+
+                    // Create chart
+                    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+                    var chart = root.container.children.push(
+                        am5percent.PieChart.new(root, {
+                            endAngle: 270
+                        })
+                    );
+
+                    // Create series
+                    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+                    var series = chart.series.push(
+                        am5percent.PieSeries.new(root, {
+                            valueField: "value",
+                            categoryField: "category",
+                            endAngle: 270
+                        })
+                    );
+
+                    series.states.create("hidden", {
+                        endAngle: -90
+                    });
+
+
+                    // Set data
+                    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+                    series.data.setAll([{
+                        category: "Cancha",
+                        value: cuentaCancha
+                    }, {
+                        category: "Gimnasio",
+                        value: cuentaGimnasio,
+
+                    }, {
+                        category: "Piscina",
+                        value: cuentaPiscina,
+
+                    }, {
+                        category: "Quincho",
+                        value: cuentaQuincho,
+
+                    }, {
+                        category: "Estadio",
+                        value: cuentaEstadio,
+
+                    }]);
+
+                    series.appear(10, 10);
+
+                }); // end am5.ready()
+        </script>
+
 
 </html>

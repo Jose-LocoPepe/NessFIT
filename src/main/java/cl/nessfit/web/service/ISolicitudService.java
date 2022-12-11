@@ -16,6 +16,7 @@ public interface ISolicitudService {
     public Optional<Solicitud> buscarPorId(String Id);
 
     public int buscarEstadoSolicitud(String Id);
+    public List<Solicitud> buscarRangoFecha(Date fechaInicio, Date fechaTermino);
 
     public Optional<Solicitud> buscarPorRangoFecha(Date inicio, Date termino);
 }

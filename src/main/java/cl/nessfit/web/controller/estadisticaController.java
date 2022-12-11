@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("administrativo/ver-estadisticas")
+@RequestMapping("/administrativo/ver-estadisticas")
 public class estadisticaController {
     @Autowired
     private ISolicitudService solicitudService;
@@ -30,9 +30,11 @@ public class estadisticaController {
     @Autowired
     private IUsuarioService usuarioService;
 
-
+    public int contadorSolicitudes = 0;
     @GetMapping("")
-    public String estadistica (Model model, @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01 12:34:56") String inicio,  @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01 12:34:56") String fin) throws ParseException {
+    public String estadistica (Model model,
+                               @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01") String inicio,
+                               @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01") String fin) throws ParseException {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = formatter.parse(inicio);
@@ -43,13 +45,14 @@ public class estadisticaController {
         int contadorQuincho = 0;
         int contadorEstadio = 0;
 
-        List<Solicitud> solicitudes = solicitudService.verTodasSolicitudes();
-
+        //List<Solicitud> solicitudes = solicitudService.verTodasSolicitudes();
+        List<Solicitud> solicitudes = solicitudService.buscarRangoFecha(date, finDate);
 
         for (Solicitud solicitud : solicitudes) {
             switch (solicitud.getInstalacion().getTipo()) {
                 case "Cancha":
                     contadorCancha++;
+
                     break;
                 case "Gimnasio":
                     contadorGimnasio++;
@@ -66,8 +69,10 @@ public class estadisticaController {
                 default:
                     break;
             }
+            contadorSolicitudes++;
         }
-        //model.addAttribute("solicitudes", solicitudes);
+
+        model.addAttribute("solicitudes", solicitudes);
         model.addAttribute("cuentaCancha", contadorCancha);
         model.addAttribute("cuentaGimnasio", contadorGimnasio);
         model.addAttribute("cuentaPiscina", contadorPiscina);
@@ -86,5 +91,9 @@ public class estadisticaController {
 
         return usuario.getNombre() + " " + usuario.getApellido();
 
+    }
+    @ModelAttribute("contarSolicitudes")
+    public int contarSolicitudes(){
+        return contadorSolicitudes;
     }
 }

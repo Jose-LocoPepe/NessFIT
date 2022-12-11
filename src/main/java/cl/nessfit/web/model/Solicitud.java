@@ -1,5 +1,7 @@
 package cl.nessfit.web.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -12,6 +14,7 @@ public class Solicitud implements Serializable {
     @Id
     private String Id;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaEmision;
 
     private int estado;
