@@ -259,7 +259,7 @@ public class GestionAdministrativoController {
         String rut = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario usuario = usuarioService.buscarPorRut(rut);
 
-        return usuario.getNombre() + " " + usuario.getApellido();
+        return "  " +usuario.getNombre() + " " + usuario.getApellido();
 
     }
 

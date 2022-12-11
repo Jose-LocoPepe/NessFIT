@@ -12,6 +12,14 @@ public interface ISolicitudService {
 
     public void guardar(Solicitud solicitud);
 
-    public Optional<Solicitud> buscarPorId(String Id);
+    public Solicitud buscarPorId(String Id);
+
+    public List<Solicitud> verSolicitudesPorUsuario(String rut);
+
+    public List<Solicitud> verSolicitudesPorEstado(Integer estado);
+
+    public List<Solicitud> buscarPorRangoFecha(Date inicio, Date termino);
+
+    public List<Solicitud> buscarPorInstalacionAndEstado(String instalacion, int estado);
 
 }

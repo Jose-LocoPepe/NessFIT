@@ -250,115 +250,152 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Estado Cliente</h1>
+                    <h1 class="h3 mb-0 text-gray-800">ID Solicitud:  <small th:text="${solicitud.id}"></small></h1>
 
                 </div>
 
-                <!-- Content Row -->
+                <!-- Content Row-->
 
                 <div class="row">
                     <div class="col-md-12 col-sm-12 ">
                         <div class="x_panel">
                             <div class="x_content">
                                 <br />
-                                <form th:action="@{/administrador/habilitacion-cliente/estado-cliente/{rut} (rut=${usuario.rut})}"
-                                      method="post" id="demo-form2" data-parsley-validate
-                                      class="user" th:object="${usuario}">
-
-                                    <div th:if="${#fields.hasErrors('*')}"
-                                         class='alert alert-danger' role='alert'>
-                                        Por favor corrija los siguientes errores:
-                                        <ul>
-                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
-                                        </ul>
-                                    </div>
 
                                     <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
-                                               for="rut">RUT:
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Fecha Emisión:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{rut}" type="text" readonly=»readonly»
-                                                   class="form-control " th:errorclass="border-danger">
-                                            <div th:if="${#fields.hasErrors('rut')}"
-                                                 th:errorclass="text-danger" th:errors="*{rut}"></div>
+                                            <p>
+                                                <strong th:text="${#dates.format(solicitud.fechaEmision,'dd-MM-yyyy')}">01-08-2022</strong>
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
-                                               for="nombre">Nombre:
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Estado de solicitud:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{nombre}" type="text" readonly=»readonly»
-                                                   class="form-control ">
-                                            <div th:if="${#fields.hasErrors('nombre')}"
-                                                 th:errorclass="text-danger" th:errors="*{nombre}"></div>
+                                            <p>
+                                                <strong th:text="${solicitud.estado == 0 ? 'Pendiente': 'Aprobado'}">Pendiente</strong>
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
-                                               for="apellido">Apellido:
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Nombre cliente:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{apellido}" type="text" readonly=»readonly»
-                                                   class="form-control ">
+                                            <p>
+                                                <strong th:text="${solicitud.usuario.nombre + ' ' + solicitud.usuario.apellido}">Joaquin Pinto</strong>
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
-                                               for="telefono">Teléfono:
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align">RUT cliente:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{telefono}" type="tel" readonly=»readonly»
-                                                   class="form-control">
+                                            <p>
+                                                <strong th:text="${solicitud.usuario.rut}">123456789</strong>
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align"
-                                               for="email">Email:
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Nombre instalación:
                                         </label>
                                         <div class="col-md-6 col-sm-6 ">
-                                            <input th:field="*{email}" type="text" readonly=»readonly»
-                                                   class="form-control ">
+                                            <p>
+                                                <strong th:text="${solicitud.instalacion.nombre}">Quincho Publico</strong>
+                                            </p>
                                         </div>
-                                        <hr size="4px" color="white" />
+                                    </div>
 
-                                        <div class="ln_solid"></div>
-                                        <div class="item form-group">
-                                            <div class="col-md-6 col-sm-6">
-                                                <a data-toggle="modal" data-target="#estadoModal">
-                                                    <button type="submit" class="btn-info btn-user btn-block">Cambiar estado</button>
-                                                </a>
-                                            </div>
+                                    <h4>Fechas solicitadas</h4>
+                                    <div class="row">
+                                        <div class="  table">
+                                            <table class="display" style="width:100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>N°</th>
+                                                    <th>Día</th>
+                                                    <th>Instalación</th>
+                                                    <th>Valor</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="dia,index : ${solicitud.diasSolicitud}">
+                                                    <td th:text="${index.count}">1</td>
+                                                    <td th:text="${#dates.format(dia,'EEEE, dd MMMM yyyy')}">Call of Duty</td>
+                                                    <td>Instalación <span th:text="${solicitud.instalacion.nombre}"></span></td>
+                                                    <td align="right" th:text="${'$ ' + T(java.lang.String).format('%,d',solicitud.instalacion.costo)}">9000</td>
+
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+                                                    <td colspan="4" align="right">Monto total $ <strong th:text="${T(java.lang.String).format('%,d',solicitud.monto)}"> 14000</strong></td>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                            <script>
+                                                /* Initialization of datatables */
+                                                $(document).ready(function () {
+                                                    $('table.display').DataTable({
+                                                        "language": {
+                                                            "sProcessing":    "Procesando...",
+                                                            "sLengthMenu":    "Mostrar _MENU_",
+                                                            "sZeroRecords":   "Las fechas solicitadas que busca no se encuentra en el sistema",
+                                                            "sEmptyTable":    "Ninguna silicitud disponible en esta tabla",
+                                                            "sInfo":          "Mostrando del _START_ al _END_ de un total de _TOTAL_ solicitudes",
+                                                            "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                                            "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                                                            "sInfoPostFix":   "",
+                                                            "sSearch":        "Buscar:",
+                                                            "sUrl":           "",
+                                                            "sInfoThousands":  ",",
+                                                            "sLoadingRecords": "Cargando...",
+                                                            "oPaginate": {
+                                                                "sFirst":    "Primero",
+                                                                "sLast":    "Último",
+                                                                "sNext":    "Siguiente",
+                                                                "sPrevious": "Anterior"
+                                                            },
+                                                            "oAria": {
+                                                                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                                                                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                                            },
+                                                            "searchPanes": {
+                                                                "clearMessage": "Borrar todo",
+                                                                "collapse": {
+                                                                    "0": "Paneles de búsqueda",
+                                                                    "_": "Paneles de búsqueda (%d)"
+                                                                },
+                                                                "count": "{total}",
+                                                                "countFiltered": "{shown} ({total})",
+                                                                "emptyPanes": "Sin paneles de búsqueda",
+                                                                "loadMessage": "Cargando paneles de búsqueda",
+                                                                "title": "Filtros Activos - %d",
+                                                                "showMessage": "Mostrar Todo",
+                                                                "collapseMessage": "Colapsar Todo"
+                                                            }
+                                                        }
+                                                    });
+                                                });
+                                            </script>
                                         </div>
 
-                                        <!-- Modificar estado Modal-->
-                                        <div class="modal fade" id="estadoModal" tabindex="-1" role="dialog" aria-labelledby="Modal_estado"
-                                             aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="Modal_estado">Seleccione.</h5>
-                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <i th:text=" '¿Desea deshabilitar/habilitar a ' + *{nombre} + ' del sistema?'"></i>
-                                                    </div>
+                                    </div>
 
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                        <button class="btn btn-primary" type="submit">Confirmar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                </form>
+                                <div class="ln_solid"></div>
+                                <div class="item form-group">
+                                    <div class="col-md-6 col-sm-6">
+                                        <button class="btn btn-primary btn-user btn-block" onclick="window.print();"><i class="fa fa-print"></i> Imprimir</button>
+                                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="window.history.back();">Atrás</button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

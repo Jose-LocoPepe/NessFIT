@@ -42,4 +42,8 @@ public class InstalacionService implements IInstalacionService {
         Instalacion instalacion = instalacionRepository.findByNombre(nombre);
         return instalacion.getEstado();
     }
+
+    public List<Instalacion> verInstalacionesPorTipo(String tipo) {
+        return instalacionRepository.findByTipo(tipo);
+    }
 }

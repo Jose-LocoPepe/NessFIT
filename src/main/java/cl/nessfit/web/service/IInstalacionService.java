@@ -16,4 +16,6 @@ public interface IInstalacionService {
     public Instalacion buscarPorNombre(String nombre);
 
     public int buscarEstadoComplejo(String nombre);
+
+    public List<Instalacion> verInstalacionesPorTipo(String tipo);
 }

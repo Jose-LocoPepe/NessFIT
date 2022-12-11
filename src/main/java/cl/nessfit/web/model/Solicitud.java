@@ -1,5 +1,7 @@
 package cl.nessfit.web.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -14,18 +16,25 @@ public class Solicitud implements Serializable {
     @Id
     private String Id;
 
-    private Date fechaEmision;
-
     private int estado;
 
-    private Date fechaEstado;
+    private int monto;
+
+
+    @Column(name = "dias_solicitados")
+    @ElementCollection(targetClass = Date.class)
+    private List<Date> diasSolicitud;
+
+    @Column(name = "fecha_creacion")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private Date fechaEmision;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RutCliente", referencedColumnName = "rut")
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdInstalacion", referencedColumnName = "id")
+    @JoinColumn(name = "IdInstalacion", referencedColumnName = "nombre")
     private Instalacion instalacion;
 
     public String getId() {
@@ -66,5 +75,30 @@ public class Solicitud implements Serializable {
 
     public void setInstalacion(Instalacion instalacion) {
         this.instalacion = instalacion;
+    }
+
+    public int getMonto() {
+        return monto;
+    }
+
+    public void setMonto(int monto) {
+        this.monto = monto;
+    }
+
+    public List<Date> getDiasSolicitud() {
+        return diasSolicitud;
+    }
+
+    public void setDiasSolicitud(List<Date> diasSolicitud) {
+        this.diasSolicitud = diasSolicitud;
+    }
+
+    @Override
+    public String toString() {
+        return "Solicitud [id=" + Id + ", " + (diasSolicitud != null ? "diasSolicitud=" + diasSolicitud + ", " : "")
+                + (fechaEmision != null ? "fechaCreacion=" + fechaEmision + ", " : "")
+                + (instalacion != null ? "instalacion=" + instalacion + ", " : "")
+                + (usuario != null ? "usuario=" + usuario + ", " : "")
+                + (estado != 0 ? "estado=" + estado + ", " : "") + (monto != 0 ? "monto=" + monto : "") + "]";
     }
 }

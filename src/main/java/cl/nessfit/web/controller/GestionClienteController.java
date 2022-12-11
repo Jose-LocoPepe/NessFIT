@@ -244,7 +244,6 @@ public class GestionClienteController {
         Rol rolCliente = new Rol();
         rolCliente.setId(3);
         usuario.setRol(rolCliente);
-        System.out.println(usuario.toString());
 
         // Guardado del usuario
         usuarioService.guardar(usuario);
@@ -263,7 +262,7 @@ public class GestionClienteController {
         String rut = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario usuario = usuarioService.buscarPorRut(rut);
 
-        return usuario.getNombre() + " " + usuario.getApellido();
+        return "  " +usuario.getNombre() + " " + usuario.getApellido();
 
     }
 

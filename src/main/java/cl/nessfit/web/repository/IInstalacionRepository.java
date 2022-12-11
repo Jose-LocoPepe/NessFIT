@@ -1,4 +1,5 @@
 package cl.nessfit.web.repository;
+import java.util.List;
 import java.util.Optional;
 
 import cl.nessfit.web.model.Instalacion;
@@ -9,4 +10,6 @@ public interface IInstalacionRepository extends JpaRepository<Instalacion, Strin
     public Optional<Instalacion> findById(String id);
     // SELECT * FROM instalaciones u WHERE u.nombre = nombre;
     public Instalacion findByNombre(String nombre);
+
+    public List<Instalacion> findByTipo(String tipo);
 }
