@@ -33,12 +33,12 @@ public class estadisticaController {
     public int contadorSolicitudes = 0;
     @GetMapping("")
     public String estadistica (Model model,
-                               @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01") String inicio,
-                               @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01") String fin) throws ParseException {
+                               @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01 00:00:00") String inicio,
+                               @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01 00:00:00") String fin) throws ParseException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = formatter.parse(inicio);
-        Date finDate = formatter.parse(fin);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = formatter.parse(inicio + " 00:00:00");
+        Date finDate = formatter.parse(fin + " 23:59:59") ;
         int contadorCancha = 0;
         int contadorGimnasio = 0;
         int contadorPiscina = 0;
