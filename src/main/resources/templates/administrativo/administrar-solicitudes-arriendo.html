@@ -37,7 +37,19 @@
   <!-- Page level custom scripts -->
   <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
   <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
+  <!--Datatable plugin CSS file -->
+  <link rel="stylesheet" href=
+          "https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" />
 
+  <!--jQuery library file -->
+  <script type="text/javascript"
+          src="https://code.jquery.com/jquery-3.5.1.js">
+  </script>
+
+  <!--Datatable plugin JS library file 1.10.22 -->
+  <script type="text/javascript"
+          src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js">
+  </script>
 </head>
 
 <body id="page-top">
@@ -68,7 +80,11 @@
 
     <!-- Nav Item - Menu para el administrativo  -->
     <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+
       <hr class="sidebar-divider">
+      <div class="sidebar-heading">
+        ADMINISTRATIVO
+      </div>
       <!-- Heading -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
@@ -89,7 +105,7 @@
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Complejos:</h6>
             <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejo</a>
-            <a class="collapse-item" href="#">Estadisticas</a>
+            <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
           </div>
         </div>
       </li>
@@ -168,8 +184,11 @@
           <li class="nav-item dropdown arrow">
             <a href="javascript:" class="nav-link dropdown-toggle"
                id="navbarDropdown" data-toggle="dropdown">
-              <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
-                 th:text=" ${nombreUser}"></i>
+              <div>
+                <i class="fa fa-user text-gray-800" aria-haspopup="false" aria-expanded="false">
+                </i>
+                <b class="text-gray-800 h6">[[${nombreUser}]]</b>
+              </div>
             </a>
 
             <!-- Dropdown - User Information -->
@@ -210,35 +229,120 @@
 
         <!-- Content Row -->
 
+
         <div class="row" style="display: block;">
           <div class="col-md-12 col-sm-12  ">
             <div class="x_panel">
               <div class="x_title">
                 <div class="clearfix"></div>
-
               </div>
+              <hr size="8px" color="white" />
               <div class="x_content">
-
-                <table class="table">
+                <table class="display" style="width:100%">
                   <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>RUT Cliente</th>
-                    <th>ID Instalacion</th>
-                    <th>Fecha solicitud</th>
-                    <th>Estado</th>
-                  </tr>
+                    <tr>
+                      <th>Fecha solicitud</th>
+                      <th>ID de la solicitud</th>
+                      <th>Nombre Cliente</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
                   </thead>
+                  <tbody>
+                    <tr th:if="${contadorSolicitudes == 0 }">
+                        <td colspan="5" class="text-center">No hay solicitudes de arriendo</td>
+                    </tr>
+                    <tr th:unless="${contadorSolicitudes == 0}"
+                        th:each="solicitud : ${solicitudes}">
+                      <th th:text="${#dates.format(solicitud.getFechaEmision(),'dd-MM-yyyy HH:mm:ss')}" aria-sort="descending">Otto</th>
+                      <td th:text="${solicitud.Id}" scope="row">1</td>
+                      <td th:text="${solicitud.getUsuario().nombreCompleto()}">Mark</td>
+
+                      <td>
+                        <a th:if="${solicitud.getEstado() == 0}">Pendiente</a>
+                        <a th:if="${solicitud.getEstado() == 1}">Aceptado</a>
+                        <a th:if="${solicitud.getEstado() == 2}">Rechazado</a>
+                      </td>
 
 
+                      <td>
+
+
+                        <a th:if="${solicitud.getEstado() == 0}">
+                          <a th:href="@{/administrativo/administrar-solicitudes-arriendo/c/{id} (id=${solicitud.id})}"
+                             class="btn btn-primary btn-sm">Aceptar</a>
+                          <a th:href="@{/administrativo/administrar-solicitudes-arriendo/r/{id} (id=${solicitud.id})}"
+                             class="btn btn-secondary btn-sm">Rechazar</a>
+                        </a>
+                        <a th:unless="${solicitud.getEstado() == 0}">
+                          <a> No hay acciones.</a>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
+                <script>
+                  /* Initialization of datatables */
+                  $(document).ready(function () {
+                    $('table.display').DataTable({
 
+                      "language": {
+                        "sProcessing":    "Procesando...",
+                        "sLengthMenu":    "Mostrar _MENU_",
+                        "sZeroRecords":   "La solicitud que busca no se encuentra en el sistema",
+                        "sEmptyTable":    "Ningún complejo deportivo disponible en esta tabla",
+                        "sInfo":          "Mostrando del _START_ al _END_ de un total de _TOTAL_ instalaciones",
+                        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":   "",
+                        "sSearch":        "Buscar:",
+                        "sUrl":           "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                          "sFirst":    "Primero",
+                          "sLast":    "Último",
+                          "sNext":    "Siguiente",
+                          "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                          "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                          "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+
+                        "searchPanes": {
+                          "clearMessage": "Borrar todo",
+                          "collapse": {
+                            "0": "Paneles de búsqueda",
+                            "_": "Paneles de búsqueda (%d)"
+                          },
+                          "count": "{total}",
+                          "countFiltered": "{shown} ({total})",
+                          "emptyPanes": "Sin paneles de búsqueda",
+                          "loadMessage": "Cargando paneles de búsqueda",
+                          "title": "Filtros Activos - %d",
+                          "showMessage": "Mostrar Todo",
+                          "collapseMessage": "Colapsar Todo"
+                        }
+                      },
+                      columnDefs: [
+                        { orderSequence:["desc"], targets:[0]} ,
+                        { orderable: true, targets: 0 },
+                        { orderable: false, targets: 1 },
+                        { orderable: false, targets: 2 },
+                        { orderable: false, targets: 3 },
+                        { orderable: false, targets: 4 },
+
+                         ]
+                    });
+                  });
+                </script>
               </div>
             </div>
           </div>
         </div>
-
-
+      </div>
+    </div>
 
 
   <!-- End of Page Wrapper -->
@@ -268,8 +372,6 @@
     </div>
   </div>
 </div>
-
-
 
 </body>
 

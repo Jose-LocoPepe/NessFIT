@@ -38,7 +38,12 @@
     <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
 
 </head>
-
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+    }
+</style>
 <body id="page-top">
 
 <!-- Page Wrapper -->
@@ -88,7 +93,7 @@
                         <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" th:href="@{/administrador/habilitacion-cliente}" >Habilitacion Clientes</a>
+                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
                     </div>
                 </div>
             </li>
@@ -110,16 +115,15 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Arriendos:</h6>
-                        <a class="collapse-item" href="#">Solicitudes de arriendo</a>
+                        <a class="collapse-item" th:href="@{/administrativo/administrar-solicitudes-arriendo}">Solicitudes de arriendo</a>
 
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
                         <a class="collapse-item" th:href="@{/administrativo/gestion-cliente}">Gestionar clientes</a>
 
                         <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Camping:</h6>
-                        <a class="collapse-item" href="#">Registrar Complejo</a>
-                        <a class="collapse-item" href="#">Gestionar Complejo</a>
+                        <h6 class="collapse-header">Complejo:</h6>
+                        <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
                         <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                     </div>
                 </div>
@@ -130,18 +134,19 @@
 
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" th:href="@{/cliente/solicitudes/crear}">
+                <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Arrendar centro deportivo</span></a>
             </div>
         </li>
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" th:href="@{cliente/solicitudes}">
+                <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Visualizar solicitudes</span></a>
             </div>
         </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
@@ -149,7 +154,6 @@
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>-->
-
 
     </ul>
     <!-- End of Sidebar -->
@@ -220,7 +224,6 @@
                                 <b class="text-gray-800 h6">[[${nombreUser}]]</b>
                             </div>
                         </a>
-
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
@@ -245,168 +248,98 @@
             </nav>
             <!-- End of Topbar -->
 
-            <!-- Begin Page Content -->
-
-
             <div class="container-fluid">
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">ID Solicitud:  <small th:text="${solicitud.id}"></small></h1>
+                    <h1 class="h3 mb-0 text-gray-800">Estadísticas</h1>
 
                 </div>
 
-                <!-- Content Row-->
-
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 ">
+                <!-- Content Row -->
+                <div class="row" style="display: block;">
+                    <div class="col-md-12 col-sm-12  ">
                         <div class="x_panel">
+                            <div class="x_title">
+
+                                <div class="clearfix"></div>
+                                <!-- mostrar cuentaCancha -->
+                            </div>
+
+                            <hr size="8px" color="white" />
                             <div class="x_content">
-                                <br />
-
-                                    <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Fecha Emisión:
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 ">
-                                            <p>
-                                                <strong th:text="${#dates.format(solicitud.fechaEmision,'dd-MM-yyyy HH:mm:ss')}">01-08-2022</strong>
-                                            </p>
+                                <form method="get" th:action="@{/administrativo/ver-estadisticas}">
+                                    <div class="row invoice-info">
+                                        <div class="col-sm-5 invoice-col">
+                                            <label class="form-label">Fecha Inicio:</label> <input
+                                                class="form-control" type="date" name="inicio">
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-5 invoice-col">
+                                            <label class="form-label">Fecha Término:</label> <input
+                                                class="form-control" type="date" name="fin">
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-1 invoice-col">
+                                            <label class="form-label"></label>
+                                            <input type="submit" value="Enviar" class="form-control btn btn-success">
                                         </div>
                                     </div>
+                                </form>
+                                <!-- info row -->
+                                <div class="row invoice-info">
+                                    <div id="chartdiv"></div>
 
-                                    <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Estado de solicitud:
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 ">
-                                            <p>
-                                                <strong th:if="${solicitud.estado == 0}" th:text="${'Pendiente'}">Pendiente</strong>
-                                                <strong th:if="${solicitud.estado == 1}" th:text="${'Aprobada'}">Aprobada</strong>
-                                                <strong th:if="${solicitud.estado == 2}" th:text="${'Rechazada'}">Rechazada</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Nombre cliente:
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 ">
-                                            <p>
-                                                <strong th:text="${solicitud.usuario.nombre + ' ' + solicitud.usuario.apellido}">Joaquin Pinto</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align">RUT cliente:
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 ">
-                                            <p>
-                                                <strong th:text="${solicitud.usuario.rut}">123456789</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="item form-group">
-                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Nombre instalación:
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 ">
-                                            <p>
-                                                <strong th:text="${solicitud.instalacion.nombre}">Quincho Publico</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <h4>Fechas solicitadas</h4>
-                                    <div class="row">
-                                        <div class="  table">
-                                            <table class="display" style="width:100%">
-                                                <thead>
-                                                <tr>
-                                                    <th>N°</th>
-                                                    <th>Día</th>
-                                                    <th>Instalación</th>
-                                                    <th>Valor</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="dia,index : ${solicitud.diasSolicitud}">
-                                                    <td th:text="${index.count}">1</td>
-                                                    <td th:text="${#dates.format(dia,'EEEE, dd MMMM yyyy')}">Call of Duty</td>
-                                                    <td>Instalación <span th:text="${solicitud.instalacion.nombre}"></span></td>
-                                                    <td align="right" th:text="${'$ ' + T(java.lang.String).format('%,d',solicitud.instalacion.costo)}">9000</td>
-
-                                                </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                    <td colspan="4" align="right">Monto total $ <strong th:text="${T(java.lang.String).format('%,d',solicitud.monto)}"> 14000</strong></td>
-                                                </tr>
-                                                </tfoot>
-                                            </table>
-                                            <script>
-                                                /* Initialization of datatables */
-                                                $(document).ready(function () {
-                                                    $('table.display').DataTable({
-                                                        "language": {
-                                                            "sProcessing":    "Procesando...",
-                                                            "sLengthMenu":    "Mostrar _MENU_",
-                                                            "sZeroRecords":   "Las fechas solicitadas que busca no se encuentra en el sistema",
-                                                            "sEmptyTable":    "Ninguna silicitud disponible en esta tabla",
-                                                            "sInfo":          "Mostrando del _START_ al _END_ de un total de _TOTAL_ solicitudes",
-                                                            "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
-                                                            "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
-                                                            "sInfoPostFix":   "",
-                                                            "sSearch":        "Buscar:",
-                                                            "sUrl":           "",
-                                                            "sInfoThousands":  ",",
-                                                            "sLoadingRecords": "Cargando...",
-                                                            "oPaginate": {
-                                                                "sFirst":    "Primero",
-                                                                "sLast":    "Último",
-                                                                "sNext":    "Siguiente",
-                                                                "sPrevious": "Anterior"
-                                                            },
-                                                            "oAria": {
-                                                                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                                                                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                                                            },
-                                                            "searchPanes": {
-                                                                "clearMessage": "Borrar todo",
-                                                                "collapse": {
-                                                                    "0": "Paneles de búsqueda",
-                                                                    "_": "Paneles de búsqueda (%d)"
-                                                                },
-                                                                "count": "{total}",
-                                                                "countFiltered": "{shown} ({total})",
-                                                                "emptyPanes": "Sin paneles de búsqueda",
-                                                                "loadMessage": "Cargando paneles de búsqueda",
-                                                                "title": "Filtros Activos - %d",
-                                                                "showMessage": "Mostrar Todo",
-                                                                "collapseMessage": "Colapsar Todo"
-                                                            }
-                                                        }
-                                                    });
-                                                });
-                                            </script>
-                                        </div>
-
-                                    </div>
-
-                                <div class="ln_solid"></div>
-                                <div class="item form-group">
-                                    <div class="col-md-6 col-sm-6">
-                                        <button class="btn btn-primary btn-user btn-block" onclick="window.print();"><i class="fa fa-print"></i> Imprimir</button>
-                                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="window.history.back();">Atrás</button>
-                                    </div>
                                 </div>
+                                <hr>
+                                <div class="clearfix"></div>
 
+                                <!-- Table row -->
+                                <h4>Días solicitados</h4>
+                                <div class="row">
+                                    <div class="  table">
+                                        <table class="display" style = "width:100%">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>RUT Cliente</th>
+                                                <th>Nombre Instalacion</th>
+                                                <th>Fecha solicitud</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <!-- divider -->
+                                            <tr th:if="${contarSolicitudes == 0 }">
+                                                <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
+                                            </tr>
+                                            <tr th:unless="${contarSolicitudes == 0}"
+                                                th:each="solicitud : ${solicitudes}">
+                                                <th th:text="${solicitud.Id}" scope="row">1</th>
+                                                <td th:text="${solicitud.getUsuario().getRut()}">Mark</td>
+                                                <td th:text="${solicitud.getInstalacion().getNombre()}">Otto</td>
+                                                <td th:text="${solicitud.fechaEmision}">Otto</td>
+
+                                                <td>
+                                                    <a th:if="${solicitud.getEstado() == 0}">Pendiente</a>
+                                                    <a th:if="${solicitud.getEstado() == 1}">Aceptado</a>
+                                                    <a th:if="${solicitud.getEstado() == 2}">Rechazado</a>
+                                                </td>
+
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.container-fluid -->
 
-            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -443,7 +376,86 @@
             </div>
         </div>
     </div>
-</div>
-</body>
+        <!-- Resources -->
+        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+
+        <script th:inline="javascript">
+
+            /*<![CDATA[*/
+
+            let cuentaCancha = /*[[${cuentaCancha}]]*/
+                let cuentaGimnasio = /*[[${cuentaGimnasio}]]*/
+                let cuentaPiscina = /*[[${cuentaPiscina}]]*/
+                let cuentaQuincho = /*[[${cuentaQuincho}]]*/
+                let cuentaEstadio = /*[[${cuentaEstadio}]]*/
+
+                /*]]>*/
+
+                am5.ready(function() {
+
+                    // Create root element
+                    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+                    var root = am5.Root.new("chartdiv");
+
+                    // Set themes
+                    // https://www.amcharts.com/docs/v5/concepts/themes/
+                    root.setThemes([
+                        am5themes_Animated.new(root)
+                    ]);
+
+                    // Create chart
+                    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+                    var chart = root.container.children.push(
+                        am5percent.PieChart.new(root, {
+                            endAngle: 270
+                        })
+                    );
+
+                    // Create series
+                    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+                    var series = chart.series.push(
+                        am5percent.PieSeries.new(root, {
+                            valueField: "value",
+                            categoryField: "category",
+                            endAngle: 270
+                        })
+                    );
+
+                    series.states.create("hidden", {
+                        endAngle: -90
+                    });
+
+
+                    // Set data
+                    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+                    series.data.setAll([{
+                        category: "Cancha",
+                        value: cuentaCancha
+                    }, {
+                        category: "Gimnasio",
+                        value: cuentaGimnasio,
+
+                    }, {
+                        category: "Piscina",
+                        value: cuentaPiscina,
+
+                    }, {
+                        category: "Quincho",
+                        value: cuentaQuincho,
+
+                    }, {
+                        category: "Estadio",
+                        value: cuentaEstadio,
+
+                    }]);
+
+                    series.appear(10, 10);
+
+                }); // end am5.ready()
+        </script>
+
 
 </html>

@@ -6,6 +6,7 @@ import cl.nessfit.web.service.IInstalacionService;
 import cl.nessfit.web.service.ISolicitudService;
 import cl.nessfit.web.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,8 +59,16 @@ public class GestionArriendoController {
             model.addAttribute("estadios", instalacionService.verInstalacionesPorTipo("estadio"));
             return "cliente/form-crear-solicitud";
         }
+        //formato de fecha dd-MM-yyyy HH:mm:ss
 
-        renta.setFechaEmision(new Date());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = new Date();
+        String fecha = formatter.format(date);
+        try {
+            renta.setFechaEmision(formatter.parse(fecha));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         renta.setInstalacion(instalacionService.buscarPorNombre(instalacion));
         Usuario usuario = usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
         renta.setUsuario(usuario);

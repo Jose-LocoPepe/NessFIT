@@ -22,13 +22,15 @@ public class Solicitud implements Serializable {
 
 
     @Column(name = "dias_solicitados")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @ElementCollection(targetClass = Date.class)
+
     private List<Date> diasSolicitud;
 
     @Column(name = "fecha_creacion")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date fechaEmision;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RutCliente", referencedColumnName = "rut")
     private Usuario usuario;
@@ -92,6 +94,9 @@ public class Solicitud implements Serializable {
     public void setDiasSolicitud(List<Date> diasSolicitud) {
         this.diasSolicitud = diasSolicitud;
     }
+
+    //get solicitud
+
 
     @Override
     public String toString() {

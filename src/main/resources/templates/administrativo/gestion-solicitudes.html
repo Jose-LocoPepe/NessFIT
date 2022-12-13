@@ -12,7 +12,8 @@
     <title>Nessfit - Menu</title>
 
     <!-- Custom fonts for this template-->
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/vendor/fontawesome-free/css/all.min.css}">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
@@ -36,6 +37,20 @@
     <!-- Page level custom scripts -->
     <script type="text/javascript" th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/demo/chart-pie-demo.js}"></script>
+
+    <!--Datatable plugin CSS file -->
+    <link rel="stylesheet" href=
+            "https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <!--jQuery library file -->
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <!--Datatable plugin JS library file -->
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
 
 </head>
 
@@ -64,7 +79,6 @@
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Inicio</span></a>
         </li>
-        <!-- Nav Item - Administrador -->
 
         <div sec:authorize="hasAuthority('ADMINISTRADOR')">
             <!-- Divider -->
@@ -75,6 +89,7 @@
                 ADMINISTRADOR
             </div>
 
+            <!-- Nav Item - Menu para el administrador-->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin1Menu"
                    aria-expanded="true" aria-controls="admin1Menu">
@@ -87,13 +102,12 @@
                         <a class="collapse-item" th:href="@{/administrador/gestion-adm}">Gestionar administrativos</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
-                        <a class="collapse-item" href="#" >Gestionar Clientes</a>
+                        <a class="collapse-item" th:href="@{/administrador/habilitacion-cliente}" >Habilitacion Clientes</a>
                     </div>
                 </div>
             </li>
         </div>
 
-        <!-- Nav Item - Administativo -->
         <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
             <hr class="sidebar-divider">
             <!-- Heading -->
@@ -110,39 +124,43 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Arriendos:</h6>
-                        <a class="collapse-item" th:href="@{/administrativo/administrar-solicitudes-arriendo}">Solicitudes de arriendo</a>
+                        <a class="collapse-item" href="#">Solicitudes de arriendo</a>
 
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Clientes:</h6>
                         <a class="collapse-item" th:href="@{/administrativo/gestion-cliente}">Gestionar clientes</a>
 
                         <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Complejos:</h6>
-                        <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
+                        <h6 class="collapse-header">Camping:</h6>
+                        <a class="collapse-item" href="#">Registrar Complejo</a>
+                        <a class="collapse-item" href="#">Gestionar Complejo</a>
                         <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                     </div>
                 </div>
             </li>
         </div>
 
-        <!-- Nav Item - Cliente-->
+        <!-- Nav Item - Pages Collapse Menu CLIENTE-->
 
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" th:href="@{/cliente/solicitudes/crear}">
+                <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Arrendar centro deportivo</span></a>
             </div>
         </li>
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" th:href="@{cliente/solicitudes}">
+                <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Visualizar solicitudes</span></a>
             </div>
         </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
+
+
     </ul>
     <!-- End of Sidebar -->
 
@@ -159,20 +177,6 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search
-                <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>-->
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -212,7 +216,6 @@
                                 <b class="text-gray-800 h6">[[${nombreUser}]]</b>
                             </div>
                         </a>
-
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
@@ -245,119 +248,120 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Solicitar arriendo</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Gestion de arriendos</h1>
 
                 </div>
 
                 <!-- Content Row -->
 
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 ">
+                <div class="row" style="display: block;">
+                    <div class="col-md-12 col-sm-12  ">
                         <div class="x_panel">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <div class="input-group-append">
+                                        <div class="col-md-12 col-sm-12" align="right">
+                                            <div class="x_title">
+                                                <a th:href="@{/cliente/solicitudes/crear}"
+                                                   class="btn btn-success text-white">Solicitar Arriendo</a>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <hr size="8px" color="white" />
                             <div class="x_content">
-                                <br/>
-                                <form th:action="@{/cliente/solicitudes/crear}" method="post"
-                                      id="demo-form2" data-parsley-validate
-                                      class="user" th:object="${renta}">
 
-                                    <input type="hidden" th:field="*{usuario}"> <input
-                                        type="hidden" th:field="*{instalacion}"> <input
-                                        type="hidden" th:field="*{fechaEmision}"> <input
-                                        type="hidden" th:field="*{estado}"> <input
-                                        type="hidden" th:field="*{diasSolicitud}"> <input
-                                        type="hidden" id="my_hidden_input" name="dias">
+                                <table class="display" style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Fecha Emisión</th>
+                                        <th>ID</th>
+                                        <th>Instalación</th>
+                                        <th>Monto</th>
+                                        <th>RUT Cliente</th>
+                                        <th>Nombre Cliente</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${#lists.size(rentas) == 0}">
+                                        <th colspan="5" class="text-center">Sin registro</th>
+                                    </tr>
+                                    <tr th:unless="${#lists.size(rentas) == 0}"
+                                        th:each="renta : ${rentas}">
+                                        <th th:text="${renta.fechaEmision}" scope="row">1</th>
+                                        <td th:text="${renta.Id}">Mark</td>
+                                        <td th:text="${renta.instalacion.nombre}">Otto</td>
+                                        <td th:text="${renta.monto}">Otto</td>
+                                        <td th:text="${renta.usuario.rut}">Otto</td>
+                                        <td th:text="${renta.usuario.nombre+ ' ' + renta.usuario.apellido}">Otto</td>
+                                        <td th:if="${renta.estado == 0}" th:text="'Pendiente'" class="text-warning"></td>
+                                        <td th:if="${renta.estado == 1}" th:text="'Aprobado'" class="text-success"></td>
+                                        <td th:if="${renta.estado == 2}" th:text="'Rechazada'" class="text-danger"></td>
+                                        <td><a th:href="@{/cliente/solicitudes/{id} (id=${renta.id})}" class="btn btn-info btn-sm py-0"><small>Ver Detalles</small></a></td>
+                                    </tr>
 
-                                    <div class="item form-group">
-                                        <div class="col-md-12 col-sm-12">
-                                            <p class="my-0">
-                                                <b>Instalación arrendada:</b> <span
-                                                    th:text="${renta.instalacion.nombre}"></span>
-                                            </p>
-                                            <p class="my-0">
-                                                <b>Cliente:</b> <span th:text="${renta.usuario.nombre + ' ' + renta.usuario.apellido}"></span>
-                                            </p>
-                                            <p class="my-0">
-                                                <b>Precio/día:</b> <span
-                                                    th:text="${'$' + renta.instalacion.costo}"></span>
-                                            </p>
+                                    </tbody>
+                                </table>
 
-                                        </div>
-                                    </div>
+                                <script>
+                                    /* Initialization of datatables */
+                                    $(document).ready(function () {
+                                        $('table.display').DataTable({
+                                            "language": {
+                                                "sProcessing":    "Procesando...",
+                                                "sLengthMenu":    "Mostrar _MENU_",
+                                                "sZeroRecords":   "La renta que busca no se encuentra en el sistema",
+                                                "sEmptyTable":    "Ninguna renta disponible en esta tabla",
+                                                "sInfo":          "Mostrando del _START_ al _END_ de un total de _TOTAL_ rentas",
+                                                "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                                "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                                                "sInfoPostFix":   "",
+                                                "sSearch":        "Buscar:",
+                                                "sUrl":           "",
+                                                "sInfoThousands":  ",",
+                                                "sLoadingRecords": "Cargando...",
+                                                "oPaginate": {
+                                                    "sFirst":    "Primero",
+                                                    "sLast":    "Último",
+                                                    "sNext":    "Siguiente",
+                                                    "sPrevious": "Anterior"
+                                                },
+                                                "oAria": {
+                                                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                                },
+                                                "searchPanes": {
+                                                    "clearMessage": "Borrar todo",
+                                                    "collapse": {
+                                                        "0": "Paneles de búsqueda",
+                                                        "_": "Paneles de búsqueda (%d)"
+                                                    },
+                                                    "count": "{total}",
+                                                    "countFiltered": "{shown} ({total})",
+                                                    "emptyPanes": "Sin paneles de búsqueda",
+                                                    "loadMessage": "Cargando paneles de búsqueda",
+                                                    "title": "Filtros Activos - %d",
+                                                    "showMessage": "Mostrar Todo",
+                                                    "collapseMessage": "Colapsar Todo"
+                                                }
+                                            }
+                                        });
+                                    });
+                                </script>
 
-                                    <div class="ln_solid">
-                                        <div class="col-md-6 col-sm-6" style="height:150px;">
-                                            <div class="item form-group">
-                                                <div class='input-group date' id='datepicker'>
-                                                    <input type='text' placeholder="Seleccione las fechas..." class="form-control" />
-                                                    <span class="input-group-addon">
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <!-- Content Row
-                                    <div class="ln_solid"></div>
-                                    <div class="item form-group">
-                                        <div class="input-group date"  id="datepicker">
-                                        </div>
-
-                                    </div>Content Row -->
-
-                                    <div class="ln_solid"></div>
-                                    <div class="item form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <a data-toggle="modal" data-target="#arrendarModal">
-                                            <button type="submit" class="btn btn-primary btn-user btn-block">Arrendar</button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="ln_solid"></div>
-                                    <div class="item form-group">
-                                        <div class="col-md-6 col-sm-6">
-                                            <a href="/cliente/solicitudes">
-                                            <button type="button" class="btn btn-danger btn-user btn-block">Cancelar</button>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Modal-->
-                                    <div class="modal fade" id="arrendarModal" tabindex="-1" role="dialog"
-                                         aria-labelledby="Modal_arrendar"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="Modal_arrendar">Seleccione.</h5>
-                                                    <button class="close" type="button" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">¿Está seguro de que desea arrendar la instalacion en las fechas seleccionadas?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar
-                                                    </button>
-                                                    <button class="btn btn-primary" type="submit">Arrendar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-
-            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
@@ -381,8 +385,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">¿Está seguro que desea cerrar la sesion?
-                </div>
+                <div class="modal-body">¿Está seguro que desea cerrar la sesion?</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                     <a class="btn btn-primary" th:href="@{/logout}">Cerrar Sesión</a>
@@ -390,74 +393,29 @@
             </div>
         </div>
     </div>
+    <!-- Habilitation Modal-->
+    <div class="modal fade" id="habilitationModal" tabindex="-1" role="dialog" aria-labelledby="Modal_habilitacion"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Modal_habilitacion">Seleccione.</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <td th:text="'¿Desea deshabilitar/habilitar a NOMBRE del sistema?'"></td>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" th:href="@{/administrador/gestion-adm}">Confirmar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<link rel="stylesheet" href="jquery-ui-1.10.2.cupertino.css" />
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-<script src="jquery.ui.datepicker-es.js"></script>
-<!-- jQuery -->
-<script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
-<!-- Bootstrap -->
-<script th:src="@{/vendors/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
-<!-- FastClick -->
-<script th:src="@{/vendors/fastclick/lib/fastclick.js}"></script>
-<!-- NProgress -->
-<script th:src="@{/vendors/nprogress/nprogress.js}"></script>
-<!-- iCheck -->
-<script th:src="@{/vendors/iCheck/icheck.min.js}"></script>
-
-<!-- Custom Theme Scripts -->
-<script th:src="@{/build/js/custom.min.js}"></script>
-<!-- Custom multidatepicker script -->
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
-        integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"
-        integrity="sha512-5pjEAV8mgR98bRTcqwZ3An0MYSOleV04mwwYj2yw+7PBhFVf/0KcE+NEox0XrFiU5+x5t5qidmo5MgBkDD9hEw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
-<script th:inline="javascript">
-    let diasNoHabilitados = []
-    /*<![CDATA[*/
-
-    /*[# th:each="rent : ${rentas}"]*/
-
-    /*[# th:each="dia : ${rent.diasSolicitud}"]*/
-    diasNoHabilitados.push(new Date(/*[[${dia}]]*/));
-    /*[/]*/
-
-    /*[/]*/
-
-    /*]]>*/
-
-
-    $('#datepicker').datepicker({
-        multidate : true,
-        format : "dd-mm-yyyy",
-        language : "es",
-        todayBtn : true,
-        clearBtn : true,
-        title : "Selecciona los días a solicitar",
-        startDate : new Date(Date.now() + (3600 * 1000 * 24)),
-        datesDisabled : diasNoHabilitados,
-        autoSize : true,
-        todayHighlight : true
-    });
-
-    $('#datepicker').on(
-        'changeDate',
-        function() {
-            $('#my_hidden_input').val(
-                $('#datepicker').datepicker('getFormattedDate'));
-            console.log($('#my_hidden_input').val())
-        });
-</script>
 </body>
-
-</html>
 
 </html>

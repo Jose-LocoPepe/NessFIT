@@ -50,4 +50,5 @@ public class SolicitudService implements ISolicitudService{
         return solicitudRepository.findByFechaEmisionBetween(inicio, termino);
     }
 
+
 }

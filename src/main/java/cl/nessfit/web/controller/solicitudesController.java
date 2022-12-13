@@ -7,6 +7,7 @@ import cl.nessfit.web.service.IInstalacionService;
 import cl.nessfit.web.service.ISolicitudService;
 import cl.nessfit.web.service.IUsuarioService;
 import cl.nessfit.web.util.RutValidacion;
+import org.hibernate.loader.plan.exec.internal.AliasResolutionContextImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,16 +15,36 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+
+/**
+ * Controlador de la vista de solicitudes
+ *
+ * @author BPCS Corporation
+ */
 @Controller
+@RequestMapping("/administrativo/administrar-solicitudes-arriendo")
 public class solicitudesController {
+    /**
+     * Servicio de las instalaciones
+     */
     @Autowired
     private IInstalacionService instalacionService;
+    /**
+     * Solicitud de servicio en uso
+     */
+    private Solicitud solicitudUso;
 
+    /**
+     * Servicio de las solicitudes
+     */
+    @Autowired
     private ISolicitudService solicitudService;
     /**
      * Inyección del servicio de usuarios
@@ -36,73 +57,153 @@ public class solicitudesController {
      */
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    /**
-     * Inyección del bean de validación de rut
-     */
-    @Autowired
-    private RutValidacion validation;
 
     /**
-     * Inicializa el binder para la validación de rut
-     *
-     * @param binder binder
+     * GetMapping para la vista de solicitudes
+     * @param model modelo de la vista
+     * @return redireccion a la vista de solicitudes
      */
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(validation);
-    }
-
-    @GetMapping("/administrativo/administrar-solicitudes-arriendo")
-    public String solicitudes(){
+    @GetMapping("")
+    public String listarSolicitudes(Model model) {
+        model.addAttribute("solicitudes", solicitudService.verTodasSolicitudes());
         return "/administrativo/administrar-solicitudes-arriendo";
     }
 
 
-    @ModelAttribute("nombreUser")
-    public String authName() {
-        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = usuarioService.buscarPorRut(rut);
+    /**
+     * Maneja la peticion GET de rechazar una solicitud
+     * @param Id id de la solicitud
+     * @param model modelo de la vista
+     * @return redireccion a la vista de rechazar solicitud
+     */
+    @GetMapping("/r/{id}")
+    public String formRechazarSolicitud(@PathVariable("id") String Id, Model model) {
+        Solicitud solicitud = solicitudService.buscarPorId(Id);
+        model.addAttribute("solicitud",solicitud);
+        model.addAttribute("nombreCompletoSolicitud", solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido());;
+        model.addAttribute("nombreInstalacion", solicitud.getInstalacion().getNombre());
+        model.addAttribute("montoTotal", solicitud.getMonto());
 
-        return "  " +usuario.getNombre() + " " + usuario.getApellido();
+        model.addAttribute("diasSolicitud", solicitud.getDiasSolicitud());
 
+        solicitudUso = solicitud;
+        return "administrativo/solicitud-informacion-rechazo";
+    }
+    /**
+     * Maneja la peticion POST de rechazar una solicitud
+     * @param solicitud solicitud a rechazar
+     * @param result resultado de la validacion
+     * @param attr atributos de la vista
+     * @return redireccion a la vista de solicitudes
+     */
+    @PostMapping("/r/{id}")
+    public String formRechazarSolicitudCliente(@Valid Solicitud solicitud, BindingResult result, RedirectAttributes attr){
+        solicitud.setId(solicitudUso.getId());
+        solicitud.setFechaEmision(solicitudUso.getFechaEmision());
+        solicitud.setDiasSolicitud(solicitudUso.getDiasSolicitud());
+        solicitud.setInstalacion(solicitudUso.getInstalacion());
+        solicitud.setUsuario(solicitudUso.getUsuario());
+        solicitud.setEstado(2);
+
+        solicitudService.guardar(solicitud);
+
+        return "redirect:/administrativo/administrar-solicitudes-arriendo";
     }
 
     /**
-     * auth para obtener el rut del usuario logueado
-     *
-     * @return retorna el rut
+     * Maneja la peticion GET de aceptar una solicitud
+     * @param Id id de la solicitud
+     * @param model modelo de la vista
+     * @return redireccion a la vista de aceptar solicitud
      */
-    @ModelAttribute("rutUser")
-    public String auth() {
-        //Usuario usuario =usuarioService.buscarPorRut(SecurityContextHolder.getContext().getAuthentication().getName());
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    @GetMapping("/c/{id}")
+    public String formAceptarSolicitud(@PathVariable(value = "id") String Id, Model model){
+        Solicitud solicitud = solicitudService.buscarPorId(Id);
+        model.addAttribute("solicitud",solicitud);
+        model.addAttribute("nombreCompletoSolicitud", solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido());;
+        model.addAttribute("nombreInstalacion", solicitud.getInstalacion().getNombre());
+        model.addAttribute("montoTotal", solicitud.getMonto());
+
+        model.addAttribute("diasSolicitud", solicitud.getDiasSolicitud());
+
+        solicitudUso = solicitud;
+        return "administrativo/solicitud-informacion";
     }
-    //boolean para ver si hay numeros en un string
-    public boolean hayNumeros(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (Character.isDigit(s.charAt(i))) {
-                return true;
+    /**
+     * Maneja la peticion POST de aceptar una solicitud
+     * @param solicitud solicitud a aceptar
+     * @param result resultado de la validacion
+     * @param attr atributos de la vista
+     * @return redireccion a la vista de solicitudes
+     */
+    @PostMapping("/c/{id}")
+    public String formAceptarSolicitud(@Valid Solicitud solicitud, BindingResult result, RedirectAttributes attr){
+        //Si hay errores
+        if(result.hasErrors()){
+            return "administrativo/solicitud-informacion";
+        }
+        solicitud.setId(solicitudUso.getId());
+        solicitud.setFechaEmision(solicitudUso.getFechaEmision());
+        solicitud.setDiasSolicitud(solicitudUso.getDiasSolicitud());
+        solicitud.setInstalacion(solicitudUso.getInstalacion());
+        solicitud.setUsuario(solicitudUso.getUsuario());
+System.out.println("Prueba");
+        solicitud.setEstado(1);
+
+
+        solicitudService.guardar(solicitud);
+
+        return "redirect:/administrativo/administrar-solicitudes-arriendo";
+    }
+    /**
+     * Modelo del nombre del usuario
+     * @return nombre del usuario
+     */
+    @ModelAttribute("nombreUser")
+    public String authName () {
+        String rut = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorRut(rut);
+        return usuario.getNombre() + " " + usuario.getApellido();
+    }
+    @ModelAttribute("contadorSolicitudesPendientes")
+    public int contadorSolicitudesPendientes(){
+        int contadorSolicitudes = 0;
+        for (Solicitud solicitud : solicitudService.verTodasSolicitudes()) {
+            if (solicitud.getEstado() == 1) {
+                contadorSolicitudes++;
             }
         }
-        return false;
+        return contadorSolicitudes;
     }
-    public boolean rutValido(String rut) {
-        try {
-            int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
-            char dv = rut.charAt(rut.length() - 1);
-            int m = 0, s = 1;
-            for (; rutAux != 0; rutAux /= 10) {
-                s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
+    @ModelAttribute("contadorSolicitudesAceptadas")
+    public int contadorSolicitudesAceptadas(){
+        int contadorSolicitudes = 0;
+        for (Solicitud solicitud : solicitudService.verTodasSolicitudes()) {
+            if (solicitud.getEstado() == 2) {
+                contadorSolicitudes++;
             }
-            char dvCalculado = (char) (s != 0 ? s + 47 : 75);
-
-            if (dvCalculado != dv) {
-                return false;
-            }
-            return true;
-
-        } catch (NumberFormatException excepcion) {
-            return false;
         }
+        return contadorSolicitudes;
     }
+    @ModelAttribute("contadorSolicitudesRechazadas")
+    public int contadorSolicitudesRechazadas(){
+        int contadorSolicitudes = 0;
+        for (Solicitud solicitud : solicitudService.verTodasSolicitudes()) {
+            if (solicitud.getEstado() == 3) {
+                contadorSolicitudes++;
+            }
+        }
+        return contadorSolicitudes;
+    }
+    @ModelAttribute("contadorSolicitudes")
+    public int contadorSolicitudes(){
+        int contadorSolicitudes = 0;
+        for (int i = 0; i < solicitudService.verTodasSolicitudes().size(); i++) {
+            contadorSolicitudes++;
+        }
+        return contadorSolicitudes;
+    }
+
+
+
 }

@@ -119,7 +119,7 @@
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Complejos:</h6>
                         <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
-                        <a class="collapse-item" href="#">Estadisticas</a>
+                        <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                     </div>
                 </div>
             </li>
@@ -215,8 +215,11 @@
                     <li class="nav-item dropdown arrow">
                         <a href="javascript:" class="nav-link dropdown-toggle"
                            id="navbarDropdown" data-toggle="dropdown">
-                            <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
-                               th:text=" ${nombreUser}"></i>
+                            <div>
+                            <i class="fa fa-user text-gray-800" aria-haspopup="false" aria-expanded="false">
+                            </i>
+                                <b class="text-gray-800 h6">[[${nombreUser}]]</b>
+                            </div>
                         </a>
 
                         <!-- Dropdown - User Information -->

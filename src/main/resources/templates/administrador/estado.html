@@ -120,7 +120,7 @@
                         <h6 class="collapse-header">Camping:</h6>
                         <a class="collapse-item" href="#">Registrar Complejo</a>
                         <a class="collapse-item" href="#">Gestionar Complejo</a>
-                        <a class="collapse-item" href="#">Estadisticas</a>
+                        <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                     </div>
                 </div>
             </li>
@@ -212,12 +212,14 @@
 
 
                     <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown arrow">
-                        <a href="javascript:" class="nav-link dropdown-toggle"
-                           id="navbarDropdown" data-toggle="dropdown">
-                            <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
-                               th:text=" ${nombreUser}"></i>
-                        </a>
+                    <a href="javascript:" class="nav-link dropdown-toggle"
+                       id="navbarDropdown" data-toggle="dropdown">
+                        <div>
+                            <i class="fa fa-user text-gray-800" aria-haspopup="false" aria-expanded="false">
+                            </i>
+                            <b class="text-gray-800 h6">[[${nombreUser}]]</b>
+                        </div>
+                    </a>
 
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

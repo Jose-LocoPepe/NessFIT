@@ -82,6 +82,9 @@
             <!-- Nav Item - Menu para el administrativo  -->
             <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
                 <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    ADMINISTRATIVO
+                </div>
                 <!-- Heading -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#admin2Menu"
@@ -102,7 +105,7 @@
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Complejos:</h6>
                             <a class="collapse-item" th:href="@{/administrativo/gestion-complejo}">Gestionar Complejos</a>
-                            <a class="collapse-item" href="#">Estadisticas</a>
+                            <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                         </div>
                     </div>
                 </li>
@@ -180,10 +183,13 @@
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown arrow">
                             <a href="javascript:" class="nav-link dropdown-toggle"
-                           id="navbarDropdown" data-toggle="dropdown">
-                            <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
-                               th:text=" ${nombreUser}"></i>
-                        </a>
+                               id="navbarDropdown" data-toggle="dropdown">
+                                <div>
+                                    <i class="fa fa-user text-gray-800" aria-haspopup="false" aria-expanded="false">
+                                    </i>
+                                    <b class="text-gray-800 h6">[[${nombreUser}]]</b>
+                                </div>
+                            </a>
 					
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -255,7 +261,8 @@
 											<td th:text="${usuario.email}">Otto</td>
 											<td
 												th:text="${usuario.estado==1?'Habilitado':'Deshabilitado'}">@mdo</td>
-											<td><a th:href="@{/administrativo/gestion-cliente/editar/{rut} (rut=${usuario.rut})}" class="btn btn-warning">editar</a>
+											<td>
+                                                <a th:href="@{/administrativo/gestion-cliente/editar/{rut} (rut=${usuario.rut})}" class="btn btn-warning">Editar</a>
                                             <!-- Cambio de estado boton-->
                                             <a th:onclick="return ventana (${usuario.nombre} + ' ' + ${usuario.apellido})",
                                                th:href="@{/administrativo/gestion-cliente/estado-clientes/{rut} (rut=${usuario.rut})}"

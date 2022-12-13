@@ -118,7 +118,7 @@
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Complejos:</h6>
                         <a class="collapse-item" href="administrativo/gestion-complejo">Gestionar Complejos</a>
-                        <a class="collapse-item" href="#">Estadisticas</a>
+                        <a class="collapse-item" th:href="@{/administrativo/ver-estadisticas}">Estadisticas</a>
                     </div>
                 </div>
             </li>
@@ -128,14 +128,14 @@
 
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" href="#">
+                <a class="nav-link" th:href="@{/cliente/solicitudes/crear}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Arrendar centro deportivo</span></a>
             </div>
         </li>
         <li class="nav-item">
             <div sec:authorize="hasAuthority('CLIENTE')">
-                <a class="nav-link" href="cliente/solicitudes">
+                <a class="nav-link" th:href="@{cliente/solicitudes}">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Visualizar solicitudes</span></a>
             </div>
@@ -208,8 +208,11 @@
                     <li class="nav-item dropdown arrow">
                         <a href="javascript:" class="nav-link dropdown-toggle"
                            id="navbarDropdown" data-toggle="dropdown">
-                            <i class="fa fa-user fa-xl text-gray-600" aria-haspopup="true" aria-expanded="false"
-                               th:text=" ${nombreUser}"></i>
+                            <div>
+                            <i class="fa fa-user text-gray-800" aria-haspopup="false" aria-expanded="false">
+                            </i>
+                                <b class="text-gray-800 h6">[[${nombreUser}]]</b>
+                            </div>
                         </a>
 
                         <!-- Dropdown - User Information -->
@@ -244,76 +247,155 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Menú Principal</h1>
                 </div>
-
+                <div sec:authorize="hasAuthority('CLIENTE')">
                 <!-- Content Row -->
                 <div class="row">
+                    <!-- tarjetas para el menu principal rol Adminstrativo -->
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-5 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Solicitudes en total
+                                            </div>
+                                            <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${contadorReservas}">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Reservas actuales
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-5 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Solicitudes Aprobadas
+                                            </div>
+                                            <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${contadorSolicitudesAprobadas}">0</div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Solicitudes Rechazadas
+                                            </div>
+                                            <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${contadorSolicitudesRechazadas}">3</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Solicitudes Pendientes
+                                            </div>
+                                            <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${contadorSolicitudesPendientes}">0</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                    <!-- tarjetas para el menu principal rol Adminstrativo -->
+                    <div sec:authorize="hasAuthority('ADMINISTRATIVO')">
+                        <div class="row">
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Reservas Pendientes
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-5 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Solicitudes en total
+                                                </div>
+                                                <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${solicitesEnTotal}">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Canchas Disponibles
+                            <div class="col-xl-5 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Solicitudes Pendientes
+                                                </div>
+                                                <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${solicitesEnTotalPendientes}">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">3</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-bottom-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Canchas Ocupadas
+
+                            <!-- Earnings (Monthly) Card Example -->
+                            <div class="col-xl-5 col-md-6 mb-4">
+                                <div class="card border-left-success shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Total de complejos
+                                                </div>
+                                                <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${contadorInstalaciones}">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
                                     </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                            <div class="col-xl-5 col-md-6 mb-4">
+                                <div class="card border-left-danger shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Total de clientes
+                                                </div>
+                                                <div class="h3 mb-0 font-weight-bold text-gray-800" th:text="${contadorClientes}">3</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
