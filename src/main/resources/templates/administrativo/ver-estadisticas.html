@@ -269,7 +269,16 @@
                             <hr size="8px" color="white" />
                             <div class="x_content">
                                 <form method="get" th:action="@{/administrativo/ver-estadisticas}">
+                                    <div th:if="${esError}"
+                                         class='alert alert-danger' role='alert'>
+                                        Por favor corrija los siguientes errores:
+                                        <ul>
+                                            <li th:text="${errorFormato}"></li>
+                                        </ul>
+                                    </div>
                                     <div class="row invoice-info">
+                                        <!-- verificar que las fechas sean correctas -->
+
                                         <div class="col-sm-5 invoice-col">
                                             <label class="form-label">Fecha Inicio:</label> <input
                                                 class="form-control" type="date" name="inicio">
@@ -314,7 +323,7 @@
                                                 <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
                                             </tr>
                                             <tr th:unless="${contarSolicitudes == 0}"
-                                                th:each="solicitud : ${solicitudes}">
+                                                th:each="solicitud : ${listaSolicitudes}">
                                                 <th th:text="${solicitud.Id}" scope="row">1</th>
                                                 <td th:text="${solicitud.getUsuario().getRut()}">Mark</td>
                                                 <td th:text="${solicitud.getInstalacion().getNombre()}">Otto</td>

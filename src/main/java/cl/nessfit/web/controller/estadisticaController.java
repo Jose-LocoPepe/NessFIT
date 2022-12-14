@@ -29,23 +29,64 @@ public class estadisticaController {
     private IUsuarioService usuarioService;
 
     public int contadorSolicitudes = 0;
+    public int contadorCancha = 0;
+    public int contadorGimnasio = 0;
+    public int contadorPiscina = 0;
+    public int contadorQuincho = 0;
+    public int contadorEstadio = 0;
+    public List<Solicitud> solicitudesList;
     @GetMapping("")
     public String estadistica (Model model,
                                @RequestParam(name = "inicio", required = false, defaultValue = "1900-01-01 00:00:00") String inicio,
                                @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01 00:00:00") String fin) throws ParseException {
 
+        //verificar que las fechas sean validas en rango
+
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = formatter.parse(inicio + " 00:00:00");
         Date finDate = formatter.parse(fin + " 23:59:59") ;
-        int contadorCancha = 0;
-        int contadorGimnasio = 0;
-        int contadorPiscina = 0;
-        int contadorQuincho = 0;
-        int contadorEstadio = 0;
+        if (date.after(finDate) || date.equals(finDate)) {
+            model.addAttribute("esError", true);
+            model.addAttribute("errorFormato", "La fecha de inicio no puede ser mayor o igual a la fecha de fin");
+            return "administrativo/ver-estadisticas";
+        }
+        if(solicitudesList == null){
+            solicitudesList = solicitudService.buscarPorRangoFecha(date, finDate);
 
-        //List<Solicitud> solicitudes = solicitudService.verTodasSolicitudes();
-        List<Solicitud> solicitudes = solicitudService.buscarPorRangoFecha(date, finDate);
+        }
+        solicitudesList.clear();
 
+        List<Solicitud> solicitudes2 = solicitudService.verTodasSolicitudes();
+        //verificar si las fechas de las solicitudes estan dentro del rango de fechas
+        for(Solicitud s : solicitudes2){
+            for(int i = 0; i < s.getDiasSolicitud().size(); i++){
+                if(s.getDiasSolicitud().get(i).after(date) && s.getDiasSolicitud().get(i).before(finDate)) {
+                    System.out.println(s.getDiasSolicitud().get(i).toString());
+                    switch (s.getInstalacion().getTipo()) {
+                        case "Cancha":
+                            contadorCancha++;
+                            break;
+                        case "Gimnasio":
+                            contadorGimnasio++;
+                            break;
+                        case "Piscina":
+                            contadorPiscina++;
+                            break;
+                        case "Quincho":
+                            contadorQuincho++;
+                            break;
+                        case "Estadio":
+                            contadorEstadio++;
+                            break;
+                    }
+                    solicitudesList.add(s);
+                }
+
+            }
+
+            contadorSolicitudes++;
+        }
+/*
         for (Solicitud solicitud : solicitudes) {
             switch (solicitud.getInstalacion().getTipo()) {
                 case "Cancha":
@@ -69,8 +110,9 @@ public class estadisticaController {
             }
             contadorSolicitudes++;
         }
-
-        model.addAttribute("solicitudes", solicitudes);
+*/
+        model.addAttribute("listaSolicitudes", solicitudesList);
+        model.addAttribute("solicitudes", solicitudes2);
         model.addAttribute("cuentaCancha", contadorCancha);
         model.addAttribute("cuentaGimnasio", contadorGimnasio);
         model.addAttribute("cuentaPiscina", contadorPiscina);
