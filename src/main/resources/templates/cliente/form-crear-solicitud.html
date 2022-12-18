@@ -266,19 +266,19 @@
                                         <div class="col-md-6 col-sm-6 ">
                                             <select  class="form-control" name="instalacion">
                                                 <optgroup label="Piscinas">
-                                                    <option th:each="piscina : ${piscinas}" th:value="${piscina.nombre}" th:text="${piscina.nombre}">
+                                                    <option  th:each="piscina : ${piscinas}"  th:if="${piscina.estado == 1}"th:value="${piscina.nombre}" th:text="${piscina.nombre}">
                                                 </optgroup>
                                                 <optgroup label="Canchas">
-                                                    <option th:each="cancha : ${canchas}" th:value="${cancha.nombre}" th:text="${cancha.nombre}">
+                                                    <option th:each="cancha : ${canchas}"  th:if="${cancha.estado == 1}" th:value="${cancha.nombre}" th:text="${cancha.nombre}">
                                                 </optgroup>
                                                 <optgroup label="Gimnasios">
-                                                    <option th:each="gimnasio : ${gimnasios}" th:value="${gimnasio.nombre}" th:text="${gimnasio.nombre}">
+                                                    <option th:each="gimnasio : ${gimnasios}" th:if="${gimnasio.estado == 1}" th:value="${gimnasio.nombre}" th:text="${gimnasio.nombre}">
                                                 </optgroup>
                                                 <optgroup label="Quinchos">
-                                                    <option th:each="quincho : ${quinchos}" th:value="${quincho.nombre}" th:text="${quincho.nombre}">
+                                                    <option th:each="quincho : ${quinchos}" th:if="${quincho.estado == 1}" th:value="${quincho.nombre}" th:text="${quincho.nombre}">
                                                 </optgroup>
                                                 <optgroup label="Estadio">
-                                                    <option th:each="estadio : ${estadios}" th:value="${estadio.nombre}" th:text="${estadio.nombre}">
+                                                    <option th:each="estadio : ${estadios}" th:if="${estadio.estado == 1}" th:value="${estadio.nombre}" th:text="${estadio.nombre}">
                                                 </optgroup>
                                             </select>
                                         </div>

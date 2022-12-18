@@ -41,13 +41,19 @@ public class estadisticaController {
                                @RequestParam(name = "fin", required = false, defaultValue = "2999-01-01 00:00:00") String fin) throws ParseException {
 
         //verificar que las fechas sean validas en rango
+        contadorCancha = 0;
+        contadorGimnasio = 0;
+        contadorPiscina = 0;
+        contadorQuincho = 0;
+        contadorEstadio = 0;
+        contadorSolicitudes=0;
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = formatter.parse(inicio + " 00:00:00");
         Date finDate = formatter.parse(fin + " 23:59:59") ;
         if (date.after(finDate) || date.equals(finDate)) {
             model.addAttribute("esError", true);
-            model.addAttribute("errorFormato", "La fecha de inicio no puede ser mayor o igual a la fecha de fin");
+            model.addAttribute("errorFormato", "La fecha de inicio no puede ser mayor o igual a la fecha de fin.");
             return "administrativo/ver-estadisticas";
         }
         if(solicitudesList == null){
@@ -57,60 +63,32 @@ public class estadisticaController {
         solicitudesList.clear();
 
         List<Solicitud> solicitudes2 = solicitudService.verTodasSolicitudes();
-        //verificar si las fechas de las solicitudes estan dentro del rango de fechas
-        for(Solicitud s : solicitudes2){
-            for(int i = 0; i < s.getDiasSolicitud().size(); i++){
-                if(s.getDiasSolicitud().get(i).after(date) && s.getDiasSolicitud().get(i).before(finDate)) {
-                    System.out.println(s.getDiasSolicitud().get(i).toString());
-                    switch (s.getInstalacion().getTipo()) {
-                        case "Cancha":
-                            contadorCancha++;
-                            break;
-                        case "Gimnasio":
-                            contadorGimnasio++;
-                            break;
-                        case "Piscina":
-                            contadorPiscina++;
-                            break;
-                        case "Quincho":
-                            contadorQuincho++;
-                            break;
-                        case "Estadio":
-                            contadorEstadio++;
-                            break;
-                    }
-                    solicitudesList.add(s);
-                }
-
+        for (Solicitud solicitud : solicitudes2) {
+            if (solicitud.getFechaEmision().after(date) && solicitud.getFechaEmision().before(finDate)) {
+                solicitudesList.add(solicitud);
             }
-
-            contadorSolicitudes++;
         }
-/*
-        for (Solicitud solicitud : solicitudes) {
-            switch (solicitud.getInstalacion().getTipo()) {
-                case "Cancha":
+        for (Solicitud solicitud : solicitudesList) {
+            if (solicitud.getFechaEmision().after(date) && solicitud.getFechaEmision().before(finDate)) {
+                if (solicitud.getInstalacion().getTipo().equalsIgnoreCase("Cancha")) {
                     contadorCancha++;
-
-                    break;
-                case "Gimnasio":
+                }
+                if (solicitud.getInstalacion().getTipo().equalsIgnoreCase("Gimnasio")) {
                     contadorGimnasio++;
-                    break;
-                case "Piscina":
+                }
+                if (solicitud.getInstalacion().getTipo().equalsIgnoreCase("Piscina")) {
                     contadorPiscina++;
-                    break;
-                case "Quincho":
+                }
+                if (solicitud.getInstalacion().getTipo().equalsIgnoreCase("Quincho")) {
                     contadorQuincho++;
-                    break;
-                case "Estadio":
+                }
+                if (solicitud.getInstalacion().getTipo().equalsIgnoreCase("Estadio")) {
                     contadorEstadio++;
-                    break;
-                default:
-                    break;
+                }
             }
             contadorSolicitudes++;
         }
-*/
+
         model.addAttribute("listaSolicitudes", solicitudesList);
         model.addAttribute("solicitudes", solicitudes2);
         model.addAttribute("cuentaCancha", contadorCancha);
@@ -118,6 +96,7 @@ public class estadisticaController {
         model.addAttribute("cuentaPiscina", contadorPiscina);
         model.addAttribute("cuentaQuincho", contadorQuincho);
         model.addAttribute("cuentaEstadio", contadorEstadio);
+        model.addAttribute("cuentaSolicitudes", contadorSolicitudes);
 
         model.addAttribute("inicio", inicio);
         model.addAttribute("fin", fin);
@@ -132,8 +111,5 @@ public class estadisticaController {
         return usuario.getNombre() + " " + usuario.getApellido();
 
     }
-    @ModelAttribute("contarSolicitudes")
-    public int contarSolicitudes(){
-        return contadorSolicitudes;
-    }
+
 }

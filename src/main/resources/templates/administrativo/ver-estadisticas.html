@@ -311,23 +311,27 @@
                                             <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>Nombre Cliente</th>
                                                 <th>RUT Cliente</th>
                                                 <th>Nombre Instalacion</th>
                                                 <th>Fecha solicitud</th>
+                                                <th>Costo total de la solicitud</th>
                                                 <th>Estado</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <!-- divider -->
-                                            <tr th:if="${contarSolicitudes == 0 }">
-                                                <th colspan="5" class="text-center">No hay solicitudes por mostrar.</th>
+                                            <tr th:if="${cuentaSolicitudes == 0}">
+                                                <th colspan="5" class="text-center">Sin solicitudes dentro del periodo seleccionado.</th>
                                             </tr>
-                                            <tr th:unless="${contarSolicitudes == 0}"
+                                            <tr th:unless="${cuentaSolicitudes == 0}"
                                                 th:each="solicitud : ${listaSolicitudes}">
                                                 <th th:text="${solicitud.Id}" scope="row">1</th>
+                                                <td th:text="${solicitud.getUsuario().getNombre()}">Juan Perez</td>
                                                 <td th:text="${solicitud.getUsuario().getRut()}">Mark</td>
                                                 <td th:text="${solicitud.getInstalacion().getNombre()}">Otto</td>
                                                 <td th:text="${solicitud.fechaEmision}">Otto</td>
+                                                <td th:text="${solicitud.getMonto()}">Otto</td>
 
                                                 <td>
                                                     <a th:if="${solicitud.getEstado() == 0}">Pendiente</a>

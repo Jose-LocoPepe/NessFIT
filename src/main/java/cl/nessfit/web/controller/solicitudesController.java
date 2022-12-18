@@ -103,6 +103,7 @@ public class solicitudesController {
         solicitud.setDiasSolicitud(solicitudUso.getDiasSolicitud());
         solicitud.setInstalacion(solicitudUso.getInstalacion());
         solicitud.setUsuario(solicitudUso.getUsuario());
+        solicitud.setMonto(solicitudUso.getMonto());
         solicitud.setEstado(2);
 
         solicitudService.guardar(solicitud);
@@ -147,7 +148,7 @@ public class solicitudesController {
         solicitud.setDiasSolicitud(solicitudUso.getDiasSolicitud());
         solicitud.setInstalacion(solicitudUso.getInstalacion());
         solicitud.setUsuario(solicitudUso.getUsuario());
-System.out.println("Prueba");
+        solicitud.setMonto(solicitudUso.getMonto());
         solicitud.setEstado(1);
 
 
